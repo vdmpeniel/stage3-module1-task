@@ -79,3 +79,6 @@ The finished sample application can be found in the [__solution__](./solution/ne
 ``` java
    java -jar news-management.jar
 ```
+
+## Our solution review:
+If you have finished task and would like to see the original solution of it written by our experts, write in #stage-3 channel about it. Access will be provided.
