@@ -13,26 +13,32 @@ public class PropertyLoader {
         loadProperties();
     }
 
-    public static PropertyLoader getInstance() throws IOException{
-        synchronized(PropertyLoader.class){
-            if(Objects.isNull(instance)){
-                instance = new PropertyLoader();
+    public static PropertyLoader getInstance(){
+        try {
+            synchronized (PropertyLoader.class) {
+                if (Objects.isNull(instance)) {
+                    instance = new PropertyLoader();
+                }
+                return instance;
             }
-            return instance;
+
+        } catch(IOException ioe){
+            System.out.println("Error: " + ioe.getMessage());
+            throw new RuntimeException(ioe);
         }
     }
 
-    public void loadProperties() throws IOException{
+    private void loadProperties(){
         try (InputStream inputStream = PropertyLoader.class.getResourceAsStream("/application.properties")) {
             properties.load(inputStream);
 
         } catch (IOException e) {
             System.out.println("Error" + e.getMessage());
-            throw e;
+            throw new RuntimeException(e);
         }
     }
 
-    public String getProperty(String key) throws IOException{
-        return getInstance().getProperty(key);
+    public String getProperty(String key){
+        return getInstance().properties.getProperty(key);
     }
 }

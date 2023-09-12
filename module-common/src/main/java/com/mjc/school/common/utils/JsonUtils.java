@@ -8,15 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class JsonUtils {
-    private static PropertyLoader propertyLoader;
-    static{
-        try {
-            propertyLoader = PropertyLoader.getInstance();
-
-        } catch(IOException ioe) {
-            throw new RuntimeException(ioe.getMessage());
-        }
-    }
+    private static PropertyLoader propertyLoader = PropertyLoader.getInstance();
 
     private JsonUtils(){}
 

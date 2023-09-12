@@ -33,7 +33,7 @@ class DateUtilsTest {
     }
 
     @Test
-    void ISO8601ToLocalDateTime() {
+    void ISO8601ToLocalDateTime() throws Exception{
         String stringDate = "2018-08-29T06:12:15.156";
         LocalDateTime localDateTime = DateUtils.ISO8601ToLocalDateTime(stringDate);
 
