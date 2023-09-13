@@ -1,5 +1,6 @@
-package com.mjc.school.repository.model;
+package com.mjc.school.repository;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
@@ -7,13 +8,19 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Random;
 
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class News {
+public class News implements Serializable {
+    @JsonIgnore
+    @Serial
+    private static final long serialVersionUID = 123456789L;
+
     private Long id;
 
     @Size(min=5, max=30, message = "Tittle must be between 5 and 30 characters long.")
