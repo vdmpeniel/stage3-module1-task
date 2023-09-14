@@ -13,6 +13,7 @@ dependencies {
     implementation 'org.glassfish:jakarta.el:4.0.2'
     implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation project(path: ':module-common')
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }

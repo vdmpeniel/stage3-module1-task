@@ -1,5 +1,6 @@
 package com.mjc.school.repository;
 
+import com.mjc.school.repository.model.News;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,12 +39,13 @@ class NewsTest {
         assertNotNull(news.getId());
     }
 
+
     @Test
     void getTittle() {
         String tittle = "hello there!";
         News news = new News();
-        news.setTittle(tittle);
-        assertEquals(tittle, news.getTittle());
+        news.setTitle(tittle);
+        assertEquals(tittle, news.getTitle());
     }
 
     @Test
@@ -82,7 +84,7 @@ class NewsTest {
     void setTittle() {
         String tittle = "hello there!";
         News news = new News();
-        news.setTittle(tittle);
+        news.setTitle(tittle);
     }
 
     @Test

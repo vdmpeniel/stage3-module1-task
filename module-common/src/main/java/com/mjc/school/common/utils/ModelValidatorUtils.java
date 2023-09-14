@@ -1,6 +1,9 @@
-package com.mjc.school.repository;
+package com.mjc.school.common.utils;
 
 
+import com.mjc.school.common.exceptions.IllegalFieldValueException;
+import com.mjc.school.common.utils.JsonUtils;
+import com.mjc.school.common.utils.PropertyLoader;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -11,17 +14,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ModelValidator {
-    private ModelValidator(){}
+public class ModelValidatorUtils {
+    private static PropertyLoader propertyLoader = PropertyLoader.getInstance();
+    private ModelValidatorUtils(){}
 
-    public static <T> Set<ConstraintViolation<T>> validateNews(T obj) {
+    public static <T> Set<ConstraintViolation<T>> validate(T obj) {
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         return validator.validate(obj);
     }
 
-    public static Map<String, String> createViolationMap(Set<ConstraintViolation<News>> violations){
+    public static <T> Map<String, String> createViolationMap(Set<ConstraintViolation<T>> violations){
         return violations.stream()
             .collect(Collectors.toMap(
                     violation -> violation.getPropertyPath().toString(),
@@ -34,5 +38,15 @@ public class ModelValidator {
         return violationMap.entrySet().stream().
             map(entry -> "Error at field " + entry.getKey() + ": " + entry.getValue())
             .collect(Collectors.toList());
+    }
+
+    public static <T> void validateAndThrow(T obj) throws Exception{
+        Set<ConstraintViolation<T>> violations = validate(obj);
+        if (!violations.isEmpty()) {
+            throw new IllegalFieldValueException(
+                "An IllegalFieldValue error occurred: " + JsonUtils.serialize(createViolationMap(violations)),
+                10001
+            );
+        }
     }
 }

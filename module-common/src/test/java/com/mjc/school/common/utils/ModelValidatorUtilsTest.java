@@ -1,5 +1,6 @@
-package com.mjc.school.repository;
+package com.mjc.school.common.utils;
 
+import com.mjc.school.repository.model.News;
 import jakarta.validation.ConstraintViolation;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,9 +8,11 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.Set;
-import static org.junit.jupiter.api.Assertions.*;
 
-class ModelValidatorTest {
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class ModelValidatorUtilsTest {
     private News news;
 
     @BeforeEach
@@ -28,25 +31,25 @@ class ModelValidatorTest {
     }
 
     @Test
-    void validateNews() {
-        Set<ConstraintViolation<News>> violations = ModelValidator.validateNews(news);
+    void validate() {
+        Set<ConstraintViolation<News>> violations = ModelValidatorUtils.validate(news);
         assertNotEquals(0, violations.size());
     }
 
     @Test
     void createViolationMap() {
-        Set<ConstraintViolation<News>> violations = ModelValidator.validateNews(news);
-        boolean hasFailingField = ModelValidator.createViolationMap(violations)
+        Set<ConstraintViolation<News>> violations = ModelValidatorUtils.validate(news);
+        boolean hasFailingField = ModelValidatorUtils.createViolationMap(violations)
             .containsKey("content");
         assertTrue(hasFailingField);
     }
 
     @Test
     void createValidationErrorList() {
-        Set<ConstraintViolation<News>> violations = ModelValidator.validateNews(news);
+        Set<ConstraintViolation<News>> violations = ModelValidatorUtils.validate(news);
         assertNotEquals(
                 0,
-                ModelValidator.createValidationErrorList(ModelValidator.createViolationMap(violations)).size()
+                ModelValidatorUtils.createValidationErrorList(ModelValidatorUtils.createViolationMap(violations)).size()
         );
     }
 }
