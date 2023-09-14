@@ -10,9 +10,11 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class NewsDao {
-    private FileDataSource dataSource;
-    public NewsDao() throws Exception{
-        dataSource = FileDataSource.getInstance();
+    private final FileDataSource dataSource = FileDataSource.getInstance();
+    public NewsDao() throws Exception{}
+
+    public void create(News news)throws Exception{
+        dataSource.executeInsertQuery(News.class, news);
     }
 
     public List<News> getAll() throws Exception{
@@ -22,25 +24,18 @@ public class NewsDao {
     }
 
     public News findById(Long id) throws Exception{
-        Predicate<ModelInterface> newsById = model -> model.getId().equals(5L);
+        Predicate<ModelInterface> newsById = model -> model.getId().equals(id);
         List<ModelInterface> resultSet = dataSource.executeSelectQuery(News.class, newsById);
         return (Objects.nonNull(resultSet) && !resultSet.isEmpty())? (News) resultSet : null;
-
     }
 
-    public static void main(String[] args) {
-        try {
-            NewsDao newsDao = new NewsDao();
-            System.out.println(newsDao.getAll());
-
-            News news = newsDao.findById(1L);
-            String toString = Objects.nonNull(news) ? news.toString() : "null";
-            System.out.println(toString);
-
-        } catch (Exception e){
-            System.out.println(e.getMessage());
-        }
+    public void update(News news) throws Exception{
+        Predicate<ModelInterface> newsById = model -> model.getId().equals(news.getId());
+        dataSource.executeUpdateQuery(News.class, news, newsById);
     }
 
-
+    public void deleteById(Long id) throws Exception{
+        Predicate<ModelInterface> newsById = model -> model.getId().equals(id);
+        dataSource.executeDeleteQuery(News.class, newsById);
+    }
 }
