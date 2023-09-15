@@ -3,7 +3,7 @@ package com.mjc.school.repository.datasource;
 import com.mjc.school.common.utils.FileUtils;
 import com.mjc.school.common.utils.JsonUtils;
 import com.mjc.school.repository.model.Author;
-import com.mjc.school.repository.model.ModelInterface;
+import com.mjc.school.repository.model.modelinterface.ModelInterface;
 import com.mjc.school.repository.model.News;
 
 import java.time.LocalDateTime;
@@ -31,7 +31,7 @@ public class FileDataSource {
         }
     }
 
-    private final String newsFilePath = "module-repository/src/main/resources/content.txt";
+    private final String newsFilePath = "module-repository/src/main/resources/news.txt";
     private final String authorFilePath = "module-repository/src/main/resources/author.txt";
 
     private final List<ModelInterface> newsTable;
@@ -68,18 +68,28 @@ public class FileDataSource {
                 .toList();
     }
 
-    public void executeDeleteQuery(Class<? extends ModelInterface> tableType, Predicate<ModelInterface> predicate) throws Exception{
-        List<ModelInterface> modelTable = setFromTable(tableType);;
-        if (Objects.isNull(predicate)) {
-            throw new Exception("Filter must not be null.");
-        }
+    public boolean executeDeleteQuery(Class<? extends ModelInterface> tableType, Predicate<ModelInterface> predicate) throws Exception {
+        try{
+            List<ModelInterface> modelTable = setFromTable(tableType);
 
-        List<ModelInterface> resultTable = modelTable.stream().filter(predicate.negate()).collect(Collectors.toList());
-        if (resultTable.size() == modelTable.size()) {
-            throw new Exception("No row affected.");
+            if (Objects.isNull(predicate)) {
+                throw new Exception("Filter must not be null.");
+            }
+
+            List<ModelInterface> resultTable = modelTable.stream().filter(predicate.negate()).collect(Collectors.toList());
+            if (resultTable.size() == modelTable.size()) {
+                throw new Exception("No row was affected.");
+            }
+            modelTable = resultTable;
+            persistModelData(tableType, resultTable);
+            return true;
+
+        } catch(Exception e){
+            if (List.of("Filter must not be null.", "No row was affected.").contains(e.getMessage())){
+                return false;
+            }
+            throw e;
         }
-        modelTable = resultTable;
-        persistModelData(tableType, resultTable);
     }
 
     public void executeInsertQuery(Class<? extends ModelInterface> tableType, ModelInterface model) throws Exception{

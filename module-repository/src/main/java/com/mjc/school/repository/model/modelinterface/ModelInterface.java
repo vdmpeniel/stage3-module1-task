@@ -1,4 +1,4 @@
-package com.mjc.school.repository.model;
+package com.mjc.school.repository.model.modelinterface;
 
 public interface ModelInterface{
     Long getId();

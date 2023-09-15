@@ -2,7 +2,7 @@ package com.mjc.school.repository.dao;
 
 import com.mjc.school.repository.datasource.FileDataSource;
 import com.mjc.school.repository.model.Author;
-import com.mjc.school.repository.model.ModelInterface;
+import com.mjc.school.repository.model.modelinterface.ModelInterface;
 
 import java.util.List;
 import java.util.Objects;
@@ -29,13 +29,13 @@ public class AuthorDao {
         return (Objects.nonNull(resultSet) && !resultSet.isEmpty())? (Author) resultSet : null;
     }
 
-    public void update(Author author) throws Exception{
+    public void update(Long id, Author author) throws Exception{
         Predicate<ModelInterface> authorById = model -> model.getId().equals(author.getId());
         dataSource.executeUpdateQuery(Author.class, author, authorById);
     }
 
-    public void deleteById(Long id) throws Exception{
+    public boolean deleteById(Long id) throws Exception{
         Predicate<ModelInterface> authorById = model -> model.getId().equals(id);
-        dataSource.executeDeleteQuery(Author.class, authorById);
+        return dataSource.executeDeleteQuery(Author.class, authorById);
     }
 }

@@ -1,7 +1,7 @@
 package com.mjc.school.repository.dao;
 
 import com.mjc.school.repository.datasource.FileDataSource;
-import com.mjc.school.repository.model.ModelInterface;
+import com.mjc.school.repository.model.modelinterface.ModelInterface;
 import com.mjc.school.repository.model.News;
 
 import java.util.List;
@@ -29,13 +29,14 @@ public class NewsDao {
         return (Objects.nonNull(resultSet) && !resultSet.isEmpty())? (News) resultSet : null;
     }
 
-    public void update(News news) throws Exception{
-        Predicate<ModelInterface> newsById = model -> model.getId().equals(news.getId());
+    public void update(Long id, News news) throws Exception{
+        Predicate<ModelInterface> newsById = model -> model.getId().equals(id);
         dataSource.executeUpdateQuery(News.class, news, newsById);
     }
 
-    public void deleteById(Long id) throws Exception{
+    public boolean deleteById(Long id) throws Exception{
         Predicate<ModelInterface> newsById = model -> model.getId().equals(id);
-        dataSource.executeDeleteQuery(News.class, newsById);
+        return dataSource.executeDeleteQuery(News.class, newsById);
+
     }
 }

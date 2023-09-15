@@ -2,8 +2,6 @@ package com.mjc.school.common.utils;
 
 
 import com.mjc.school.common.exceptions.IllegalFieldValueException;
-import com.mjc.school.common.utils.JsonUtils;
-import com.mjc.school.common.utils.PropertyLoader;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -19,7 +17,6 @@ public class ModelValidatorUtils {
     private ModelValidatorUtils(){}
 
     public static <T> Set<ConstraintViolation<T>> validate(T obj) {
-
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         return validator.validate(obj);

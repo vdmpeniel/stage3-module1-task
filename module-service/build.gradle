@@ -10,6 +10,11 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+    implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
     implementation project(path: ':module-common')
     implementation project(path: ':module-repository')
     testImplementation platform('org.junit:junit-bom:5.9.1')
