@@ -1,12 +1,17 @@
 package com.mjc.school.controller;
 
 public class ConsoleApplication {
-
-
     ApplicationViewController viewController = ApplicationViewController.getInstance();
-    public void run(){
 
-        runApplicationMainLoop();
+    public ConsoleApplication() throws Exception{}
+
+    public void run(){
+        try {
+            runApplicationMainLoop();
+
+        } catch(Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     private void runApplicationMainLoop(){
@@ -20,7 +25,12 @@ public class ConsoleApplication {
     }
 
     public static void main(String[] args) {
-        ConsoleApplication consoleApplication = new ConsoleApplication();
-        consoleApplication.runApplicationMainLoop();
+        try {
+            ConsoleApplication consoleApplication = new ConsoleApplication();
+            consoleApplication.runApplicationMainLoop();
+
+        } catch(Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 }

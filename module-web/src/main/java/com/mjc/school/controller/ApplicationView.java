@@ -1,5 +1,8 @@
 package com.mjc.school.controller;
 
+import com.mjc.school.service.dto.NewsDto;
+
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -28,6 +31,33 @@ class ApplicationView {
             "0 - Exit"
         );
         return getInput();
+    }
+
+    public void renderAllNews(List<NewsDto> newsDtoList){
+        newsDtoList.stream().forEach(this::renderSingleNews);
+    }
+
+    public void renderSingleNews(NewsDto newsDto){
+        System.out.println(newsDto);
+    }
+
+    public String renderNewsSelectionById(){
+        System.out.println("Enter news id:");
+        return getInput();
+    }
+
+    public NewsDto renderNewsCreationView(){
+        NewsDto newsDto = new NewsDto();
+
+        System.out.println("Enter news title:");
+        newsDto.setTitle(getInput());
+
+        System.out.println("Enter news content:");
+        newsDto.setNewsContent(getInput());
+
+        System.out.println("Enter news content:");
+        newsDto.setAuthorId(getInput());
+        return newsDto;
     }
 
     public void renderOperationTittle(){

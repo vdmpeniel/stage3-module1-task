@@ -16,6 +16,7 @@ dependencies {
 
     implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
     implementation project(path: ':module-common')
+
     implementation project(path: ':module-repository')
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'

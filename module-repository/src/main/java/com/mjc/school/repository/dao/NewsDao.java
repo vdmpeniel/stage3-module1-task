@@ -1,8 +1,8 @@
 package com.mjc.school.repository.dao;
 
 import com.mjc.school.repository.datasource.FileDataSource;
-import com.mjc.school.repository.model.modelinterface.ModelInterface;
 import com.mjc.school.repository.model.News;
+import com.mjc.school.repository.model.modelinterface.ModelInterface;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +26,7 @@ public class NewsDao {
     public News findById(Long id) throws Exception{
         Predicate<ModelInterface> newsById = model -> model.getId().equals(id);
         List<ModelInterface> resultSet = dataSource.executeSelectQuery(News.class, newsById);
-        return (Objects.nonNull(resultSet) && !resultSet.isEmpty())? (News) resultSet : null;
+        return (Objects.nonNull(resultSet) && !resultSet.isEmpty())? (News) resultSet.get(0) : null;
     }
 
     public void update(Long id, News news) throws Exception{

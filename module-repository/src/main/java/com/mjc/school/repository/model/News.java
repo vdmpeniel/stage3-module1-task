@@ -7,15 +7,13 @@ import com.mjc.school.common.utils.DateUtils;
 import com.mjc.school.repository.model.modelinterface.ModelInterface;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class News implements ModelInterface, Serializable {
     @JsonIgnore

@@ -26,7 +26,7 @@ public class AuthorDao {
     public Author findById(Long id) throws Exception{
         Predicate<ModelInterface> AuthorById = model -> model.getId().equals(id);
         List<ModelInterface> resultSet = dataSource.executeSelectQuery(Author.class, AuthorById);
-        return (Objects.nonNull(resultSet) && !resultSet.isEmpty())? (Author) resultSet : null;
+        return (Objects.nonNull(resultSet) && !resultSet.isEmpty())? (Author) resultSet.get(0) : null;
     }
 
     public void update(Long id, Author author) throws Exception{
