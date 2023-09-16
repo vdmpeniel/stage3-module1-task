@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mjc.school.common.utils.DateUtils;
+import com.mjc.school.repository.model.modelhelper.AutoIncrementIdGenerator;
+import com.mjc.school.repository.model.modelhelper.IdGenerator;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -21,7 +23,7 @@ public class News implements ModelInterface, Serializable {
 
 
     @JsonIgnore
-    private static Long nextId = 0L;
+    private IdGenerator idGenerator = new AutoIncrementIdGenerator(this.getClass());
 
     @JsonIgnore
     private Long id;
@@ -73,9 +75,10 @@ public class News implements ModelInterface, Serializable {
     }
 
     @JsonProperty("id")
-    public void generateId() {
-        id = nextId++;
+    public synchronized void generateId() {
+        id = idGenerator.generateId(this.getClass());
     }
+
 
     public void setId(Long id){
         if (id.equals(-1L)) { this.id = id; }
