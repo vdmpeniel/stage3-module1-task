@@ -3,7 +3,7 @@ package com.mjc.school.repository.datasource;
 import com.mjc.school.common.utils.FileUtils;
 import com.mjc.school.common.utils.JsonUtils;
 import com.mjc.school.repository.model.Author;
-import com.mjc.school.repository.model.modelinterface.ModelInterface;
+import com.mjc.school.repository.model.ModelInterface;
 import com.mjc.school.repository.model.News;
 
 import java.time.LocalDateTime;
@@ -130,26 +130,5 @@ public class FileDataSource {
 
     }
 
-    public static void main(String[] args) {
 
-        try {
-            FileDataSource fileDataSource = FileDataSource.getInstance();
-            News news1 = new News();
-            news1.setTitle("azucaaa");
-            news1.setAuthorId(2L);
-            news1.setContent("La mulata tiene tumbao...");
-
-            fileDataSource.executeInsertQuery(News.class, news1);
-//            News news = new News(0L);
-//            news.setAuthorId(4L);
-//            news.setContent("lalalala....");
-//
-//            Predicate<ModelInterface> newsById = model -> model.getId().equals(1L);
-//
-//            fileDataSource.executeUpdateQuery(News.class, news, newsById);
-
-        } catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-    }
 }

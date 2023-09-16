@@ -24,13 +24,5 @@ public class ConsoleApplication {
         viewController.controlMenuView();
     }
 
-    public static void main(String[] args) {
-        try {
-            ConsoleApplication consoleApplication = new ConsoleApplication();
-            consoleApplication.runApplicationMainLoop();
 
-        } catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-    }
 }

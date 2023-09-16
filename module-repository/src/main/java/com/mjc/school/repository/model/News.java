@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mjc.school.common.utils.DateUtils;
-import com.mjc.school.repository.model.modelinterface.ModelInterface;
+import com.mjc.school.repository.model.modelhelper.AutoIncrementIdGenerator;
+import com.mjc.school.repository.model.modelhelper.IdGenerator;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -21,7 +22,7 @@ public class News implements ModelInterface, Serializable {
     private static final long serialVersionUID = 123456789L;
 
     @JsonIgnore
-    private static Long idSequentialGenerator = 0L;
+    private IdGenerator idGenerator = new AutoIncrementIdGenerator(this.getClass());
 
     @JsonIgnore
     private Long id;
@@ -44,15 +45,11 @@ public class News implements ModelInterface, Serializable {
 
 
     public News(){
-        id = generateUniqueId();
+        generateId();
         createDate = LocalDateTime.now();
         lastUpdateDate = createDate;
     }
-    public News(Long id){
-        this.id = id;
-        createDate = LocalDateTime.now();
-        lastUpdateDate = createDate;
-    }
+
     public News(String title, String content, LocalDateTime createDate, LocalDateTime lastUpdateDate, Long authorId){
         this();
         this.title = title;
@@ -60,6 +57,12 @@ public class News implements ModelInterface, Serializable {
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
         this.authorId = authorId;
+    }
+
+    public News(Long id){
+        this.id = id;
+        createDate = LocalDateTime.now();
+        lastUpdateDate = createDate;
     }
     public News(Long id, String title, String content, LocalDateTime createDate, LocalDateTime lastUpdateDate, Long authorId){
         this(id);
@@ -72,23 +75,12 @@ public class News implements ModelInterface, Serializable {
 
     @JsonProperty("id")
     public void generateId() {
-        id = generateUniqueId();
+        id = idGenerator.generateId(this.getClass());
     }
 
     public void setId(Long id){
         if (id.equals(-1L)) { this.id = id; }
         else { throw new UnsupportedOperationException("The id of this record can't be altered."); }
-    }
-
-    public void getIdSequentialGenerator(Long id){
-        throw new UnsupportedOperationException("This field can't be accessed.");
-    }
-    public void setIdSequentialGenerator(Long id){
-        throw new UnsupportedOperationException("This field can't be altered.");
-    }
-
-    private long generateUniqueId() {
-        return idSequentialGenerator++;
     }
 
     @Override

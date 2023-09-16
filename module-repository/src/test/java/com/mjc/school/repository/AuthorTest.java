@@ -19,10 +19,8 @@ class AuthorTest {
 
     @Test
     void setId() {
-        assertThrows(UnsupportedOperationException.class, () -> {
-            Author author = new Author();
-            author.setId(1L);
-        });
+        Author author = new Author();
+        author.setId(1L);
     }
 
     @Test

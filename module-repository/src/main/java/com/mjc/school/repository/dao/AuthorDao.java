@@ -2,7 +2,7 @@ package com.mjc.school.repository.dao;
 
 import com.mjc.school.repository.datasource.FileDataSource;
 import com.mjc.school.repository.model.Author;
-import com.mjc.school.repository.model.modelinterface.ModelInterface;
+import com.mjc.school.repository.model.ModelInterface;
 
 import java.util.List;
 import java.util.Objects;

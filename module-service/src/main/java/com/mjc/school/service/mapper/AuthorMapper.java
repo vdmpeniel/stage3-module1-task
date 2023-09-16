@@ -11,6 +11,8 @@ public interface AuthorMapper {
     AuthorMapper INSTANCE = Mappers.getMapper( AuthorMapper.class );
 
     @Mapping( source = "fullName", target = "name" )
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "idGenerator", ignore = true)
     Author authorDtoToAuthor( AuthorDto authorDto );
 
     @Mapping( source = "name", target = "fullName" )

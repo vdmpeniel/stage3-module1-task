@@ -17,8 +17,10 @@ public class ModelValidatorUtils {
     private ModelValidatorUtils(){}
 
     public static <T> Set<ConstraintViolation<T>> validate(T obj) {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
+        Validator validator;
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
         return validator.validate(obj);
     }
 

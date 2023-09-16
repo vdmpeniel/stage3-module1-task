@@ -27,10 +27,9 @@ class ApplicationView {
             "2 - Get news by id. \n" +
             "3 - Create news. \n" +
             "4 - Update news. \n" +
-            "5 - Remove news by id. \n" +
-            "0 - Exit"
+            "5 - Remove news by id."
         );
-        return getInput();
+        return getInput("0 - Exit");
     }
 
     public void renderAllNews(List<NewsDto> newsDtoList){
@@ -41,23 +40,20 @@ class ApplicationView {
         System.out.println(newsDto);
     }
 
-    public String renderNewsSelectionById(){
-        System.out.println("Enter news id:");
-        return getInput();
+    public Long renderNewsSelectionById(){
+        return Long.parseLong(getInput("Enter news id:"));
     }
 
     public NewsDto renderNewsCreationView(){
-        NewsDto newsDto = new NewsDto();
+        return renderNewsUpdate();
+    }
 
-        System.out.println("Enter news title:");
-        newsDto.setTitle(getInput());
-
-        System.out.println("Enter news content:");
-        newsDto.setNewsContent(getInput());
-
-        System.out.println("Enter news content:");
-        newsDto.setAuthorId(getInput());
-        return newsDto;
+    public NewsDto renderNewsUpdate(){
+        return NewsDto.builder()
+            .title(getInput("Enter news title:"))
+            .newsContent(getInput("Enter news content:"))
+            .authorId(getInput("Enter author id:"))
+            .build();
     }
 
     public void renderOperationTittle(){
@@ -68,7 +64,8 @@ class ApplicationView {
         System.out.println("Command not found.");
     }
 
-    private String getInput(){
+    private String getInput(String message){
+        System.out.println(message);
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
