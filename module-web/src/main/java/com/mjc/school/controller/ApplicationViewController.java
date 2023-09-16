@@ -83,8 +83,10 @@ public class ApplicationViewController {
 
     private void removeNewsById(){
         view.renderOperationTittle();
-        // renderNewsRemovalById
-        // call removeNewsById Service
+        newsService.removeNewsById(
+                view.renderNewsSelectionById()
+        );
+
     }
 
     private void defaultBehavior(){

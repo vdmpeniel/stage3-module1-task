@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mjc.school.common.utils.DateUtils;
 import com.mjc.school.repository.model.modelhelper.AutoIncrementIdGenerator;
-import com.mjc.school.repository.model.modelhelper.IdGenerator;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -22,8 +21,7 @@ public class News implements ModelInterface, Serializable {
     private static final long serialVersionUID = 123456789L;
 
 
-    @JsonIgnore
-    private IdGenerator idGenerator = new AutoIncrementIdGenerator(this.getClass());
+
 
     @JsonIgnore
     private Long id;
@@ -42,6 +40,7 @@ public class News implements ModelInterface, Serializable {
 
     @NotNull(message = "Creation Date must be populated")
     private Long authorId;
+
 
 
 
@@ -76,13 +75,7 @@ public class News implements ModelInterface, Serializable {
 
     @JsonProperty("id")
     public synchronized void generateId() {
-        id = idGenerator.generateId(this.getClass());
-    }
-
-
-    public void setId(Long id){
-        if (id.equals(-1L)) { this.id = id; }
-        else { throw new UnsupportedOperationException("The id of this record can't be altered."); }
+        id = AutoIncrementIdGenerator.generateId(this.getClass());
     }
 
     @Override

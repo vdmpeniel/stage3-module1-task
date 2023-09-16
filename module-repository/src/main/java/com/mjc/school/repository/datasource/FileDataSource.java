@@ -5,6 +5,7 @@ import com.mjc.school.common.utils.JsonUtils;
 import com.mjc.school.repository.model.Author;
 import com.mjc.school.repository.model.ModelInterface;
 import com.mjc.school.repository.model.News;
+import com.mjc.school.repository.model.modelhelper.AutoIncrementIdGenerator;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,29 +39,30 @@ public class FileDataSource {
     private final List<ModelInterface> authorTable;
 
 
-    public String getModelFilePath(Class<? extends ModelInterface> tableType){
+    private String getModelFilePath(Class<? extends ModelInterface> tableType){
         return (Author.class.isAssignableFrom(tableType))? authorFilePath : newsFilePath;
     }
     private List<ModelInterface> setFromTable(Class<? extends ModelInterface> tableType){
         return (Author.class.isAssignableFrom(tableType))? authorTable : newsTable;
     }
 
-    private List<ModelInterface> loadModelData(Class<? extends ModelInterface> tableType) throws Exception{
-        String json = FileUtils.readFile(getModelFilePath(tableType));
+    private List<ModelInterface> loadModelData(Class<? extends ModelInterface> clazz) throws Exception{
+        AutoIncrementIdGenerator.reset(clazz);
+        String json = FileUtils.readFile(getModelFilePath(clazz));
         json = json.replaceAll("/n", "");
-        return JsonUtils.deserializeList(json, tableType)
-                .stream().map(tableType::cast).collect(Collectors.toList());
+        return JsonUtils.deserializeList(json, clazz)
+                .stream().map(clazz::cast).collect(Collectors.toList());
     }
 
-    public void persistModelData(Class<? extends ModelInterface> tableType, List<ModelInterface> modelTable) throws Exception{
+    public void persistModelData(Class<? extends ModelInterface> clazz, List<ModelInterface> modelTable) throws Exception{
             String json = JsonUtils.serialize(
-                    modelTable.stream().map(tableType::cast).toList()
+                    modelTable.stream().map(clazz::cast).toList()
             );
-            FileUtils.writeFile(getModelFilePath(tableType), json);
+            FileUtils.writeFile(getModelFilePath(clazz), json);
     }
 
-    public List<ModelInterface> executeSelectQuery(Class<? extends ModelInterface> tableType, Predicate<ModelInterface> predicate) throws Exception{
-        List<ModelInterface> modelTable = setFromTable(tableType);
+    public List<ModelInterface> executeSelectQuery(Class<? extends ModelInterface> clazz, Predicate<ModelInterface> predicate) throws Exception{
+        List<ModelInterface> modelTable = setFromTable(clazz);
         return (Objects.isNull(predicate)) ?
                 new ArrayList<>(modelTable)
                 : modelTable.stream()
@@ -68,9 +70,9 @@ public class FileDataSource {
                 .toList();
     }
 
-    public boolean executeDeleteQuery(Class<? extends ModelInterface> tableType, Predicate<ModelInterface> predicate) throws Exception {
+    public boolean executeDeleteQuery(Class<? extends ModelInterface> clazz, Predicate<ModelInterface> predicate) throws Exception {
         try{
-            List<ModelInterface> modelTable = setFromTable(tableType);
+            List<ModelInterface> modelTable = setFromTable(clazz);
 
             if (Objects.isNull(predicate)) {
                 throw new Exception("Filter must not be null.");
@@ -81,7 +83,7 @@ public class FileDataSource {
                 throw new Exception("No row was affected.");
             }
             modelTable = resultTable;
-            persistModelData(tableType, resultTable);
+            persistModelData(clazz, resultTable);
             return true;
 
         } catch(Exception e){
@@ -92,14 +94,15 @@ public class FileDataSource {
         }
     }
 
-    public void executeInsertQuery(Class<? extends ModelInterface> tableType, ModelInterface model) throws Exception{
-        List<ModelInterface> modelTable = loadModelData(tableType);
+    // The problem is I need to reset the id generator before I load the data.
+    public void executeInsertQuery(Class<? extends ModelInterface> clazz, ModelInterface model) throws Exception{
+        List<ModelInterface> modelTable = loadModelData(clazz);
         modelTable.add(model);
-        persistModelData(tableType, modelTable);
+        persistModelData(clazz, modelTable);
     }
 
-    public void executeUpdateQuery(Class<? extends ModelInterface> tableType, ModelInterface model, Predicate<ModelInterface> predicate) throws Exception{
-        List<ModelInterface> modelTable = loadModelData(tableType);
+    public void executeUpdateQuery(Class<? extends ModelInterface> clazz, ModelInterface model, Predicate<ModelInterface> predicate) throws Exception{
+        List<ModelInterface> modelTable = loadModelData(clazz);
 
         if (modelTable.stream().filter(predicate).toList().size() == 0) {
             throw new Exception("Filter returned no results");
@@ -108,14 +111,14 @@ public class FileDataSource {
         modelTable = modelTable.stream().map(original -> {
             try {
                 Long id = original.getId();
-                LocalDateTime createdDate = (tableType.isAssignableFrom(News.class))?
+                LocalDateTime createdDate = (clazz.isAssignableFrom(News.class))?
                     ((News) original).getCreateDate()
                     : null;
 
                 if (predicate.test(original)) {
-                     original = tableType.cast(JsonUtils.deserialize(JsonUtils.serialize(model), tableType));
+                     original = clazz.cast(JsonUtils.deserialize(JsonUtils.serialize(model), clazz));
                      original.setId(id);
-                     if (tableType.isAssignableFrom(News.class)){
+                     if (clazz.isAssignableFrom(News.class)){
                          ((News) original).setCreateDate(createdDate);
                          ((News) original).setLastUpdateDate(LocalDateTime.now());
                      }
@@ -126,7 +129,7 @@ public class FileDataSource {
             }
             return original;
         }).toList();
-        persistModelData(tableType, modelTable);
+        persistModelData(clazz, modelTable);
 
     }
 

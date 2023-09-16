@@ -14,6 +14,11 @@ public class NewsService {
 
     public NewsService() throws Exception{}
 
+    public void resetId(News news, Long id) throws UnsupportedOperationException{
+        if (id.equals(-1L)) { news.setId(id); }
+        else { throw new UnsupportedOperationException("The id of this record can't be altered."); }
+    }
+
     public NewsDto createNews(NewsDto newsDto){
         try {
             ModelValidatorUtils.validateAndThrow(newsDto);

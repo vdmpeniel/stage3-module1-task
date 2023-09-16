@@ -3,6 +3,7 @@ package com.mjc.school.service;
 import com.mjc.school.common.utils.ModelValidatorUtils;
 import com.mjc.school.repository.dao.AuthorDao;
 import com.mjc.school.repository.model.Author;
+import com.mjc.school.repository.model.News;
 import com.mjc.school.service.dto.AuthorDto;
 import com.mjc.school.service.mapper.AuthorMapper;
 
@@ -12,6 +13,11 @@ public class AuthorService {
     AuthorDao authorDao = new AuthorDao();
 
     public AuthorService() throws Exception{}
+
+    public void resetId(News news, Long id) throws UnsupportedOperationException{
+        if (id.equals(-1L)) { news.setId(id); }
+        else { throw new UnsupportedOperationException("The id of this record can't be altered."); }
+    }
 
     public AuthorDto createAuthor(AuthorDto authorDto) throws Exception {
         ModelValidatorUtils.validateAndThrow(authorDto);

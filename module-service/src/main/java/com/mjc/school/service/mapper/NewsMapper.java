@@ -12,6 +12,7 @@ public interface NewsMapper {
     NewsMapper INSTANCE = Mappers.getMapper( NewsMapper.class );
 
     @Mapping( source = "newsContent", target = "content" )
+    @Mapping(target = "id", constant = "-1L")
     News newsDtoToNews(NewsDto newsDto );
 
     @Mapping( source = "content", target = "newsContent" )

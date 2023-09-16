@@ -37,6 +37,5 @@ public class NewsDao {
     public boolean deleteById(Long id) throws Exception{
         Predicate<ModelInterface> newsById = model -> model.getId().equals(id);
         return dataSource.executeDeleteQuery(News.class, newsById);
-
     }
 }
