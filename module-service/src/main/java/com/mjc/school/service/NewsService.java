@@ -18,7 +18,7 @@ public class NewsService {
         try {
             ModelValidatorUtils.validateAndThrow(newsDto);
 
-            News news = NewsMapper.INSTANCE.mapToNews(newsDto);
+            News news = NewsMapper.INSTANCE.newsDtoToNews(newsDto);
             news.setCreateDate(LocalDateTime.now());
             news.setLastUpdateDate(news.getCreateDate());
             newsDao.create(news);
@@ -32,7 +32,7 @@ public class NewsService {
 
     public List<NewsDto> getAllNews() {
         try{
-            return newsDao.getAll().stream().map(NewsMapper.INSTANCE::mapToNewsDto).toList();
+            return newsDao.getAll().stream().map(NewsMapper.INSTANCE::newsToNewsDto).toList();
 
         } catch(Exception e){
             System.out.println(e.getMessage());
@@ -42,7 +42,7 @@ public class NewsService {
 
     public NewsDto getNewsById(Long id) {
         try{
-            return NewsMapper.INSTANCE.mapToNewsDto(newsDao.findById(id));
+            return NewsMapper.INSTANCE.newsToNewsDto(newsDao.findById(id));
 
         } catch(Exception e){
             System.out.println(e.getMessage());
@@ -54,9 +54,9 @@ public class NewsService {
         try{
             //ModelValidatorUtils.validateAndThrow(newsDto);
 
-            News news = NewsMapper.INSTANCE.mapToNews(newsDto);
+            News news = NewsMapper.INSTANCE.newsDtoToNews(newsDto);
             newsDao.update(id, news);
-            return NewsMapper.INSTANCE.mapToNewsDto(newsDao.findById(id));
+            return NewsMapper.INSTANCE.newsToNewsDto(newsDao.findById(id));
 
         } catch(Exception e){
             System.out.println(e.getMessage());

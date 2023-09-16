@@ -12,7 +12,6 @@ public interface AuthorMapper {
 
     @Mapping( source = "fullName", target = "name" )
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "idGenerator", ignore = true)
     Author authorDtoToAuthor( AuthorDto authorDto );
 
     @Mapping( source = "name", target = "fullName" )

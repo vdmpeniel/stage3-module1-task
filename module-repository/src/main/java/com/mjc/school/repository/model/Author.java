@@ -3,8 +3,6 @@ package com.mjc.school.repository.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mjc.school.repository.model.modelhelper.AutoIncrementIdGenerator;
-import com.mjc.school.repository.model.modelhelper.IdGenerator;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -19,7 +17,7 @@ public class Author implements ModelInterface, Serializable {
     private static final long serialVersionUID = 123456789L;
 
     @JsonIgnore
-    private IdGenerator idGenerator = new AutoIncrementIdGenerator(this.getClass());
+    private static Long nextId = 0L;
 
     private Long id;
 
@@ -35,8 +33,8 @@ public class Author implements ModelInterface, Serializable {
     }
 
     @JsonProperty("id")
-    public void generateId() {
-        id = idGenerator.generateId(this.getClass());
+    public synchronized void generateId() {
+        id = nextId++;
     }
 
     public void setId(Long id){
