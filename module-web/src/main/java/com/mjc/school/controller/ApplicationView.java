@@ -1,8 +1,8 @@
 package com.mjc.school.controller;
 
 import com.mjc.school.service.dto.NewsDto;
+import com.mjc.school.service.dto.ResponseDto;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -19,7 +19,6 @@ class ApplicationView {
         }
     }
 
-
     public String renderMenuView() {
         System.out.println(
             "Enter the number of operation: \n" +
@@ -32,8 +31,13 @@ class ApplicationView {
         return getInput("0 - Exit");
     }
 
-    public void renderAllNews(List<NewsDto> newsDtoList){
-        newsDtoList.stream().forEach(this::renderSingleNews);
+    public void renderResponse(ResponseDto responseDto){
+        if("OK".equals(responseDto.getStatus()) && Objects.nonNull(responseDto.getResultSet())) {
+            responseDto.getResultSet().stream().forEach(this::renderSingleNews);
+
+        } else {
+            renderErrors(responseDto);
+        }
     }
 
     public void renderSingleNews(NewsDto newsDto){
@@ -64,6 +68,13 @@ class ApplicationView {
         System.out.println("Command not found.");
     }
 
+    public void renderErrors(ResponseDto responseDto){
+        responseDto
+            .getErrorList()
+            .stream()
+            .forEach(System.out::println);
+    }
+
     private String getInput(String message){
         System.out.println(message);
         Scanner scanner = new Scanner(System.in);
@@ -72,8 +83,8 @@ class ApplicationView {
 
     private String getOperationTitle(){
         String operationTitle = Thread.currentThread().getStackTrace()[3].getMethodName()
-                .replaceAll("(\\p{javaLowerCase})(\\p{javaUpperCase})", "$1 $2")
-                .toLowerCase();
+            .replaceAll("(\\p{javaLowerCase})(\\p{javaUpperCase})", "$1 $2")
+            .toLowerCase();
         return operationTitle.substring(0, 1).toUpperCase() + operationTitle.substring(1);
     }
 }

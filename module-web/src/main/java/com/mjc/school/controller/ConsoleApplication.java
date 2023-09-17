@@ -23,6 +23,4 @@ public class ConsoleApplication {
     private void runConsoleGUI(){
         viewController.controlMenuView();
     }
-
-
 }

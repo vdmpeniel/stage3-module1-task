@@ -56,14 +56,12 @@ public class ApplicationViewController {
 
     public void getAllNews(){
         view.renderOperationTittle();
-        view.renderAllNews(newsService.getAllNews());
-
+        view.renderResponse(newsService.getAllNews());
     }
 
     private void getNewsById(){
         view.renderOperationTittle();
-        view.renderSingleNews(newsService.getNewsById(view.renderNewsSelectionById()));
-
+        view.renderResponse(newsService.getNewsById(view.renderNewsSelectionById()));
     }
 
     private void createNews(){
@@ -73,11 +71,11 @@ public class ApplicationViewController {
 
     private void updateNews(){
         view.renderOperationTittle();
-        view.renderSingleNews(
-                newsService.updateNewsById(
-                        view.renderNewsSelectionById(),
-                        view.renderNewsUpdate()
-                )
+        view.renderResponse(
+            newsService.updateNewsById(
+                view.renderNewsSelectionById(),
+                view.renderNewsUpdate()
+            )
         );
     }
 
@@ -86,7 +84,6 @@ public class ApplicationViewController {
         newsService.removeNewsById(
                 view.renderNewsSelectionById()
         );
-
     }
 
     private void defaultBehavior(){
