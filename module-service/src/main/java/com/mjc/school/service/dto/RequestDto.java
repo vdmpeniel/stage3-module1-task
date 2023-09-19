@@ -7,6 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class RequestDto {
-    private String payload;
-
+    private Long lookupId;
+    private NewsDto inputData;
 }

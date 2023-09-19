@@ -40,31 +40,30 @@ class ApplicationView {
         }
     }
 
-    public void renderSingleNews(NewsDto newsDto){
+    private void renderSingleNews(NewsDto newsDto){
         System.out.println(newsDto);
     }
 
-    public Long renderNewsSelectionById(){
+    public Long renderNewsIdInputForm(){
         return Long.parseLong(getInput("Enter news id:"));
     }
 
-    public NewsDto renderNewsCreationView(){
-        return renderNewsUpdate();
-    }
-
-    public NewsDto renderNewsUpdate(){
+    public NewsDto renderNewsInputForm(){
         return NewsDto.builder()
             .title(getInput("Enter news title:"))
             .newsContent(getInput("Enter news content:"))
-            .authorId(getInput("Enter author id:"))
+            .authorId(Long.parseLong(getInput("Enter author id:")))
             .build();
+    }
+    public void renderDeleteResponse(ResponseDto responseDto){
+        System.out.println("OK".equals(responseDto.getStatus())? "True": "False");
     }
 
     public void renderOperationTittle(){
         System.out.printf("Operation: %s.\n", getOperationTitle());
     }
 
-    public void renderDefaultOption(){
+    public void renderMenuDefaultOption(){
         System.out.println("Command not found.");
     }
 

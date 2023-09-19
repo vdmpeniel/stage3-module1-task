@@ -6,7 +6,7 @@ import java.util.Map;
 public class AutoIncrementIdGenerator{
     private volatile static Map<Class<?>, Long> nextIdMap = new HashMap<>();
 
-    private AutoIncrementIdGenerator(Class<?> clazz){}
+    private AutoIncrementIdGenerator(){}
 
     public synchronized static void reset(Class<?> clazz){
         nextIdMap.put(clazz, 0L);

@@ -1,10 +1,13 @@
 package com.mjc.school.controller;
 
 import com.mjc.school.service.NewsService;
+import com.mjc.school.service.dto.NewsDto;
+import com.mjc.school.service.dto.RequestDto;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 public class ApplicationViewController {
     private volatile static ApplicationViewController instance;
@@ -24,6 +27,7 @@ public class ApplicationViewController {
 
     private ApplicationView view = new ApplicationView();
     private NewsService newsService = new NewsService();
+
 
     public void controlMenuView(){
         int index = validateIndexInput(view.renderMenuView()) + 1;
@@ -61,33 +65,47 @@ public class ApplicationViewController {
 
     private void getNewsById(){
         view.renderOperationTittle();
-        view.renderResponse(newsService.getNewsById(view.renderNewsSelectionById()));
+        view.renderResponse(newsService.getNewsById(
+            RequestDto.builder().lookupId(
+                    (view.renderNewsIdInputForm())
+            ).build())
+        );
     }
 
+
+    private final Function<Long, NewsDto> newsDtoWithIdSupplier = (id) -> {
+        NewsDto newsDto = view.renderNewsInputForm();
+        newsDto.setId(id);
+        return newsDto;
+    };
     private void createNews(){
         view.renderOperationTittle();
-        newsService.createNews(view.renderNewsCreationView());
+        view.renderResponse(newsService.createNews(
+            RequestDto.builder().inputData(view.renderNewsInputForm()).build()
+        ));
     }
 
     private void updateNews(){
         view.renderOperationTittle();
         view.renderResponse(
             newsService.updateNewsById(
-                view.renderNewsSelectionById(),
-                view.renderNewsUpdate()
+                RequestDto.builder()
+                    .lookupId(view.renderNewsIdInputForm())
+                    .inputData(newsDtoWithIdSupplier.apply(-1L))
+                    .build()
             )
         );
     }
 
     private void removeNewsById(){
         view.renderOperationTittle();
-        newsService.removeNewsById(
-                view.renderNewsSelectionById()
-        );
+        view.renderDeleteResponse(newsService.removeNewsById(
+            RequestDto.builder().lookupId(view.renderNewsIdInputForm()).build()
+        ));
     }
 
     private void defaultBehavior(){
-        view.renderDefaultOption();
+        view.renderMenuDefaultOption();
     }
 }
 

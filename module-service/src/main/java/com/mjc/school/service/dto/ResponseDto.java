@@ -12,4 +12,11 @@ public class ResponseDto {
     private String status;
     private List<NewsDto> resultSet;
     private List<ErrorDto> errorList;
+
+    @Override
+    public String toString(){
+        return "status=" + status + ",\n" +
+                "resultSet=" + resultSet + ",\n" +
+                "errorList=" + errorList;
+    }
 }

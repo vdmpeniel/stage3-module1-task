@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ExistValidator.class)
 public @interface Exist {
-    String message() default "Invalid index";
+    String message() default "Invalid Id";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

@@ -36,6 +36,7 @@ public class News implements ModelInterface, Serializable {
     private LocalDateTime createDate;
 
     @NotNull(message = "Creation Date must be populated")
+    //@ISO8601DateTimeConstraint
     private LocalDateTime lastUpdateDate;
 
     @NotNull(message = "Creation Date must be populated")
@@ -44,11 +45,7 @@ public class News implements ModelInterface, Serializable {
 
 
 
-    public News(){
-        generateId();
-        createDate = LocalDateTime.now();
-        lastUpdateDate = createDate;
-    }
+    public News(){}
 
     public News(String title, String content, LocalDateTime createDate, LocalDateTime lastUpdateDate, Long authorId){
         this();
@@ -61,8 +58,6 @@ public class News implements ModelInterface, Serializable {
 
     public News(Long id){
         this.id = id;
-        createDate = LocalDateTime.now();
-        lastUpdateDate = createDate;
     }
     public News(Long id, String title, String content, LocalDateTime createDate, LocalDateTime lastUpdateDate, Long authorId){
         this(id);
@@ -73,6 +68,7 @@ public class News implements ModelInterface, Serializable {
         this.authorId = authorId;
     }
 
+    @Override
     @JsonProperty("id")
     public synchronized void generateId() {
         id = AutoIncrementIdGenerator.generateId(this.getClass());
@@ -81,13 +77,14 @@ public class News implements ModelInterface, Serializable {
     @Override
     public String toString(){
         try {
-            return  "\n" + "News Object: " + "\n" +
+            return  "News Object: " + "\n" +
                     "id: " + id + "\n" +
                     "title: " + title + "\n" +
                     "content: " + content + "\n" +
                     "createdDate: " + DateUtils.LocalDateTimeToISO8601(createDate) + "\n" +
                     "lastUpdatedDate: " + DateUtils.LocalDateTimeToISO8601(lastUpdateDate) + "\n" +
                     "authorId: " + authorId + "\n";
+
         } catch (Exception e){
             throw new RuntimeException(e.getMessage());
         }

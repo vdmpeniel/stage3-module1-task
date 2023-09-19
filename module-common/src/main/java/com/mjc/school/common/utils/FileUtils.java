@@ -9,9 +9,18 @@ import java.util.stream.Collectors;
 
 public class FileUtils {
 
-    private static PropertyLoader propertyLoader = PropertyLoader.getInstance();
+    private final static PropertyLoader propertyLoader;
 
-    private FileUtils(){}
+    static {
+        try {
+            propertyLoader = PropertyLoader.getInstance();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private FileUtils() {}
 
     public static String readFile(String filename) throws IOException {
         Path filePath = getAbsolutePath(filename);

@@ -26,7 +26,7 @@ public class NewsDao {
     public News findById(Long id) throws Exception{
         Predicate<ModelInterface> newsById = model -> model.getId().equals(id);
         List<ModelInterface> resultSet = dataSource.executeSelectQuery(News.class, newsById);
-        return (Objects.nonNull(resultSet) && !resultSet.isEmpty())? (News) resultSet.get(0) : null;
+        return (Objects.nonNull(resultSet) && !resultSet.isEmpty())? (News) resultSet.get(0) : new News();
     }
 
     public void update(Long id, News news) throws Exception{
@@ -36,6 +36,7 @@ public class NewsDao {
 
     public boolean deleteById(Long id) throws Exception{
         Predicate<ModelInterface> newsById = model -> model.getId().equals(id);
-        return dataSource.executeDeleteQuery(News.class, newsById);
+        dataSource.executeDeleteQuery(News.class, newsById);
+        return true;
     }
 }

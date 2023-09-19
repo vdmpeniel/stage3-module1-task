@@ -2,13 +2,16 @@ package com.mjc.school.repository.datasource;
 
 import com.mjc.school.common.utils.FileUtils;
 import com.mjc.school.common.utils.JsonUtils;
+import com.mjc.school.common.utils.PropertyLoader;
 import com.mjc.school.repository.model.Author;
 import com.mjc.school.repository.model.ModelInterface;
 import com.mjc.school.repository.model.News;
 import com.mjc.school.repository.model.modelhelper.AutoIncrementIdGenerator;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -16,10 +19,27 @@ import java.util.stream.Collectors;
 
 
 public class FileDataSource {
+    private PropertyLoader propertyLoader;
     private volatile static FileDataSource instance;
-    private FileDataSource() throws Exception{
-        newsTable = loadModelData(News.class);
-        authorTable = loadModelData(Author.class);
+
+    String authorFilePath;
+    String newsFilePath;
+
+
+
+    private FileDataSource(){
+        try {
+            propertyLoader = PropertyLoader.getInstance();
+            String testVariant = isTest()? ".test" : "";
+            authorFilePath = propertyLoader.getProperty("application.news.file.path" + testVariant);
+            newsFilePath = propertyLoader.getProperty("application.author.file.path"  + testVariant);
+
+            newsTable = loadModelData(News.class);
+            authorTable = loadModelData(Author.class);
+
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
 
@@ -32,26 +52,37 @@ public class FileDataSource {
         }
     }
 
-    private final String newsFilePath = "module-repository/src/main/resources/news.txt";
-    private final String authorFilePath = "module-repository/src/main/resources/author.txt";
-
-    private final List<ModelInterface> newsTable;
-    private final List<ModelInterface> authorTable;
+    private List<ModelInterface> newsTable;
+    private List<ModelInterface> authorTable;
 
 
-    private String getModelFilePath(Class<? extends ModelInterface> tableType){
-        return (Author.class.isAssignableFrom(tableType))? authorFilePath : newsFilePath;
+    private String getModelFilePath(Class<? extends ModelInterface> tableType) throws IOException {
+        return ((Author.class.isAssignableFrom(tableType))? authorFilePath : newsFilePath);
     }
+    private boolean isTest(){
+        String stackTrace = Arrays.stream(Thread.currentThread().getStackTrace())
+                .map(StackTraceElement::getClassName)
+                .collect(Collectors.joining(",\n"));
+        return stackTrace.toLowerCase().contains("test");
+    }
+
     private List<ModelInterface> setFromTable(Class<? extends ModelInterface> tableType){
         return (Author.class.isAssignableFrom(tableType))? authorTable : newsTable;
+    }
+
+    private void setModelTableValue(Class<? extends ModelInterface> clazz, List<ModelInterface> modelTable){
+        if(Author.class.isAssignableFrom(clazz)){ authorTable = modelTable; }
+        else { newsTable = modelTable; }
     }
 
     private List<ModelInterface> loadModelData(Class<? extends ModelInterface> clazz) throws Exception{
         AutoIncrementIdGenerator.reset(clazz);
         String json = FileUtils.readFile(getModelFilePath(clazz));
         json = json.replaceAll("/n", "");
-        return JsonUtils.deserializeList(json, clazz)
+        List<ModelInterface> data = JsonUtils.deserializeList(json, clazz)
                 .stream().map(clazz::cast).collect(Collectors.toList());
+        data.forEach(model -> model.generateId());
+        return data;
     }
 
     public void persistModelData(Class<? extends ModelInterface> clazz, List<ModelInterface> modelTable) throws Exception{
@@ -64,45 +95,40 @@ public class FileDataSource {
     public List<ModelInterface> executeSelectQuery(Class<? extends ModelInterface> clazz, Predicate<ModelInterface> predicate) throws Exception{
         List<ModelInterface> modelTable = setFromTable(clazz);
         return (Objects.isNull(predicate)) ?
-                new ArrayList<>(modelTable)
-                : modelTable.stream()
-                .filter(predicate)
-                .toList();
+            new ArrayList<>(modelTable)
+            : modelTable.stream()
+            .filter(predicate)
+            .toList();
     }
 
-    public boolean executeDeleteQuery(Class<? extends ModelInterface> clazz, Predicate<ModelInterface> predicate) throws Exception {
-        try{
-            List<ModelInterface> modelTable = setFromTable(clazz);
+    public void executeDeleteQuery(Class<? extends ModelInterface> clazz, Predicate<ModelInterface> predicate) throws Exception {
+        List<ModelInterface> modelTable = setFromTable(clazz);
 
-            if (Objects.isNull(predicate)) {
-                throw new Exception("Filter must not be null.");
-            }
-
-            List<ModelInterface> resultTable = modelTable.stream().filter(predicate.negate()).collect(Collectors.toList());
-            if (resultTable.size() == modelTable.size()) {
-                throw new Exception("No row was affected.");
-            }
-            modelTable = resultTable;
-            persistModelData(clazz, resultTable);
-            return true;
-
-        } catch(Exception e){
-            if (List.of("Filter must not be null.", "No row was affected.").contains(e.getMessage())){
-                return false;
-            }
-            throw e;
+        if (Objects.isNull(predicate)) {
+            throw new Exception("Filter must not be null.");
         }
+
+        List<ModelInterface> resultTable = modelTable.stream().filter(predicate.negate()).collect(Collectors.toList());
+        if (resultTable.size() == modelTable.size()) {
+            throw new Exception("No row was affected.");
+        }
+        setModelTableValue(clazz, resultTable);
     }
 
-    // The problem is I need to reset the id generator before I load the data.
     public void executeInsertQuery(Class<? extends ModelInterface> clazz, ModelInterface model) throws Exception{
-        List<ModelInterface> modelTable = loadModelData(clazz);
+        List<ModelInterface> modelTable = setFromTable(clazz);
+        model.generateId();
+        if(model instanceof News){
+            News news = ((News) model);
+            if(Objects.isNull(news.getCreateDate())){ news.setCreateDate(LocalDateTime.now()); }
+            if(Objects.isNull(news.getCreateDate())){ news.setLastUpdateDate(news.getCreateDate()); }
+        }
         modelTable.add(model);
-        persistModelData(clazz, modelTable);
+        //System.out.println(modelTable);
     }
 
     public void executeUpdateQuery(Class<? extends ModelInterface> clazz, ModelInterface model, Predicate<ModelInterface> predicate) throws Exception{
-        List<ModelInterface> modelTable = loadModelData(clazz);
+        List<ModelInterface> modelTable = setFromTable(clazz);
 
         if (modelTable.stream().filter(predicate).toList().size() == 0) {
             throw new Exception("Filter returned no results");
@@ -129,8 +155,7 @@ public class FileDataSource {
             }
             return original;
         }).toList();
-        persistModelData(clazz, modelTable);
-
+        setModelTableValue(clazz, modelTable);
     }
 
 

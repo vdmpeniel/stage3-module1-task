@@ -9,12 +9,22 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class JsonUtils {
-    private static PropertyLoader propertyLoader = PropertyLoader.getInstance();
+    private static PropertyLoader propertyLoader;
+
+    static {
+        try {
+            propertyLoader = PropertyLoader.getInstance();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private JsonUtils(){}
 

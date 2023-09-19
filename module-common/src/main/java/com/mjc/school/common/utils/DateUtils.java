@@ -1,14 +1,20 @@
 package com.mjc.school.common.utils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.TimeZone;
 
 public class DateUtils {
-    private static PropertyLoader propertyLoader = PropertyLoader.getInstance();
+    private static PropertyLoader propertyLoader;
+
+    static {
+        try {
+            propertyLoader = PropertyLoader.getInstance();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private DateUtils(){}
 

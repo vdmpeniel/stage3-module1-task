@@ -4,4 +4,6 @@ public interface ModelInterface{
     Long getId();
     void setId(Long id);
 
+    void generateId();
+
 }

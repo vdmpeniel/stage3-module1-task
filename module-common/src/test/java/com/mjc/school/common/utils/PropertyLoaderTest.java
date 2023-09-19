@@ -4,6 +4,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PropertyLoaderTest {
@@ -17,7 +19,7 @@ class PropertyLoaderTest {
     }
 
     @Test
-    void getInstance() {
+    void getInstance() throws IOException{
         PropertyLoader propertyLoader = PropertyLoader.getInstance();
         PropertyLoader propertyLoader2 = PropertyLoader.getInstance();
         assertEquals(propertyLoader, propertyLoader2);
@@ -25,7 +27,7 @@ class PropertyLoaderTest {
 
 
     @Test
-    void getProperty() {
+    void getProperty() throws IOException {
         PropertyLoader propertyLoader = PropertyLoader.getInstance();
         String result = propertyLoader.getProperty("application.name");
         boolean endsWithElipsys = result.endsWith("...");

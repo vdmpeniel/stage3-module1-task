@@ -4,36 +4,51 @@ import com.mjc.school.common.utils.ModelValidatorUtils;
 import com.mjc.school.repository.dao.NewsDao;
 import com.mjc.school.repository.model.News;
 import com.mjc.school.service.dto.ErrorDto;
-import com.mjc.school.service.dto.NewsDto;
+import com.mjc.school.service.dto.RequestDto;
 import com.mjc.school.service.dto.ResponseDto;
 import com.mjc.school.service.mapper.NewsMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public class NewsService {
-    NewsDao newsDao = new NewsDao();
+    NewsDao newsDao;
 
-    public NewsService() throws Exception{}
+    public NewsService(){
+        try {
+            newsDao = new NewsDao();
 
-    public void resetId(News news, Long id) throws UnsupportedOperationException{
+        } catch(Exception e){
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public void setModelId(News news, Long id) throws UnsupportedOperationException{
         if (id.equals(-1L)) { news.setId(id); }
         else { throw new UnsupportedOperationException("The id of this record can't be altered."); }
     }
 
-    public ResponseDto createNews(NewsDto newsDto){
+    public ResponseDto createNews(RequestDto requestDto){
         try {
-            ModelValidatorUtils.validateAndThrow(newsDto);
+            ModelValidatorUtils.validateAndThrow(requestDto.getInputData());
 
-            News news = NewsMapper.INSTANCE.newsDtoToNews(newsDto);
+            News news = NewsMapper.INSTANCE.newsDtoToNews(requestDto.getInputData());
             news.setCreateDate(LocalDateTime.now());
             news.setLastUpdateDate(news.getCreateDate());
             newsDao.create(news);
+
             return ResponseDto
-                    .builder()
-                    .status("OK")
-                    .resultSet(getNewsById(news.getId()).getResultSet())
-                    .build();
+                .builder()
+                .status("OK")
+                .resultSet(
+                    getNewsById(
+                        RequestDto.builder().lookupId(
+                            news.getId()
+                        ).build()
+                    ).getResultSet()
+                )
+                .build();
 
         } catch(Exception e){
             return buildErrorResponse(e);
@@ -53,12 +68,41 @@ public class NewsService {
         }
     }
 
-    public ResponseDto getNewsById(Long id) {
+    public ResponseDto getNewsById(RequestDto requestDto) {
         try{
+            ResponseDto responseDto = ResponseDto
+                .builder()
+                .status("OK")
+                .resultSet(
+                    List.of(NewsMapper.INSTANCE.newsToNewsDto(
+                        newsDao.findById(requestDto.getLookupId())
+                    ))
+                )
+                .build();
+
+            if(Objects.isNull(responseDto.getResultSet().get(0).getId())){
+                throw new Exception(String.format("News with id %s does not exist.", requestDto.getLookupId()));
+            }
+            return responseDto;
+
+        } catch(Exception e){
+            return buildErrorResponse(e);
+        }
+    }
+
+    public ResponseDto updateNewsById(RequestDto requestDto) {
+        try{
+            ModelValidatorUtils.validateAndThrow(requestDto.getInputData());
+
+            News news = NewsMapper.INSTANCE.newsDtoToNews(requestDto.getInputData());
+            news.setLastUpdateDate(LocalDateTime.now());
+            newsDao.update(requestDto.getLookupId(), news);
             return ResponseDto
                 .builder()
                 .status("OK")
-                .resultSet(List.of(NewsMapper.INSTANCE.newsToNewsDto(newsDao.findById(id))))
+                .resultSet(
+                    List.of(NewsMapper.INSTANCE.newsToNewsDto(newsDao.findById(requestDto.getLookupId())))
+                )
                 .build();
 
         } catch(Exception e){
@@ -66,36 +110,24 @@ public class NewsService {
         }
     }
 
-    public ResponseDto updateNewsById(Long id, NewsDto newsDto) {
+    public ResponseDto removeNewsById( RequestDto requestDto ) {
         try{
-            //ModelValidatorUtils.validateAndThrow(newsDto);
-
-            News news = NewsMapper.INSTANCE.newsDtoToNews(newsDto);
-            newsDao.update(id, news);
-            return ResponseDto
-                .builder()
-                .status("OK")
-                .resultSet(List.of(NewsMapper.INSTANCE.newsToNewsDto(newsDao.findById(id))))
-                .build();
+            newsDao.deleteById(requestDto.getLookupId());
+            return ResponseDto.builder()
+                    .status("OK")
+                    .resultSet(null)
+                    .build();
 
         } catch(Exception e){
             return buildErrorResponse(e);
-        }
-    }
-    public boolean removeNewsById( Long id ) {
-        try{
-            return newsDao.deleteById( id );
-
-        } catch( Exception e ){
-            return false;
         }
     }
 
     public ResponseDto buildErrorResponse( Exception e ){
         return ResponseDto.builder()
-            .status( "Failed" )
+            .status("Failed")
             .errorList(
-                List.of(ErrorDto.builder().code( "0002" ).message( e.getMessage()).build() )
+                List.of(ErrorDto.builder().code("0002").message(e.getMessage()).build() )
             )
             .build();
     }

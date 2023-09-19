@@ -13,9 +13,13 @@ public interface NewsMapper {
 
     @Mapping( source = "newsContent", target = "content" )
     @Mapping(target = "id", constant = "-1L")
+    @Mapping(target = "lastUpdateDate", expression = "java(newsDto.getLastUpdateDate())")
+    @Mapping(target = "createDate", expression = "java(newsDto.getCreateDate())")
     News newsDtoToNews(NewsDto newsDto );
 
     @Mapping( source = "content", target = "newsContent" )
+    @Mapping(target = "lastUpdateDate", expression = "java(news.getLastUpdateDate())")
+    @Mapping(target = "createDate", expression = "java(news.getCreateDate())")
     NewsDto newsToNewsDto( News news );
 }
 

@@ -36,6 +36,7 @@ public class AuthorDao {
 
     public boolean deleteById(Long id) throws Exception{
         Predicate<ModelInterface> authorById = model -> model.getId().equals(id);
-        return dataSource.executeDeleteQuery(Author.class, authorById);
+        dataSource.executeDeleteQuery(Author.class, authorById);
+        return true;
     }
 }

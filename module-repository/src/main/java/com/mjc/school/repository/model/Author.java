@@ -23,7 +23,7 @@ public class Author implements ModelInterface, Serializable {
     String name;
 
     public Author(Long id){ id = -1L; }
-    public Author(){ generateId(); }
+    public Author(){}
 
     public Author(String name){
         this();

@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidatorContext;
 
 import java.util.Objects;
 
-public class ExistValidator implements ConstraintValidator<Exist, String> {
+public class ExistValidator implements ConstraintValidator<Exist, Long> {
     AuthorDao authorDao;
     @Override
     public void initialize(Exist constraintAnnotation) {
@@ -18,19 +18,18 @@ public class ExistValidator implements ConstraintValidator<Exist, String> {
     }
 
     @Override
-    public boolean isValid(String idString, ConstraintValidatorContext context) {
+    public boolean isValid(Long id, ConstraintValidatorContext context) {
         context.disableDefaultConstraintViolation();
         String fieldName = context.getDefaultConstraintMessageTemplate();
         String message = context.getDefaultConstraintMessageTemplate()
                 .replace("{fieldName}", fieldName)
-                .replace("{fieldValue}", idString);
+                .replace("{fieldValue}", id.toString());
 
         context.disableDefaultConstraintViolation();
         context.buildConstraintViolationWithTemplate(message)
                 .addConstraintViolation();
 
         try {
-            long id = Long.parseLong(idString);
             return id >= 0 && Objects.nonNull(authorDao.findById(id));
 
         } catch(Exception e){
