@@ -7,19 +7,24 @@ import com.mjc.school.common.utils.DateUtils;
 import com.mjc.school.repository.model.modelhelper.AutoIncrementIdGenerator;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class News implements ModelInterface, Serializable {
     @JsonIgnore
     @Serial
     private static final long serialVersionUID = 123456789L;
-
 
     @JsonIgnore
     private Long id;
@@ -34,37 +39,10 @@ public class News implements ModelInterface, Serializable {
     private LocalDateTime createDate;
 
     @NotNull(message = "Creation Date must be populated")
-    //@ISO8601DateTimeConstraint
     private LocalDateTime lastUpdateDate;
 
     @NotNull(message = "Creation Date must be populated")
     private Long authorId;
-
-
-
-
-    public News(){}
-
-    public News(String title, String content, LocalDateTime createDate, LocalDateTime lastUpdateDate, Long authorId){
-        this();
-        this.title = title;
-        this.content = content;
-        this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
-        this.authorId = authorId;
-    }
-
-    public News(Long id){
-        this.id = id;
-    }
-    public News(Long id, String title, String content, LocalDateTime createDate, LocalDateTime lastUpdateDate, Long authorId){
-        this(id);
-        this.title = title;
-        this.content = content;
-        this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
-        this.authorId = authorId;
-    }
 
     @Override
     @JsonProperty("id")

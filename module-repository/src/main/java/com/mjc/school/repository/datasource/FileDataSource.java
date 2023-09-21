@@ -1,41 +1,34 @@
 package com.mjc.school.repository.datasource;
 
-import com.mjc.school.common.utils.FileUtils;
 import com.mjc.school.common.utils.JsonUtils;
 import com.mjc.school.common.utils.PropertyLoader;
 import com.mjc.school.repository.model.Author;
 import com.mjc.school.repository.model.ModelInterface;
 import com.mjc.school.repository.model.News;
-import com.mjc.school.repository.model.modelhelper.AutoIncrementIdGenerator;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
-public class JsonFileDataSource implements DataSourceInterface{
-    private PropertyLoader propertyLoader;
-    private volatile static JsonFileDataSource instance;
+public class FileDataSource implements DataSourceInterface{
+    private volatile static FileDataSource instance;
+    DataManager dataManager = new ListDataFileManager();
 
     String authorFilePath;
     String newsFilePath;
 
 
 
-    private JsonFileDataSource(){
+    private FileDataSource(){
         try {
-            propertyLoader = PropertyLoader.getInstance();
-            String testVariant = isTest()? ".test" : "";
-            authorFilePath = propertyLoader.getProperty("application.news.file.path" + testVariant);
-            newsFilePath = propertyLoader.getProperty("application.author.file.path"  + testVariant);
-
-            newsTable = loadModelData(News.class);
-            authorTable = loadModelData(Author.class);
+            PropertyLoader propertyLoader = PropertyLoader.getInstance();
+            newsTable = dataManager.load(News.class);
+            authorTable = dataManager.load(Author.class);
 
         } catch (Exception e){
             System.out.println(e.getMessage());
@@ -43,10 +36,10 @@ public class JsonFileDataSource implements DataSourceInterface{
     }
 
 
-    public static JsonFileDataSource getInstance() throws Exception{
-        synchronized (JsonFileDataSource.class){
+    public static FileDataSource getInstance() throws Exception{
+        synchronized (FileDataSource.class){
             if (Objects.isNull(instance)){
-                instance = new JsonFileDataSource();
+                instance = new FileDataSource();
             }
             return instance;
         }
@@ -59,12 +52,7 @@ public class JsonFileDataSource implements DataSourceInterface{
     private String getModelFilePath(Class<? extends ModelInterface> tableType) throws IOException {
         return ((Author.class.isAssignableFrom(tableType))? authorFilePath : newsFilePath);
     }
-    private boolean isTest(){
-        String stackTrace = Arrays.stream(Thread.currentThread().getStackTrace())
-                .map(StackTraceElement::getClassName)
-                .collect(Collectors.joining(",\n"));
-        return stackTrace.toLowerCase().contains("test");
-    }
+
 
     private List<ModelInterface> setFromTable(Class<? extends ModelInterface> tableType){
         return (Author.class.isAssignableFrom(tableType))? authorTable : newsTable;
@@ -75,23 +63,8 @@ public class JsonFileDataSource implements DataSourceInterface{
         else { newsTable = modelTable; }
     }
 
-    private List<ModelInterface> loadModelData(Class<? extends ModelInterface> clazz) throws Exception{
-        AutoIncrementIdGenerator.reset(clazz);
-        String json = FileUtils.readFile(getModelFilePath(clazz));
-        json = json.replaceAll("/n", "");
-        List<ModelInterface> data = JsonUtils.deserializeList(json, clazz)
-                .stream().map(clazz::cast).collect(Collectors.toList());
-        data.forEach(model -> model.generateId());
-        return data;
-    }
 
-    public void persistModelData(Class<? extends ModelInterface> clazz, List<ModelInterface> modelTable) throws Exception{
-            String json = JsonUtils.serialize(
-                    modelTable.stream().map(clazz::cast).toList()
-            );
-            FileUtils.writeFile(getModelFilePath(clazz), json);
-    }
-
+    @Override
     public List<ModelInterface> executeSelectQuery(Class<? extends ModelInterface> clazz, Predicate<ModelInterface> predicate) throws Exception{
         List<ModelInterface> modelTable = setFromTable(clazz);
         return (Objects.isNull(predicate)) ?
@@ -101,6 +74,7 @@ public class JsonFileDataSource implements DataSourceInterface{
             .toList();
     }
 
+    @Override
     public void executeDeleteQuery(Class<? extends ModelInterface> clazz, Predicate<ModelInterface> predicate) throws Exception {
         List<ModelInterface> modelTable = setFromTable(clazz);
 
@@ -120,11 +94,12 @@ public class JsonFileDataSource implements DataSourceInterface{
         model.generateId();
         if(model instanceof News){
             News news = ((News) model);
-            if(Objects.isNull(news.getCreateDate())){ news.setCreateDate(LocalDateTime.now()); }
-            if(Objects.isNull(news.getCreateDate())){ news.setLastUpdateDate(news.getCreateDate()); }
+            if(Objects.isNull(news.getCreateDate())){
+                news.setCreateDate(LocalDateTime.now());
+                news.setLastUpdateDate(news.getCreateDate());
+            }
         }
-        modelTable.add(model);
-        //System.out.println(modelTable);
+        modelTable.add((ModelInterface) model);
     }
 
     public void executeUpdateQuery(Class<? extends ModelInterface> clazz, ModelInterface model, Predicate<ModelInterface> predicate) throws Exception{

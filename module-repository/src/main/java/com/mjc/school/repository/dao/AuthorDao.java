@@ -1,7 +1,7 @@
 package com.mjc.school.repository.dao;
 
 import com.mjc.school.repository.datasource.DataSourceInterface;
-import com.mjc.school.repository.datasource.JsonFileDataSource;
+import com.mjc.school.repository.datasource.FileDataSource;
 import com.mjc.school.repository.model.Author;
 import com.mjc.school.repository.model.ModelInterface;
 
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class AuthorDao implements ModelDaoInterface{
 
-    private final DataSourceInterface dataSource = JsonFileDataSource.getInstance();
+    private final DataSourceInterface dataSource = FileDataSource.getInstance();
     public AuthorDao() throws Exception{}
 
     @Override

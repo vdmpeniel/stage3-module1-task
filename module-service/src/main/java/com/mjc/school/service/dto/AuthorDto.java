@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 public class AuthorDto implements ModelDtoInterface {
+
     private Long id;
 
     @Size(min=5, max=15, message = "Name must be between 5 and 15 characters long")

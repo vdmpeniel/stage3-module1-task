@@ -2,8 +2,6 @@ package com.mjc.school.common.utils;
 
 import com.mjc.school.common.utils.modelvalidatorutils.ModelValidatorUtils;
 import com.mjc.school.repository.model.News;
-import com.mjc.school.repository.model.modelfactory.ModelFactory;
-import com.mjc.school.repository.model.modelfactory.NewsFactory;
 import jakarta.validation.ConstraintViolation;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ModelValidatorUtilsTest {
     private News news;
-    private final ModelFactory newsFactory = new NewsFactory();
 
     @BeforeEach
     void setUp() {

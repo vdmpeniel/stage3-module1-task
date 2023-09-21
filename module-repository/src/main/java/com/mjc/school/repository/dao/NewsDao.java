@@ -1,7 +1,7 @@
 package com.mjc.school.repository.dao;
 
 import com.mjc.school.repository.datasource.DataSourceInterface;
-import com.mjc.school.repository.datasource.JsonFileDataSource;
+import com.mjc.school.repository.datasource.FileDataSource;
 import com.mjc.school.repository.model.News;
 import com.mjc.school.repository.model.ModelInterface;
 
@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class NewsDao implements ModelDaoInterface{
-    private final DataSourceInterface dataSource = JsonFileDataSource.getInstance();
+    private final DataSourceInterface dataSource = FileDataSource.getInstance();
     public NewsDao() throws Exception{}
 
     @Override

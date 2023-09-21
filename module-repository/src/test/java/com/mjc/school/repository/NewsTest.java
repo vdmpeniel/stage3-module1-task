@@ -1,8 +1,6 @@
 package com.mjc.school.repository;
 
 import com.mjc.school.repository.model.News;
-import com.mjc.school.repository.model.modelfactory.ModelFactory;
-import com.mjc.school.repository.model.modelfactory.NewsFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +10,6 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 class NewsTest {
-    ModelFactory newsFactory = new NewsFactory();
 
     @BeforeEach
     void setUp() {
@@ -25,14 +22,14 @@ class NewsTest {
     @Test
     void setId() {
         assertThrows(UnsupportedOperationException.class, () -> {
-            News news = newsFactory.create();
+            News news = new News();
             news.setId(1L);
         });
     }
 
     @Test
     void getId() {
-        News news = newsFactory.create(
+        News news = new News(
             "Some Title",
             "Some Content",
             LocalDateTime.now(),
@@ -46,7 +43,7 @@ class NewsTest {
     @Test
     void getTittle() {
         String tittle = "hello there!";
-        News news = newsFactory.create();
+        News news = new News();
         news.setTitle(tittle);
         assertEquals(tittle, news.getTitle());
     }
@@ -54,7 +51,7 @@ class NewsTest {
     @Test
     void getContent() {
         String content = "hello there! - Some Content there.";
-        News news = newsFactory.create();
+        News news = new News();
         news.setContent(content);
         assertEquals(content, news.getContent());
     }
@@ -62,7 +59,7 @@ class NewsTest {
     @Test
     void getCreateDate() {
         LocalDateTime now = LocalDateTime.now();
-        News news = newsFactory.create();
+        News news = new News();
         news.setCreateDate(now);
         assertEquals(now, news.getCreateDate());
     }
@@ -70,7 +67,7 @@ class NewsTest {
     @Test
     void getLastUpdateDate() {
         LocalDateTime now = LocalDateTime.now();
-        News news = newsFactory.create();
+        News news = new News();
         news.setLastUpdateDate(now);
         assertEquals(now, news.getLastUpdateDate());
     }
@@ -78,7 +75,7 @@ class NewsTest {
     @Test
     void getAuthorId() {
         Long authorId = 1_000L;
-        News news = newsFactory.create();
+        News news = new News();
         news.setAuthorId(authorId);
         assertEquals(authorId, news.getAuthorId());
     }
@@ -86,35 +83,35 @@ class NewsTest {
     @Test
     void setTittle() {
         String tittle = "hello there!";
-        News news = newsFactory.create();
+        News news = new News();
         news.setTitle(tittle);
     }
 
     @Test
     void setContent() {
         String content = "hello there! - Some Content there.";
-        News news = newsFactory.create();
+        News news = new News();
         news.setContent(content);
     }
 
     @Test
     void setCreateDate() {
         LocalDateTime now = LocalDateTime.now();
-        News news = newsFactory.create();
+        News news = new News();
         news.setCreateDate(now);
     }
 
     @Test
     void setLastUpdateDate() {
         LocalDateTime now = LocalDateTime.now();
-        News news = newsFactory.create();
+        News news = new News();
         news.setLastUpdateDate(now);
     }
 
     @Test
     void setAuthorId() {
         Long authorId = 1_000L;
-        News news = newsFactory.create();
+        News news = new News();
         news.setAuthorId(authorId);
     }
 }

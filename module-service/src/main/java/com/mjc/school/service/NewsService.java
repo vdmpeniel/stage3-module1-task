@@ -1,6 +1,8 @@
 package com.mjc.school.service;
 
 import com.mjc.school.common.exceptions.IllegalFieldValueException;
+import com.mjc.school.common.utils.JsonUtils;
+import com.mjc.school.common.utils.PropertyLoader;
 import com.mjc.school.common.utils.modelvalidatorutils.ModelValidatorUtils;
 import com.mjc.school.repository.dao.ModelDaoInterface;
 import com.mjc.school.repository.dao.NewsDao;
@@ -10,6 +12,7 @@ import com.mjc.school.service.dto.*;
 import com.mjc.school.service.mapper.NewsMapper;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -85,7 +88,7 @@ public class NewsService implements ServiceInterface{
                 .status("OK")
                 .resultSet(
                     List.of(NewsMapper.INSTANCE.newsToNewsDto(
-                                    (News) newsDao.findById(requestDto.getLookupId())
+                        (News) newsDao.findById(requestDto.getLookupId())
                     ))
                 )
                 .build();
@@ -133,6 +136,22 @@ public class NewsService implements ServiceInterface{
         } catch(Exception e){
             return buildErrorResponse(e);
         }
+    }
+
+    private void validateInput(RequestDto requestDto)throws Exception{
+        if(Objects.nonNull(requestDto.getLookupId())){
+            if(requestDto.getLookupId() < 0){
+                PropertyLoader propertyLoader = PropertyLoader.getInstance();
+                String json = propertyLoader.getProperty("validation.error.news.newsid.min");
+                json = json.replace("{fieldValue}", requestDto.getLookupId().toString());
+                LinkedHashMap<String, String> errorMap = (LinkedHashMap<String, String>) JsonUtils.deserialize(json, Object.class);
+                throw new IllegalFieldValueException(errorMap.get("message"), errorMap.get("code"));
+            }
+        }
+        if(Objects.nonNull(requestDto.getInputData())) {
+            ModelValidatorUtils.runValidation(requestDto.getInputData());
+        }
+
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.mjc.school.service;
 
-import com.mjc.school.repository.datasource.JsonFileDataSource;
+import com.mjc.school.repository.datasource.FileDataSource;
 import com.mjc.school.service.dto.NewsDto;
 import com.mjc.school.service.dto.RequestDto;
 import com.mjc.school.service.dto.ResponseDto;
@@ -16,7 +16,7 @@ class NewsServiceTest {
     @BeforeEach
     void setUp() {
         try {
-            JsonFileDataSource.getInstance();
+            FileDataSource.getInstance();
              service = new NewsService();
 
         } catch(Exception e){

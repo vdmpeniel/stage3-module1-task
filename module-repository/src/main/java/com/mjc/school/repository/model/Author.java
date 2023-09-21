@@ -5,12 +5,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mjc.school.repository.model.modelhelper.AutoIncrementIdGenerator;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Author implements ModelInterface, Serializable {
     @JsonIgnore
@@ -22,13 +28,6 @@ public class Author implements ModelInterface, Serializable {
     @Size(min=5, max=15, message = "Name must be between 5 and 15 characters long")
     String name;
 
-    public Author(Long id){ id = -1L; }
-    public Author(){}
-
-    public Author(String name){
-        this();
-        this.name = name;
-    }
 
     @JsonProperty("id")
     public synchronized void generateId() {
