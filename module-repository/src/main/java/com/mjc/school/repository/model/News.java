@@ -21,8 +21,6 @@ public class News implements ModelInterface, Serializable {
     private static final long serialVersionUID = 123456789L;
 
 
-
-
     @JsonIgnore
     private Long id;
 

@@ -1,6 +1,6 @@
 package com.mjc.school.service;
 
-import com.mjc.school.repository.datasource.FileDataSource;
+import com.mjc.school.repository.datasource.JsonFileDataSource;
 import com.mjc.school.service.dto.NewsDto;
 import com.mjc.school.service.dto.RequestDto;
 import com.mjc.school.service.dto.ResponseDto;
@@ -16,7 +16,7 @@ class NewsServiceTest {
     @BeforeEach
     void setUp() {
         try {
-            FileDataSource.getInstance();
+            JsonFileDataSource.getInstance();
              service = new NewsService();
 
         } catch(Exception e){
@@ -35,7 +35,7 @@ class NewsServiceTest {
     @Test
     void createNews() {
         try {
-            ResponseDto responseDto = service.createNews(
+            ResponseDto responseDto = service.create(
                 RequestDto.builder()
                     .inputData(
                         NewsDto.builder()
@@ -57,14 +57,14 @@ class NewsServiceTest {
 
     @Test
     void getAllNews() {
-        ResponseDto responseDto = service.getAllNews();
+        ResponseDto responseDto = service.getAll();
         System.out.println(responseDto);
         assertFalse(responseDto.getResultSet().isEmpty());
     }
 
     @Test
     void getNewsById() {
-        ResponseDto responseDto = service.getNewsById(
+        ResponseDto responseDto = service.getById(
                RequestDto.builder()
                    .lookupId(1L)
                    .build()

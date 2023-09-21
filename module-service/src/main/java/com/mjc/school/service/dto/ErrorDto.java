@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ErrorDto {
+public class ErrorDto implements ModelDtoInterface {
     private String code;
     private String message;
 

@@ -1,16 +1,16 @@
-package com.mjc.school.common.utils;
+package com.mjc.school.common.utils.modelvalidatorutils;
 
 
 import com.mjc.school.common.exceptions.IllegalFieldValueException;
+import com.mjc.school.common.utils.JsonUtils;
+import com.mjc.school.common.utils.PropertyLoader;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ModelValidatorUtils {
@@ -28,6 +28,8 @@ public class ModelValidatorUtils {
 
     public static <T> Set<ConstraintViolation<T>> validate(T obj) {
         Validator validator;
+        //CustomValidatorFactory.createValidatorFactory()
+
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
             validator = factory.getValidator();
         }
@@ -49,13 +51,30 @@ public class ModelValidatorUtils {
             .collect(Collectors.toList());
     }
 
-    public static <T> void validateAndThrow(T obj) throws Exception{
+    public static <T> List<Object> runValidation(T obj) throws Exception{
         Set<ConstraintViolation<T>> violations = validate(obj);
         if (!violations.isEmpty()) {
-            throw new IllegalFieldValueException(
-                "An IllegalFieldValue error occurred: " + JsonUtils.serialize(createViolationMap(violations)),
-                10001
-            );
+            List<Object> exceptionList = violations.stream()
+                    .map(violation -> {
+                        try {
+                            String json = propertyLoader.getProperty(violation.getMessage());
+                            json = json.replace("{fieldValue}", violation.getInvalidValue().toString());
+                            return JsonUtils.deserialize(json, Object.class);
+
+                        } catch(Exception e){
+                            LinkedHashMap<String, String> errorMap = new LinkedHashMap<>();
+                            errorMap.put("code", "0000100");
+                            errorMap.put("priority", "-1");
+                            errorMap.put("message", "Error running serialization: " + e.getMessage());
+                            return errorMap;
+                        }
+                    })
+                    .sorted(Comparator.comparing( errorMap -> Integer.parseInt( ((LinkedHashMap<String, String>) errorMap).get("priority"))))
+                    .toList();
+
+            LinkedHashMap<String, String> priorityError = (LinkedHashMap<String, String>) exceptionList.get(0);
+            throw new IllegalFieldValueException(priorityError.get("message"), priorityError.get("code"));
         }
+        return null;
     }
 }

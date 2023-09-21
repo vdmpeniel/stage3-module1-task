@@ -1,7 +1,7 @@
 package com.mjc.school.repository;
 
 import com.mjc.school.common.exceptions.IllegalFieldValueException;
-import com.mjc.school.common.utils.ModelValidatorUtils;
+import com.mjc.school.common.utils.modelvalidatorutils.ModelValidatorUtils;
 import com.mjc.school.repository.model.News;
 import com.mjc.school.repository.model.modelfactory.ModelFactory;
 import com.mjc.school.repository.model.modelfactory.NewsFactory;
@@ -29,7 +29,7 @@ public class NewsConstraintsTest {
         assertThrows(IllegalFieldValueException.class, () -> {
             News news = newsFactory.create();
             news.setTitle(".");
-            ModelValidatorUtils.validateAndThrow(news);
+            ModelValidatorUtils.runValidation(news);
         });
     }
 
@@ -38,7 +38,7 @@ public class NewsConstraintsTest {
         assertThrows(IllegalFieldValueException.class, () -> {
             News news = newsFactory.create();
             news.setContent(".");
-            ModelValidatorUtils.validateAndThrow(news);
+            ModelValidatorUtils.runValidation(news);
         });
     }
 
@@ -49,7 +49,7 @@ public class NewsConstraintsTest {
                 news.setContent(".");
                 news.setLastUpdateDate(LocalDateTime.now());
 
-            ModelValidatorUtils.validateAndThrow(news);
+            ModelValidatorUtils.runValidation(news);
         });
     }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
-public class ApplicationViewController {
+public class ApplicationViewController implements ViewControllerInterface{
     private volatile static ApplicationViewController instance;
 
     private ApplicationViewController() throws Exception{}
@@ -42,6 +42,10 @@ public class ApplicationViewController {
         }};
         operations.get(index).run();
     }
+    public void getAllNews(){
+        view.renderOperationTittle();
+        view.renderResponse(newsService.getAll());
+    }
 
     private int validateIndexInput(String input){
         try {
@@ -54,18 +58,15 @@ public class ApplicationViewController {
         }
     }
 
-    private void exit(){
+    public void exit(){
         doNextLoop = false;
     }
 
-    public void getAllNews(){
-        view.renderOperationTittle();
-        view.renderResponse(newsService.getAllNews());
-    }
 
-    private void getNewsById(){
+
+    public void getNewsById(){
         view.renderOperationTittle();
-        view.renderResponse(newsService.getNewsById(
+        view.renderResponse(newsService.getById(
             RequestDto.builder().lookupId(
                     (view.renderNewsIdInputForm())
             ).build())
@@ -78,17 +79,17 @@ public class ApplicationViewController {
         newsDto.setId(id);
         return newsDto;
     };
-    private void createNews(){
+    public void createNews(){
         view.renderOperationTittle();
-        view.renderResponse(newsService.createNews(
+        view.renderResponse(newsService.create(
             RequestDto.builder().inputData(view.renderNewsInputForm()).build()
         ));
     }
 
-    private void updateNews(){
+    public void updateNews(){
         view.renderOperationTittle();
         view.renderResponse(
-            newsService.updateNewsById(
+            newsService.updateById(
                 RequestDto.builder()
                     .lookupId(view.renderNewsIdInputForm())
                     .inputData(newsDtoWithIdSupplier.apply(-1L))
@@ -97,14 +98,14 @@ public class ApplicationViewController {
         );
     }
 
-    private void removeNewsById(){
+    public void removeNewsById(){
         view.renderOperationTittle();
-        view.renderDeleteResponse(newsService.removeNewsById(
+        view.renderDeleteResponse(newsService.removeById(
             RequestDto.builder().lookupId(view.renderNewsIdInputForm()).build()
         ));
     }
 
-    private void defaultBehavior(){
+    public void defaultBehavior(){
         view.renderMenuDefaultOption();
     }
 }

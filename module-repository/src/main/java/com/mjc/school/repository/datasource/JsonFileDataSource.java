@@ -18,16 +18,16 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
-public class FileDataSource {
+public class JsonFileDataSource implements DataSourceInterface{
     private PropertyLoader propertyLoader;
-    private volatile static FileDataSource instance;
+    private volatile static JsonFileDataSource instance;
 
     String authorFilePath;
     String newsFilePath;
 
 
 
-    private FileDataSource(){
+    private JsonFileDataSource(){
         try {
             propertyLoader = PropertyLoader.getInstance();
             String testVariant = isTest()? ".test" : "";
@@ -43,10 +43,10 @@ public class FileDataSource {
     }
 
 
-    public static FileDataSource getInstance() throws Exception{
-        synchronized (FileDataSource.class){
+    public static JsonFileDataSource getInstance() throws Exception{
+        synchronized (JsonFileDataSource.class){
             if (Objects.isNull(instance)){
-                instance = new FileDataSource();
+                instance = new JsonFileDataSource();
             }
             return instance;
         }

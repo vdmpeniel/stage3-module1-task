@@ -6,7 +6,7 @@ import com.mjc.school.service.dto.ResponseDto;
 import java.util.Objects;
 import java.util.Scanner;
 
-class ApplicationView {
+class ApplicationView implements ViewInterface{
 
     private volatile static ApplicationView instance;
 
@@ -33,7 +33,7 @@ class ApplicationView {
 
     public void renderResponse(ResponseDto responseDto){
         if("OK".equals(responseDto.getStatus()) && Objects.nonNull(responseDto.getResultSet())) {
-            responseDto.getResultSet().stream().forEach(this::renderSingleNews);
+            responseDto.getResultSet().stream().map(model -> (NewsDto) model).forEach(this::renderSingleNews);
 
         } else {
             renderErrors(responseDto);
@@ -68,10 +68,7 @@ class ApplicationView {
     }
 
     public void renderErrors(ResponseDto responseDto){
-        responseDto
-            .getErrorList()
-            .stream()
-            .forEach(System.out::println);
+        System.out.println(responseDto.getError());
     }
 
     private String getInput(String message){

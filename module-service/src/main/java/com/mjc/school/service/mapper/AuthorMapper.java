@@ -12,8 +12,8 @@ public interface AuthorMapper {
 
     @Mapping( source = "fullName", target = "name" )
     @Mapping(target = "id", constant = "-1L")
-    Author authorDtoToAuthor( AuthorDto authorDto );
+    Author authorDtoToAuthor(AuthorDto authorDto);
 
     @Mapping( source = "name", target = "fullName" )
-    AuthorDto authorToAuthorDto( Author author );
+    AuthorDto authorToAuthorDto(Author author);
 }

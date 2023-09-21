@@ -1,48 +1,127 @@
 package com.mjc.school.service;
 
-import com.mjc.school.common.utils.ModelValidatorUtils;
+import com.mjc.school.common.utils.modelvalidatorutils.ModelValidatorUtils;
 import com.mjc.school.repository.dao.AuthorDao;
+import com.mjc.school.repository.dao.ModelDaoInterface;
 import com.mjc.school.repository.model.Author;
-import com.mjc.school.repository.model.News;
+import com.mjc.school.repository.model.ModelInterface;
 import com.mjc.school.service.dto.AuthorDto;
+import com.mjc.school.service.dto.ModelDtoInterface;
+import com.mjc.school.service.dto.RequestDto;
+import com.mjc.school.service.dto.ResponseDto;
 import com.mjc.school.service.mapper.AuthorMapper;
 
 import java.util.List;
+import java.util.Objects;
 
-public class AuthorService {
-    AuthorDao authorDao = new AuthorDao();
+public class AuthorService implements ServiceInterface{
+    ModelDaoInterface authorDao = new AuthorDao();
 
     public AuthorService() throws Exception{}
 
-    public void resetId(News news, Long id) throws UnsupportedOperationException{
-        if (id.equals(-1L)) { news.setId(id); }
+
+    @Override
+    public void setModelId(ModelInterface author, Long id) throws UnsupportedOperationException {
+        if (id.equals(-1L)) { author.setId(id); }
         else { throw new UnsupportedOperationException("The id of this record can't be altered."); }
     }
 
-    public AuthorDto createAuthor(AuthorDto authorDto) throws Exception {
-        ModelValidatorUtils.validateAndThrow(authorDto);
+    @Override
+    public ResponseDto create(RequestDto requestDto) {
+        try {
+            ModelValidatorUtils.runValidation(requestDto.getInputData());
 
-        Author author = AuthorMapper.INSTANCE.authorDtoToAuthor(authorDto);
-        authorDao.create(author);
-        return getAuthorById(author.getId());
+            ModelInterface author = AuthorMapper.INSTANCE.authorDtoToAuthor((AuthorDto) requestDto.getInputData());
+            authorDao.create((Author) author);
+            return ResponseDto
+                    .builder()
+                    .status("OK")
+                    .resultSet(
+                            getById(
+                                    RequestDto.builder().lookupId(
+                                            author.getId()
+                                    ).build()
+                            ).getResultSet()
+                    )
+                    .build();
+
+        } catch(Exception e){
+            return buildErrorResponse(e);
+        }
     }
 
-    public List<AuthorDto> getAllAuthor() throws Exception {
-        return authorDao.getAll().stream().map(AuthorMapper.INSTANCE::authorToAuthorDto).toList();
+
+    @Override
+    public ResponseDto getAll() {
+        try{
+            return ResponseDto
+                    .builder()
+                    .status("OK")
+                    .resultSet(
+                        authorDao.getAll()
+                            .stream()
+                            .map(model -> AuthorMapper.INSTANCE.authorToAuthorDto((Author) model))
+                            .map(model -> (ModelDtoInterface) model)
+                            .toList()
+                    )
+                    .build();
+
+        } catch(Exception e){
+            return buildErrorResponse(e);
+        }
     }
 
-    public AuthorDto getAuthorById(Long id) throws Exception {
-        return AuthorMapper.INSTANCE.authorToAuthorDto(authorDao.findById(id));
+    @Override
+    public ResponseDto getById(RequestDto requestDto) {
+        try{
+            ResponseDto responseDto = ResponseDto
+                    .builder()
+                    .status("OK")
+                    .resultSet(
+                            List.of(AuthorMapper.INSTANCE.authorToAuthorDto(
+                                            (Author) authorDao.findById(requestDto.getLookupId())
+                            ))
+                    )
+                    .build();
+
+            if(Objects.isNull(((AuthorDto) responseDto.getResultSet().get(0)).getId())){
+                throw new Exception(String.format("News with id %s does not exist.", requestDto.getLookupId()));
+            }
+            return responseDto;
+
+        } catch(Exception e){
+            return buildErrorResponse(e);
+        }
     }
 
-    public AuthorDto updateAuthorById(Long id, AuthorDto authorDto) throws Exception {
-        ModelValidatorUtils.validateAndThrow(authorDto);
+    @Override
+    public ResponseDto updateById(RequestDto requestDto) {
+        return null;
+    }
+
+    @Override
+    public ResponseDto removeById(RequestDto requestDto) {
+        return null;
+    }
+
+    @Override
+    public ResponseDto buildErrorResponse(Exception e) {
+        return null;
+    }
+
+    public AuthorDto getById(Long id) throws Exception {
+        return AuthorMapper.INSTANCE.authorToAuthorDto((Author) authorDao.findById(id));
+    }
+
+
+    public AuthorDto updateById(Long id, AuthorDto authorDto) throws Exception {
+        ModelValidatorUtils.runValidation(authorDto);
 
         Author author = AuthorMapper.INSTANCE.authorDtoToAuthor(authorDto);
         authorDao.update(id, author);
-        return AuthorMapper.INSTANCE.authorToAuthorDto(authorDao.findById(id));
+        return AuthorMapper.INSTANCE.authorToAuthorDto((Author) authorDao.findById(id));
     }
-    public boolean removeAuthorById(Long id) throws Exception {
-        return authorDao.deleteById(id);
+    public boolean removeById(Long id) throws Exception {
+        return authorDao.delete(id);
     }
 }

@@ -9,12 +9,12 @@ public class AutoIncrementIdGenerator{
     private AutoIncrementIdGenerator(){}
 
     public synchronized static void reset(Class<?> clazz){
-        nextIdMap.put(clazz, 0L);
+        nextIdMap.put(clazz, 1L);
     }
 
     public synchronized static long generateId(Class<?> clazz) {
         if (!nextIdMap.containsKey(clazz)) {
-            nextIdMap.put(clazz, 0L);
+            nextIdMap.put(clazz, 1L);
         }
         Long currentValue = nextIdMap.get(clazz);
         nextIdMap.put(clazz, nextIdMap.get(clazz) + 1);

@@ -6,7 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RequestDto {
+public class RequestDto implements ModelDtoInterface {
     private Long lookupId;
-    private NewsDto inputData;
+    private ModelDtoInterface inputData;
 }

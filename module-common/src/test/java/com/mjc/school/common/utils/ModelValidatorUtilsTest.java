@@ -1,5 +1,6 @@
 package com.mjc.school.common.utils;
 
+import com.mjc.school.common.utils.modelvalidatorutils.ModelValidatorUtils;
 import com.mjc.school.repository.model.News;
 import com.mjc.school.repository.model.modelfactory.ModelFactory;
 import com.mjc.school.repository.model.modelfactory.NewsFactory;
@@ -20,7 +21,7 @@ class ModelValidatorUtilsTest {
 
     @BeforeEach
     void setUp() {
-        news = newsFactory.create(
+        news = new News(
             ".",
             ".",
             LocalDateTime.now(),

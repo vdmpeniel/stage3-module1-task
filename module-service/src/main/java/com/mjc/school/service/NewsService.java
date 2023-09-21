@@ -1,19 +1,20 @@
 package com.mjc.school.service;
 
-import com.mjc.school.common.utils.ModelValidatorUtils;
+import com.mjc.school.common.exceptions.IllegalFieldValueException;
+import com.mjc.school.common.utils.modelvalidatorutils.ModelValidatorUtils;
+import com.mjc.school.repository.dao.ModelDaoInterface;
 import com.mjc.school.repository.dao.NewsDao;
+import com.mjc.school.repository.model.ModelInterface;
 import com.mjc.school.repository.model.News;
-import com.mjc.school.service.dto.ErrorDto;
-import com.mjc.school.service.dto.RequestDto;
-import com.mjc.school.service.dto.ResponseDto;
+import com.mjc.school.service.dto.*;
 import com.mjc.school.service.mapper.NewsMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-public class NewsService {
-    NewsDao newsDao;
+public class NewsService implements ServiceInterface{
+    ModelDaoInterface newsDao;
 
     public NewsService(){
         try {
@@ -24,16 +25,18 @@ public class NewsService {
         }
     }
 
-    public void setModelId(News news, Long id) throws UnsupportedOperationException{
+    @Override
+    public void setModelId(ModelInterface news, Long id) throws UnsupportedOperationException{
         if (id.equals(-1L)) { news.setId(id); }
         else { throw new UnsupportedOperationException("The id of this record can't be altered."); }
     }
 
-    public ResponseDto createNews(RequestDto requestDto){
+    @Override
+    public ResponseDto create(RequestDto requestDto){
         try {
-            ModelValidatorUtils.validateAndThrow(requestDto.getInputData());
+            ModelValidatorUtils.runValidation(requestDto.getInputData());
 
-            News news = NewsMapper.INSTANCE.newsDtoToNews(requestDto.getInputData());
+            News news = NewsMapper.INSTANCE.newsDtoToNews((NewsDto) requestDto.getInputData());
             news.setCreateDate(LocalDateTime.now());
             news.setLastUpdateDate(news.getCreateDate());
             newsDao.create(news);
@@ -42,7 +45,7 @@ public class NewsService {
                 .builder()
                 .status("OK")
                 .resultSet(
-                    getNewsById(
+                    getById(
                         RequestDto.builder().lookupId(
                             news.getId()
                         ).build()
@@ -55,12 +58,18 @@ public class NewsService {
         }
     }
 
-    public ResponseDto getAllNews() {
+    @Override
+    public ResponseDto getAll() {
         try{
             return ResponseDto
                 .builder()
                 .status("OK")
-                .resultSet(newsDao.getAll().stream().map(NewsMapper.INSTANCE::newsToNewsDto).toList())
+                .resultSet(
+                        newsDao.getAll()
+                                .stream()
+                                .map(model -> NewsMapper.INSTANCE.newsToNewsDto((News) model))
+                                .map(model -> (ModelDtoInterface) model)
+                                .toList())
                 .build();
 
         } catch(Exception e){
@@ -68,19 +77,20 @@ public class NewsService {
         }
     }
 
-    public ResponseDto getNewsById(RequestDto requestDto) {
+    @Override
+    public ResponseDto getById(RequestDto requestDto) {
         try{
             ResponseDto responseDto = ResponseDto
                 .builder()
                 .status("OK")
                 .resultSet(
                     List.of(NewsMapper.INSTANCE.newsToNewsDto(
-                        newsDao.findById(requestDto.getLookupId())
+                                    (News) newsDao.findById(requestDto.getLookupId())
                     ))
                 )
                 .build();
 
-            if(Objects.isNull(responseDto.getResultSet().get(0).getId())){
+            if(Objects.isNull(((NewsDto) responseDto.getResultSet().get(0)).getId())){
                 throw new Exception(String.format("News with id %s does not exist.", requestDto.getLookupId()));
             }
             return responseDto;
@@ -90,18 +100,19 @@ public class NewsService {
         }
     }
 
-    public ResponseDto updateNewsById(RequestDto requestDto) {
+    @Override
+    public ResponseDto updateById(RequestDto requestDto) {
         try{
-            ModelValidatorUtils.validateAndThrow(requestDto.getInputData());
+            ModelValidatorUtils.runValidation(requestDto.getInputData());
 
-            News news = NewsMapper.INSTANCE.newsDtoToNews(requestDto.getInputData());
+            News news = NewsMapper.INSTANCE.newsDtoToNews((NewsDto) requestDto.getInputData());
             news.setLastUpdateDate(LocalDateTime.now());
             newsDao.update(requestDto.getLookupId(), news);
             return ResponseDto
                 .builder()
                 .status("OK")
                 .resultSet(
-                    List.of(NewsMapper.INSTANCE.newsToNewsDto(newsDao.findById(requestDto.getLookupId())))
+                    List.of(NewsMapper.INSTANCE.newsToNewsDto((News) newsDao.findById(requestDto.getLookupId())))
                 )
                 .build();
 
@@ -110,9 +121,10 @@ public class NewsService {
         }
     }
 
-    public ResponseDto removeNewsById( RequestDto requestDto ) {
+    @Override
+    public ResponseDto removeById(RequestDto requestDto ) {
         try{
-            newsDao.deleteById(requestDto.getLookupId());
+            newsDao.delete(requestDto.getLookupId());
             return ResponseDto.builder()
                     .status("OK")
                     .resultSet(null)
@@ -123,12 +135,24 @@ public class NewsService {
         }
     }
 
-    public ResponseDto buildErrorResponse( Exception e ){
-        return ResponseDto.builder()
-            .status("Failed")
-            .errorList(
-                List.of(ErrorDto.builder().code("0002").message(e.getMessage()).build() )
-            )
-            .build();
+    @Override
+    public ResponseDto buildErrorResponse(Exception e) {
+        if (e instanceof IllegalFieldValueException) {
+            IllegalFieldValueException ifve = (IllegalFieldValueException) e;
+            return ResponseDto.builder()
+                .status("Failed")
+                .error(
+                        ErrorDto.builder().code(ifve.getErrorCode()).message(ifve.getMessage()).build()
+                )
+                .build();
+
+        } else {
+            return ResponseDto.builder()
+                .status("Failed")
+                .error(
+                        ErrorDto.builder().code("0000123").message(e.getMessage()).build()
+                )
+                .build();
+        }
     }
 }
