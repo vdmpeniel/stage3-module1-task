@@ -1,7 +1,7 @@
 ### TODO List
 Use a branch for each item in the list
 * 1 - Make toStrings match what is shown in the sample app <Done>
-* 2 - Create custom Exceptions for all important issues
+* 2 - Create custom Exceptions for all important issues <Done>
     Getting News by id:
     * ERROR_CODE: 000010 ERROR_MESSAGE: News id can not be null or less than 1. News id is: -1
     * ERROR_CODE: 000001 ERROR_MESSAGE: News with id 123 does not exist.
@@ -23,9 +23,9 @@ Use a branch for each item in the list
     * ERROR_CODE: 000013 ERROR_MESSAGE: News Id should be number
     * ERROR_CODE: 000010 ERROR_MESSAGE: News id can not be null or less than 1. News id is: -1
 
-* 3 - Create interfaces for all class categories (decoupling)
-* 4 - Create a new data source that match the data files I was Given
+* 3 - Create interfaces for all class categories (decoupling) <Done>
+* 4 - Create a new data source that match the data files I was Given <Done>
 * 5 - Move all literals to properties file
-* 6 - Maybe: Create an Enum for Error Codes
+* 6 - Inverting all equals
 * 8 - Testing of Services and more
 * 9 - Start submitting and fixing bugs.

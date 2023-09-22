@@ -28,7 +28,7 @@ public class NewsDao implements ModelDaoInterface{
     public ModelInterface findById(Long id) throws Exception{
         Predicate<ModelInterface> newsById = model -> model.getId().equals(id);
         List<ModelInterface> resultSet = dataSource.executeSelectQuery(News.class, newsById);
-        return (Objects.nonNull(resultSet) && !resultSet.isEmpty())? (News) resultSet.get(0) : new News();
+        return (Objects.nonNull(resultSet) && !resultSet.isEmpty())? (News) resultSet.get(0) : null;
     }
 
     @Override

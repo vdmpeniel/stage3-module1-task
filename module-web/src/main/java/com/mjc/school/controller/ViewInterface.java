@@ -5,7 +5,7 @@ import com.mjc.school.service.dto.ResponseDto;
 public interface ViewInterface {
     public String renderMenuView();
     public void renderResponse(ResponseDto responseDto);
-    public Long renderNewsIdInputForm();
+    public String renderNewsIdInputForm();
     public void renderDeleteResponse(ResponseDto responseDto);
     public void renderOperationTittle();
     public void renderMenuDefaultOption();

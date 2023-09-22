@@ -57,9 +57,10 @@ public class ModelValidatorUtils {
             List<Object> exceptionList = violations.stream()
                     .map(violation -> {
                         try {
-                            String json = propertyLoader.getProperty(violation.getMessage());
-                            json = json.replace("{fieldValue}", violation.getInvalidValue().toString());
-                            return JsonUtils.deserialize(json, Object.class);
+                            String errorJson = propertyLoader.getProperty(violation.getMessage());
+                            errorJson = errorJson.replace("{fieldValue}", violation.getInvalidValue().toString())
+                                                 .replace("{fieldName}", violation.getPropertyPath().toString());
+                            return JsonUtils.deserialize(errorJson, Object.class);
 
                         } catch(Exception e){
                             LinkedHashMap<String, String> errorMap = new LinkedHashMap<>();

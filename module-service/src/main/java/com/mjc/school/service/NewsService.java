@@ -1,7 +1,6 @@
 package com.mjc.school.service;
 
 import com.mjc.school.common.exceptions.IllegalFieldValueException;
-import com.mjc.school.common.utils.JsonUtils;
 import com.mjc.school.common.utils.PropertyLoader;
 import com.mjc.school.common.utils.modelvalidatorutils.ModelValidatorUtils;
 import com.mjc.school.repository.dao.ModelDaoInterface;
@@ -12,15 +11,15 @@ import com.mjc.school.service.dto.*;
 import com.mjc.school.service.mapper.NewsMapper;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class NewsService implements ServiceInterface{
+    PropertyLoader propertyLoader;
     ModelDaoInterface newsDao;
 
     public NewsService(){
         try {
+            propertyLoader = PropertyLoader.getInstance();
             newsDao = new NewsDao();
 
         } catch(Exception e){
@@ -50,7 +49,7 @@ public class NewsService implements ServiceInterface{
                 .resultSet(
                     getById(
                         RequestDto.builder().lookupId(
-                            news.getId()
+                            news.getId().toString()
                         ).build()
                     ).getResultSet()
                 )
@@ -83,19 +82,16 @@ public class NewsService implements ServiceInterface{
     @Override
     public ResponseDto getById(RequestDto requestDto) {
         try{
+            ModelValidatorUtils.runValidation(requestDto);
             ResponseDto responseDto = ResponseDto
                 .builder()
                 .status("OK")
                 .resultSet(
                     List.of(NewsMapper.INSTANCE.newsToNewsDto(
-                        (News) newsDao.findById(requestDto.getLookupId())
+                        (News) newsDao.findById(Long.parseLong(requestDto.getLookupId()))
                     ))
                 )
                 .build();
-
-            if(Objects.isNull(((NewsDto) responseDto.getResultSet().get(0)).getId())){
-                throw new Exception(String.format("News with id %s does not exist.", requestDto.getLookupId()));
-            }
             return responseDto;
 
         } catch(Exception e){
@@ -106,16 +102,17 @@ public class NewsService implements ServiceInterface{
     @Override
     public ResponseDto updateById(RequestDto requestDto) {
         try{
+            ModelValidatorUtils.runValidation(requestDto);
             ModelValidatorUtils.runValidation(requestDto.getInputData());
 
             News news = NewsMapper.INSTANCE.newsDtoToNews((NewsDto) requestDto.getInputData());
             news.setLastUpdateDate(LocalDateTime.now());
-            newsDao.update(requestDto.getLookupId(), news);
+            newsDao.update(Long.parseLong(requestDto.getLookupId()), news);
             return ResponseDto
                 .builder()
                 .status("OK")
                 .resultSet(
-                    List.of(NewsMapper.INSTANCE.newsToNewsDto((News) newsDao.findById(requestDto.getLookupId())))
+                    List.of(NewsMapper.INSTANCE.newsToNewsDto((News) newsDao.findById(Long.parseLong(requestDto.getLookupId()))))
                 )
                 .build();
 
@@ -127,7 +124,8 @@ public class NewsService implements ServiceInterface{
     @Override
     public ResponseDto removeById(RequestDto requestDto ) {
         try{
-            newsDao.delete(requestDto.getLookupId());
+            ModelValidatorUtils.runValidation(requestDto);
+            newsDao.delete(Long.parseLong(requestDto.getLookupId()));
             return ResponseDto.builder()
                     .status("OK")
                     .resultSet(null)
@@ -138,21 +136,6 @@ public class NewsService implements ServiceInterface{
         }
     }
 
-    private void validateInput(RequestDto requestDto)throws Exception{
-        if(Objects.nonNull(requestDto.getLookupId())){
-            if(requestDto.getLookupId() < 0){
-                PropertyLoader propertyLoader = PropertyLoader.getInstance();
-                String json = propertyLoader.getProperty("validation.error.news.newsid.min");
-                json = json.replace("{fieldValue}", requestDto.getLookupId().toString());
-                LinkedHashMap<String, String> errorMap = (LinkedHashMap<String, String>) JsonUtils.deserialize(json, Object.class);
-                throw new IllegalFieldValueException(errorMap.get("message"), errorMap.get("code"));
-            }
-        }
-        if(Objects.nonNull(requestDto.getInputData())) {
-            ModelValidatorUtils.runValidation(requestDto.getInputData());
-        }
-
-    }
 
     @Override
     public ResponseDto buildErrorResponse(Exception e) {

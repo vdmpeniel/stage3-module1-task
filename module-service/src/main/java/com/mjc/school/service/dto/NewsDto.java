@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class NewsDto implements ModelDtoInterface {
-    private Long id;
+    private String id;
 
     @Size(min=5, max=30, message = "validation.error.news.title.size")
     private String title;
@@ -23,7 +23,7 @@ public class NewsDto implements ModelDtoInterface {
     @Digits(integer = 10, fraction = 0, message = "validation.error.news.authorid.isanumber")
     @Min(value = 1, message = "validation.error.news.authorid.min")
     @Exist(message = "validation.error.news.authorid.exist")
-    private Long authorId;
+    private String authorId;
 
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;

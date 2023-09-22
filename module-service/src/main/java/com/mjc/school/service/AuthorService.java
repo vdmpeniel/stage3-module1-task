@@ -39,7 +39,7 @@ public class AuthorService implements ServiceInterface{
                     .resultSet(
                             getById(
                                     RequestDto.builder().lookupId(
-                                            author.getId()
+                                            author.getId().toString()
                                     ).build()
                             ).getResultSet()
                     )
@@ -79,7 +79,7 @@ public class AuthorService implements ServiceInterface{
                     .status("OK")
                     .resultSet(
                             List.of(AuthorMapper.INSTANCE.authorToAuthorDto(
-                                            (Author) authorDao.findById(requestDto.getLookupId())
+                                            (Author) authorDao.findById(Long.parseLong(requestDto.getLookupId()))
                             ))
                     )
                     .build();

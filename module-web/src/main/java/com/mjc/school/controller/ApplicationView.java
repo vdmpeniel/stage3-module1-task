@@ -44,19 +44,19 @@ class ApplicationView implements ViewInterface{
         System.out.println(newsDto);
     }
 
-    public Long renderNewsIdInputForm(){
-        return Long.parseLong(getInput("Enter news id:"));
+    public String renderNewsIdInputForm(){
+        return getInput("Enter news id:");
     }
 
     public NewsDto renderNewsInputForm(){
         return NewsDto.builder()
             .title(getInput("Enter news title:"))
             .newsContent(getInput("Enter news content:"))
-            .authorId(Long.parseLong(getInput("Enter author id:")))
+            .authorId(getInput("Enter author id:"))
             .build();
     }
     public void renderDeleteResponse(ResponseDto responseDto){
-        System.out.println("OK".equals(responseDto.getStatus())? "True": "False");
+        System.out.println("OK".equals(responseDto.getStatus())? "True": responseDto.getError());
     }
 
     public void renderOperationTittle(){

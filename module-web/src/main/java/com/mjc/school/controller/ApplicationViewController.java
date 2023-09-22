@@ -68,13 +68,13 @@ public class ApplicationViewController implements ViewControllerInterface{
         view.renderOperationTittle();
         view.renderResponse(newsService.getById(
             RequestDto.builder().lookupId(
-                    (view.renderNewsIdInputForm())
+                    view.renderNewsIdInputForm()
             ).build())
         );
     }
 
 
-    private final Function<Long, NewsDto> newsDtoWithIdSupplier = (id) -> {
+    private final Function<String, NewsDto> newsDtoWithIdSupplier = (id) -> {
         NewsDto newsDto = view.renderNewsInputForm();
         newsDto.setId(id);
         return newsDto;
@@ -92,7 +92,7 @@ public class ApplicationViewController implements ViewControllerInterface{
             newsService.updateById(
                 RequestDto.builder()
                     .lookupId(view.renderNewsIdInputForm())
-                    .inputData(newsDtoWithIdSupplier.apply(-1L))
+                    .inputData(newsDtoWithIdSupplier.apply("-1"))
                     .build()
             )
         );
