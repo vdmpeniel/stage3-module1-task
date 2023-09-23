@@ -21,18 +21,22 @@ class AuthorTest {
     void setId() {
         Author author = new Author();
         author.setId(1L);
+        assertEquals(1L, author.getId());
     }
 
     @Test
     void getId() {
         Author author = new Author();
-        assertNotNull(author.getId());
+        author.setId(1L);
+        assertEquals(1L, author.getId());
     }
 
     @Test
     void getName() {
         String name = "John Smith";
-        Author author = new Author(name);
+        Author author = Author.builder()
+                .name(name)
+                .build();
         assertEquals(name, author.getName());
     }
 

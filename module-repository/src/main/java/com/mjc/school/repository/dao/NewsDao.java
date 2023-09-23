@@ -26,19 +26,19 @@ public class NewsDao implements ModelDaoInterface{
     }
 
     public ModelInterface findById(Long id) throws Exception{
-        Predicate<ModelInterface> newsById = model -> model.getId().equals(id);
+        Predicate<ModelInterface> newsById = model -> id.equals(model.getId());
         List<ModelInterface> resultSet = dataSource.executeSelectQuery(News.class, newsById);
         return (Objects.nonNull(resultSet) && !resultSet.isEmpty())? (News) resultSet.get(0) : null;
     }
 
     @Override
     public void update(Long id, ModelInterface news) throws Exception {
-        Predicate<ModelInterface> newsById = model -> model.getId().equals(id);
+        Predicate<ModelInterface> newsById = model -> id.equals(model.getId());
         dataSource.executeUpdateQuery(News.class, news, newsById);
     }
 
     public boolean delete(Long id) throws Exception{
-        Predicate<ModelInterface> newsById = model -> model.getId().equals(id);
+        Predicate<ModelInterface> newsById = model -> id.equals(model.getId());
         dataSource.executeDeleteQuery(News.class, newsById);
         return true;
     }

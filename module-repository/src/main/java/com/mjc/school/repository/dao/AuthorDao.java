@@ -29,20 +29,20 @@ public class AuthorDao implements ModelDaoInterface{
 
     @Override
     public Author findById(Long id) throws Exception{
-        Predicate<ModelInterface> AuthorById = model -> model.getId().equals(id);
+        Predicate<ModelInterface> AuthorById = model -> id.equals(model.getId());
         List<ModelInterface> resultSet = dataSource.executeSelectQuery(Author.class, AuthorById);
         return (Objects.nonNull(resultSet) && !resultSet.isEmpty())? (Author) resultSet.get(0) : null;
     }
 
     @Override
     public void update(Long id, ModelInterface author) throws Exception{
-        Predicate<ModelInterface> authorById = model -> model.getId().equals(author.getId());
+        Predicate<ModelInterface> authorById = model -> author.getId().equals(model.getId());
         dataSource.executeUpdateQuery(Author.class, author, authorById);
     }
 
     @Override
     public boolean delete(Long id) throws Exception{
-        Predicate<ModelInterface> authorById = model -> model.getId().equals(id);
+        Predicate<ModelInterface> authorById = model -> id.equals(model.getId());
         dataSource.executeDeleteQuery(Author.class, authorById);
         return true;
     }

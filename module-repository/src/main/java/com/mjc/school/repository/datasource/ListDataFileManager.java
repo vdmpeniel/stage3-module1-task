@@ -53,7 +53,7 @@ public class ListDataFileManager implements DataManager{
 
         List<ModelInterface> data = new ArrayList<>();
         if(News.class.isAssignableFrom(clazz)){
-            String content = FileUtils.readFile(propertyLoader.getProperty("application.content.file.path") + testVariant);
+            String content = FileUtils.readFile(propertyLoader.getProperty("application.content.file.path" + testVariant));
             List<String> contentList = List.of(content.split("/n"));
 
             data = IntStream.range(0, textList.size())

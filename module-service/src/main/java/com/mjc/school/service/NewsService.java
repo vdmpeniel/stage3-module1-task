@@ -5,7 +5,6 @@ import com.mjc.school.common.utils.PropertyLoader;
 import com.mjc.school.common.utils.modelvalidatorutils.ModelValidatorUtils;
 import com.mjc.school.repository.dao.ModelDaoInterface;
 import com.mjc.school.repository.dao.NewsDao;
-import com.mjc.school.repository.model.ModelInterface;
 import com.mjc.school.repository.model.News;
 import com.mjc.school.service.dto.*;
 import com.mjc.school.service.mapper.NewsMapper;
@@ -27,11 +26,6 @@ public class NewsService implements ServiceInterface{
         }
     }
 
-    @Override
-    public void setModelId(ModelInterface news, Long id) throws UnsupportedOperationException{
-        if (id.equals(-1L)) { news.setId(id); }
-        else { throw new UnsupportedOperationException("The id of this record can't be altered."); }
-    }
 
     @Override
     public ResponseDto create(RequestDto requestDto){

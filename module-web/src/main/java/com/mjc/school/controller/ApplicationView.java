@@ -20,13 +20,15 @@ class ApplicationView implements ViewInterface{
     }
 
     public String renderMenuView() {
-        System.out.println(
-            "Enter the number of operation: \n" +
-            "1 - Get all news. \n" +
-            "2 - Get news by id. \n" +
-            "3 - Create news. \n" +
-            "4 - Update news. \n" +
-            "5 - Remove news by id."
+        System.out.print(
+            """
+            Enter the number of operation:\s
+            1 - Get all news.\s
+            2 - Get news by id.\s
+            3 - Create news.\s
+            4 - Update news.\s
+            5 - Remove news by id.
+            """
         );
         return getInput("0 - Exit");
     }

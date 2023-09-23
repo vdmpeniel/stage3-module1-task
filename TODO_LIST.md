@@ -25,7 +25,7 @@ Use a branch for each item in the list
 
 * 3 - Create interfaces for all class categories (decoupling) <Done>
 * 4 - Create a new data source that match the data files I was Given <Done>
-* 5 - Move all literals to properties file
-* 6 - Inverting all equals
-* 8 - Testing of Services and more
+* 5 - Move all literals to properties file <?>
+* 6 - Inverting all equals <Done>
+* 8 - Testing of Services and more <Done?>
 * 9 - Start submitting and fixing bugs.

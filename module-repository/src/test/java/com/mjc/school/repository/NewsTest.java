@@ -21,22 +21,22 @@ class NewsTest {
 
     @Test
     void setId() {
-        assertThrows(UnsupportedOperationException.class, () -> {
-            News news = new News();
-            news.setId(1L);
-        });
+        News news = new News();
+        news.setId(1L);
+        assertEquals(1L, news.getId());
     }
 
     @Test
     void getId() {
-        News news = new News(
-            "Some Title",
-            "Some Content",
-            LocalDateTime.now(),
-            LocalDateTime.now().plusMinutes(5),
-            1L
-        );
-        assertNotNull(news.getId());
+        News news = News.builder()
+            .id(1L)
+            .title("Some Title")
+            .content("Some Content")
+            .createDate(LocalDateTime.now())
+            .lastUpdateDate(LocalDateTime.now().plusMinutes(5))
+            .authorId(1L)
+            .build();
+        assertEquals(1L, news.getId());
     }
 
 

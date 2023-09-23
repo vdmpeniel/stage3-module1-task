@@ -21,12 +21,6 @@ public class AuthorService implements ServiceInterface{
 
 
     @Override
-    public void setModelId(ModelInterface author, Long id) throws UnsupportedOperationException {
-        if (id.equals(-1L)) { author.setId(id); }
-        else { throw new UnsupportedOperationException("The id of this record can't be altered."); }
-    }
-
-    @Override
     public ResponseDto create(RequestDto requestDto) {
         try {
             ModelValidatorUtils.runValidation(requestDto.getInputData());

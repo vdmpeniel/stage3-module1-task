@@ -1,24 +1,20 @@
-[
-    {
-        "title":"qwerty",
-        "content":"qwerty",
-        "createDate": "2018-08-29T06:12:15.156",
-        "lastUpdateDate": "2018-08-29T06:12:15.156",
-        "authorId": 1
-    },
-    {
-        "title":"qwerty1",
-        "content":"qwerty1",
-        "createDate": "2018-08-29T06:12:15.156",
-        "lastUpdateDate": "2018-08-29T06:12:15.156",
-        "authorId": 2
-    },
-    {
-        "title":"qwerty3",
-        "content":"qwerty3",
-        "createDate": "2018-08-29T06:12:15.156",
-        "lastUpdateDate": "2018-08-29T06:12:15.156",
-        "authorId": 2
-    }
-
-]
+Volcano erupts in Hawaii
+Dog wins mayor election
+TikTok star arrested for fraud
+New vaccine for malaria
+UFO sighting in Texas
+Beyoncé drops surprise album
+Snowstorm hits New York
+Pope Francis visits Iraq
+Tesla launches flying car
+GameStop stock skyrockets
+Brexit deal finally reached
+Australia wildfires contained
+Messi joins PSG
+Harry Potter reboot announced
+SpaceX lands on Mars
+Kanye West runs for president
+Rihanna and Drake dating again
+Global warming worsens
+Oscars 2023 nominees revealed
+Zombie apocalypse averted
