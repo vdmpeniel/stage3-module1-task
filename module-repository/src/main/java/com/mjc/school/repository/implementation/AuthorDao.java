@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 
 public class AuthorDao implements ModelDaoInterface {
 
-    private final DataSourceInterface dataSource = DataSource.getInstance();
-    public AuthorDao() throws Exception{}
+    private final DataSourceInterface dataSource = new DataSourceFileBased();
+    public AuthorDao(){}
 
     @Override
     public ModelInterface create(ModelInterface author)throws Exception{

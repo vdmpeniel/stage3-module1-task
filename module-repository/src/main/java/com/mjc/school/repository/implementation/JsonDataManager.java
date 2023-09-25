@@ -1,6 +1,7 @@
 package com.mjc.school.repository.implementation;
 
 import com.mjc.school.common.implementation.utils.FileUtils;
+import com.mjc.school.common.implementation.utils.IdGeneratorUtils;
 import com.mjc.school.common.implementation.utils.JsonUtils;
 import com.mjc.school.common.implementation.utils.PropertyLoader;
 import com.mjc.school.repository.interfaces.DataManagerInterface;
@@ -35,13 +36,13 @@ public class JsonDataManager implements DataManagerInterface {
         return stackTrace.toLowerCase().contains("test");
     }
 
-    private String getModelFilePath(Class<? extends ModelInterface> tableType) throws IOException {
+    private String getModelFilePath(Class<? extends ModelInterface> tableType){
         return ((Author.class.isAssignableFrom(tableType))? authorFilePath : newsFilePath);
     }
 
     @Override
     public List<ModelInterface> load(Class<? extends ModelInterface> clazz) throws Exception{
-        AutoIncrementIdGenerator.reset(clazz);
+        IdGeneratorUtils.reset(clazz);
         String json = FileUtils.readFile(getModelFilePath(clazz));
         json = json.replaceAll("/n", "");
         List<ModelInterface> data = JsonUtils.deserializeList(json, clazz)

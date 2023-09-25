@@ -1,7 +1,7 @@
 package com.mjc.school.service;
 
 import com.mjc.school.common.implementation.exceptions.IllegalFieldValueException;
-import com.mjc.school.repository.implementation.DataSource;
+import com.mjc.school.repository.implementation.DataSourceFileBased;
 import com.mjc.school.service.implementation.NewsDto;
 import com.mjc.school.service.implementation.NewsService;
 import com.mjc.school.service.implementation.RequestDto;
@@ -16,12 +16,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NewsServiceTest {
     NewsService service;
+    DataSourceFileBased dataSourceFileBased;
 
     @BeforeEach
     void setUp() {
         try {
-            DataSource.getInstance();
-             service = new NewsService();
+            dataSourceFileBased = new DataSourceFileBased();
+            service = new NewsService();
 
         } catch(Exception e){
             System.out.println(e.getMessage());

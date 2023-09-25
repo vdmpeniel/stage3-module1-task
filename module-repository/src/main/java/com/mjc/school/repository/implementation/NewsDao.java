@@ -10,8 +10,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class NewsDao implements ModelDaoInterface {
-    private final DataSourceInterface dataSource = DataSource.getInstance();
-    public NewsDao() throws Exception{}
+    private final DataSourceInterface dataSource = new DataSourceFileBased();
+    public NewsDao(){}
 
     @Override
     public ModelInterface create(ModelInterface news)throws Exception{

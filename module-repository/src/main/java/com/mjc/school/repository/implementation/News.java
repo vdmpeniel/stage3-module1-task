@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mjc.school.common.implementation.utils.DateUtils;
+import com.mjc.school.common.implementation.utils.IdGeneratorUtils;
 import com.mjc.school.repository.interfaces.ModelInterface;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -47,7 +48,7 @@ public class News implements ModelInterface, Serializable {
     @Override
     @JsonProperty("id")
     public synchronized void generateId() {
-        id = AutoIncrementIdGenerator.generateId(this.getClass());
+        id = IdGeneratorUtils.generateId(this.getClass());
     }
 
     @Override

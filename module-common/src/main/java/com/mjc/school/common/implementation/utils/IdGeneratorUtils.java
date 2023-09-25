@@ -1,12 +1,12 @@
-package com.mjc.school.repository.implementation;
+package com.mjc.school.common.implementation.utils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class AutoIncrementIdGenerator{
+public class IdGeneratorUtils {
     private volatile static Map<Class<?>, Long> nextIdMap = new HashMap<>();
 
-    private AutoIncrementIdGenerator(){}
+    private IdGeneratorUtils(){}
 
     public synchronized static void reset(Class<?> clazz){
         nextIdMap.put(clazz, 1L);

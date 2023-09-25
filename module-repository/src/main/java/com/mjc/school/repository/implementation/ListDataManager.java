@@ -1,13 +1,13 @@
 package com.mjc.school.repository.implementation;
 
 import com.mjc.school.common.implementation.utils.FileUtils;
+import com.mjc.school.common.implementation.utils.IdGeneratorUtils;
 import com.mjc.school.common.implementation.utils.PropertyLoader;
 import com.mjc.school.repository.interfaces.DataManagerInterface;
 import com.mjc.school.repository.interfaces.ModelInterface;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,11 +45,11 @@ public class ListDataManager implements DataManagerInterface {
 
     @Override
     public List<ModelInterface> load(Class<? extends ModelInterface> clazz) throws Exception {
-        AutoIncrementIdGenerator.reset(clazz);
+        IdGeneratorUtils.reset(clazz);
         String text = FileUtils.readFile(getModelFilePath(clazz));
         List<String> textList = List.of(text.split("/n"));
 
-        List<ModelInterface> data = new ArrayList<>();
+        List<ModelInterface> data;
         if(News.class.isAssignableFrom(clazz)){
             String content = FileUtils.readFile(propertyLoader.getProperty("application.content.file.path" + testVariant));
             List<String> contentList = List.of(content.split("/n"));

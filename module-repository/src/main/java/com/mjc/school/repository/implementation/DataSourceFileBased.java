@@ -1,7 +1,6 @@
 package com.mjc.school.repository.implementation;
 
 import com.mjc.school.common.implementation.utils.JsonUtils;
-import com.mjc.school.common.implementation.utils.PropertyLoader;
 import com.mjc.school.repository.interfaces.DataManagerInterface;
 import com.mjc.school.repository.interfaces.DataSourceInterface;
 import com.mjc.school.repository.interfaces.ModelInterface;
@@ -14,39 +13,24 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
-public class DataSource implements DataSourceInterface {
-    private volatile static DataSource instance;
+public class DataSourceFileBased implements DataSourceInterface {
     DataManagerInterface dataManagerInterface = new ListDataManager();
 
-    String authorFilePath;
-    String newsFilePath;
+    private static List<ModelInterface> newsTable;
+    private static List<ModelInterface> authorTable;
 
 
-
-    private DataSource(){
+    public DataSourceFileBased(){
         try {
-            PropertyLoader propertyLoader = PropertyLoader.getInstance();
-            newsTable = dataManagerInterface.load(News.class);
-            authorTable = dataManagerInterface.load(Author.class);
+            if(Objects.isNull(newsTable)) {
+                newsTable = dataManagerInterface.load(News.class);
+                authorTable = dataManagerInterface.load(Author.class);
+            }
 
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
     }
-
-
-    public static DataSource getInstance() throws Exception{
-        synchronized (DataSource.class){
-            if (Objects.isNull(instance)){
-                instance = new DataSource();
-            }
-            return instance;
-        }
-    }
-
-    private List<ModelInterface> newsTable;
-    private List<ModelInterface> authorTable;
-
 
     private List<ModelInterface> setFromTable(Class<? extends ModelInterface> tableType){
         return (Author.class.isAssignableFrom(tableType))? authorTable : newsTable;
@@ -59,7 +43,7 @@ public class DataSource implements DataSourceInterface {
 
 
     @Override
-    public List<ModelInterface> executeSelectQuery(Class<? extends ModelInterface> clazz, Predicate<ModelInterface> predicate) throws Exception{
+    public List<ModelInterface> executeSelectQuery(Class<? extends ModelInterface> clazz, Predicate<ModelInterface> predicate){
         List<ModelInterface> modelTable = setFromTable(clazz);
         return (Objects.isNull(predicate)) ?
             new ArrayList<>(modelTable)
@@ -83,17 +67,17 @@ public class DataSource implements DataSourceInterface {
         setModelTableValue(clazz, resultTable);
     }
 
-    public ModelInterface executeInsertQuery(Class<? extends ModelInterface> clazz, ModelInterface model) throws Exception{
+    public ModelInterface executeInsertQuery(Class<? extends ModelInterface> clazz, ModelInterface model){
         List<ModelInterface> modelTable = setFromTable(clazz);
         model.generateId();
-        if(model instanceof News){
-            News news = ((News) model);
+        if(model instanceof News news){
             if(Objects.isNull(news.getCreateDate())){
                 news.setCreateDate(LocalDateTime.now());
                 news.setLastUpdateDate(news.getCreateDate());
             }
         }
-        modelTable.add((ModelInterface) model);
+        modelTable.add(model);
+        setModelTableValue(clazz, modelTable);
         return model;
     }
 
