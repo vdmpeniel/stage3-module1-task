@@ -1,8 +1,8 @@
 package com.mjc.school.repository;
 
-import com.mjc.school.common.exceptions.IllegalFieldValueException;
-import com.mjc.school.common.utils.modelvalidatorutils.ModelValidatorUtils;
-import com.mjc.school.repository.model.News;
+import com.mjc.school.common.implementation.exceptions.IllegalFieldValueException;
+import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValidatorUtils;
+import com.mjc.school.repository.implementation.News;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package com.mjc.school.common.utils;
 
-import com.mjc.school.common.utils.modelvalidatorutils.ModelValidatorUtils;
-import com.mjc.school.repository.model.News;
+import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValidatorUtils;
+import com.mjc.school.repository.implementation.News;
 import jakarta.validation.ConstraintViolation;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,6 +1,6 @@
 package com.mjc.school.controller;
 
-import com.mjc.school.service.dto.ResponseDto;
+import com.mjc.school.service.implementation.ResponseDto;
 
 public interface ViewInterface {
     public String renderMenuView();
