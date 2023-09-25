@@ -1,30 +1,40 @@
 package com.mjc.school.service.implementation;
 
+import com.mjc.school.common.implementation.exceptions.IllegalFieldValueException;
+import com.mjc.school.common.implementation.utils.PropertyLoader;
 import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValidatorUtils;
+import com.mjc.school.repository.implementation.Author;
 import com.mjc.school.repository.implementation.AuthorDao;
 import com.mjc.school.repository.interfaces.ModelDaoInterface;
-import com.mjc.school.repository.implementation.Author;
-import com.mjc.school.repository.interfaces.ModelInterface;
 import com.mjc.school.service.interfaces.AuthorMapperInterface;
-import com.mjc.school.service.interfaces.ServiceInterface;
 import com.mjc.school.service.interfaces.ModelDtoInterface;
+import com.mjc.school.service.interfaces.ServiceInterface;
 
 import java.util.List;
-import java.util.Objects;
 
 public class AuthorService implements ServiceInterface {
-    ModelDaoInterface authorDao = new AuthorDao();
+    PropertyLoader propertyLoader;
+    ModelDaoInterface authorDao;
 
-    public AuthorService() throws Exception{}
+    public AuthorService(){
+        try {
+            propertyLoader = PropertyLoader.getInstance();
+            authorDao = new AuthorDao();
+
+        } catch(Exception e){
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
 
 
     @Override
-    public ResponseDto create(RequestDto requestDto) {
+    public ResponseDto create(RequestDto requestDto){
         try {
             ModelValidatorUtils.runValidation(requestDto.getInputData());
 
-            ModelInterface author = AuthorMapperInterface.INSTANCE.authorDtoToAuthor((AuthorDto) requestDto.getInputData());
-            authorDao.create((Author) author);
+            Author author = AuthorMapperInterface.INSTANCE.authorDtoToAuthor((AuthorDto) requestDto.getInputData());
+            authorDao.create(author);
+
             return ResponseDto
                     .builder()
                     .status("OK")
@@ -42,7 +52,6 @@ public class AuthorService implements ServiceInterface {
         }
     }
 
-
     @Override
     public ResponseDto getAll() {
         try{
@@ -50,12 +59,11 @@ public class AuthorService implements ServiceInterface {
                     .builder()
                     .status("OK")
                     .resultSet(
-                        authorDao.readAll()
-                            .stream()
-                            .map(model -> AuthorMapperInterface.INSTANCE.authorToAuthorDto((Author) model))
-                            .map(model -> (ModelDtoInterface) model)
-                            .toList()
-                    )
+                            authorDao.readAll()
+                                    .stream()
+                                    .map(model -> AuthorMapperInterface.INSTANCE.authorToAuthorDto((Author) model))
+                                    .map(model -> (ModelDtoInterface) model)
+                                    .toList())
                     .build();
 
         } catch(Exception e){
@@ -66,19 +74,16 @@ public class AuthorService implements ServiceInterface {
     @Override
     public ResponseDto getById(RequestDto requestDto) {
         try{
+            ModelValidatorUtils.runValidation(requestDto);
             ResponseDto responseDto = ResponseDto
                     .builder()
                     .status("OK")
                     .resultSet(
                             List.of(AuthorMapperInterface.INSTANCE.authorToAuthorDto(
-                                            (Author) authorDao.readById(Long.parseLong(requestDto.getLookupId()))
+                                    (Author) authorDao.readById(Long.parseLong(requestDto.getLookupId()))
                             ))
                     )
                     .build();
-
-            if(Objects.isNull(((AuthorDto) responseDto.getResultSet().get(0)).getId())){
-                throw new Exception(String.format("News with id %s does not exist.", requestDto.getLookupId()));
-            }
             return responseDto;
 
         } catch(Exception e){
@@ -88,32 +93,62 @@ public class AuthorService implements ServiceInterface {
 
     @Override
     public ResponseDto updateById(RequestDto requestDto) {
-        return null;
+        try{
+            ModelValidatorUtils.runValidation(requestDto);
+            ModelValidatorUtils.runValidation(requestDto.getInputData());
+
+            Author author = AuthorMapperInterface.INSTANCE.authorDtoToAuthor((AuthorDto) requestDto.getInputData());
+            author.setId(Long.parseLong(requestDto.getLookupId()));
+            authorDao.update(author);
+
+            return ResponseDto
+                    .builder()
+                    .status("OK")
+                    .resultSet(
+                            List.of(AuthorMapperInterface.INSTANCE.authorToAuthorDto((Author) authorDao.readById(Long.parseLong(requestDto.getLookupId()))))
+                    )
+                    .build();
+
+        } catch(Exception e){
+            return buildErrorResponse(e);
+        }
     }
 
     @Override
-    public ResponseDto removeById(RequestDto requestDto) {
-        return null;
+    public ResponseDto removeById(RequestDto requestDto ) {
+        try{
+            ModelValidatorUtils.runValidation(requestDto);
+            authorDao.delete(Long.parseLong(requestDto.getLookupId()));
+            return ResponseDto.builder()
+                    .status("OK")
+                    .resultSet(null)
+                    .build();
+
+        } catch(Exception e){
+            return buildErrorResponse(e);
+        }
     }
+
 
     @Override
     public ResponseDto buildErrorResponse(Exception e) {
-        return null;
+        if (e instanceof IllegalFieldValueException) {
+            IllegalFieldValueException ifve = (IllegalFieldValueException) e;
+            return ResponseDto.builder()
+                    .status("Failed")
+                    .error(
+                            ErrorDto.builder().code(ifve.getErrorCode()).message(ifve.getMessage()).build()
+                    )
+                    .build();
+
+        } else {
+            return ResponseDto.builder()
+                    .status("Failed")
+                    .error(
+                            ErrorDto.builder().code("0000123").message(e.getMessage()).build()
+                    )
+                    .build();
+        }
     }
 
-    public AuthorDto getById(Long id) throws Exception {
-        return AuthorMapperInterface.INSTANCE.authorToAuthorDto((Author) authorDao.readById(id));
-    }
-
-
-    public AuthorDto updateById(Long id, AuthorDto authorDto) throws Exception {
-        ModelValidatorUtils.runValidation(authorDto);
-
-        Author author = AuthorMapperInterface.INSTANCE.authorDtoToAuthor(authorDto);
-        authorDao.update(id, author);
-        return AuthorMapperInterface.INSTANCE.authorToAuthorDto((Author) authorDao.readById(id));
-    }
-    public boolean removeById(Long id) throws Exception {
-        return authorDao.delete(id);
-    }
 }

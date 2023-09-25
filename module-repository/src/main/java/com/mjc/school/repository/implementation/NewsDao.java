@@ -31,12 +31,12 @@ public class NewsDao implements ModelDaoInterface {
     }
 
     @Override
-    public ModelInterface update(Long id, ModelInterface news) throws Exception {
-        Predicate<ModelInterface> newsById = model -> id.equals(model.getId());
+    public ModelInterface update(ModelInterface news) throws Exception {
+        Predicate<ModelInterface> newsById = model -> news.getId().equals(model.getId());
         return dataSource.executeUpdateQuery(News.class, news, newsById);
     }
 
-    public boolean delete(Long id) throws Exception{
+    public Boolean delete(Long id) throws Exception{
         Predicate<ModelInterface> newsById = model -> id.equals(model.getId());
         dataSource.executeDeleteQuery(News.class, newsById);
         return true;

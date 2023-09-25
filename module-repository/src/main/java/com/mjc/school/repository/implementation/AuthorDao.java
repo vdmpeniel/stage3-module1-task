@@ -34,13 +34,13 @@ public class AuthorDao implements ModelDaoInterface {
     }
 
     @Override
-    public ModelInterface update(Long id, ModelInterface author) throws Exception{
+    public ModelInterface update(ModelInterface author) throws Exception{
         Predicate<ModelInterface> authorById = model -> author.getId().equals(model.getId());
         return dataSource.executeUpdateQuery(Author.class, author, authorById);
     }
 
     @Override
-    public boolean delete(Long id) throws Exception{
+    public Boolean delete(Long id) throws Exception{
         Predicate<ModelInterface> authorById = model -> id.equals(model.getId());
         dataSource.executeDeleteQuery(Author.class, authorById);
         return true;

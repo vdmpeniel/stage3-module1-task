@@ -102,7 +102,9 @@ public class NewsService implements ServiceInterface {
 
             News news = NewsMapperInterface.INSTANCE.newsDtoToNews((NewsDto) requestDto.getInputData());
             news.setLastUpdateDate(LocalDateTime.now());
-            newsDao.update(Long.parseLong(requestDto.getLookupId()), news);
+            news.setId(Long.parseLong(requestDto.getLookupId()));
+            newsDao.update(news);
+
             return ResponseDto
                 .builder()
                 .status("OK")

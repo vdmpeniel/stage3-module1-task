@@ -9,7 +9,7 @@ public interface ModelDaoInterface {
 
     public ModelInterface readById(Long id) throws Exception;
 
-    public ModelInterface update(Long id, ModelInterface model) throws Exception;
+    public ModelInterface update(ModelInterface model) throws Exception;
 
-    public boolean delete(Long id) throws Exception;
+    public Boolean delete(Long id) throws Exception;
 }
