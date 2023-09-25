@@ -50,7 +50,7 @@ public class AuthorService implements ServiceInterface {
                     .builder()
                     .status("OK")
                     .resultSet(
-                        authorDao.getAll()
+                        authorDao.readAll()
                             .stream()
                             .map(model -> AuthorMapperInterface.INSTANCE.authorToAuthorDto((Author) model))
                             .map(model -> (ModelDtoInterface) model)
@@ -71,7 +71,7 @@ public class AuthorService implements ServiceInterface {
                     .status("OK")
                     .resultSet(
                             List.of(AuthorMapperInterface.INSTANCE.authorToAuthorDto(
-                                            (Author) authorDao.findById(Long.parseLong(requestDto.getLookupId()))
+                                            (Author) authorDao.readById(Long.parseLong(requestDto.getLookupId()))
                             ))
                     )
                     .build();
@@ -102,7 +102,7 @@ public class AuthorService implements ServiceInterface {
     }
 
     public AuthorDto getById(Long id) throws Exception {
-        return AuthorMapperInterface.INSTANCE.authorToAuthorDto((Author) authorDao.findById(id));
+        return AuthorMapperInterface.INSTANCE.authorToAuthorDto((Author) authorDao.readById(id));
     }
 
 
@@ -111,7 +111,7 @@ public class AuthorService implements ServiceInterface {
 
         Author author = AuthorMapperInterface.INSTANCE.authorDtoToAuthor(authorDto);
         authorDao.update(id, author);
-        return AuthorMapperInterface.INSTANCE.authorToAuthorDto((Author) authorDao.findById(id));
+        return AuthorMapperInterface.INSTANCE.authorToAuthorDto((Author) authorDao.readById(id));
     }
     public boolean removeById(Long id) throws Exception {
         return authorDao.delete(id);

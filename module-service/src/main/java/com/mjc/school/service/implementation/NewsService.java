@@ -62,7 +62,7 @@ public class NewsService implements ServiceInterface {
                 .builder()
                 .status("OK")
                 .resultSet(
-                        newsDao.getAll()
+                        newsDao.readAll()
                                 .stream()
                                 .map(model -> NewsMapperInterface.INSTANCE.newsToNewsDto((News) model))
                                 .map(model -> (ModelDtoInterface) model)
@@ -83,7 +83,7 @@ public class NewsService implements ServiceInterface {
                 .status("OK")
                 .resultSet(
                     List.of(NewsMapperInterface.INSTANCE.newsToNewsDto(
-                        (News) newsDao.findById(Long.parseLong(requestDto.getLookupId()))
+                        (News) newsDao.readById(Long.parseLong(requestDto.getLookupId()))
                     ))
                 )
                 .build();
@@ -107,7 +107,7 @@ public class NewsService implements ServiceInterface {
                 .builder()
                 .status("OK")
                 .resultSet(
-                    List.of(NewsMapperInterface.INSTANCE.newsToNewsDto((News) newsDao.findById(Long.parseLong(requestDto.getLookupId()))))
+                    List.of(NewsMapperInterface.INSTANCE.newsToNewsDto((News) newsDao.readById(Long.parseLong(requestDto.getLookupId()))))
                 )
                 .build();
 

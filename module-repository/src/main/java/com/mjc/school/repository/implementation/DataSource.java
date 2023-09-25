@@ -2,11 +2,10 @@ package com.mjc.school.repository.implementation;
 
 import com.mjc.school.common.implementation.utils.JsonUtils;
 import com.mjc.school.common.implementation.utils.PropertyLoader;
-import com.mjc.school.repository.interfaces.DataManager;
+import com.mjc.school.repository.interfaces.DataManagerInterface;
 import com.mjc.school.repository.interfaces.DataSourceInterface;
 import com.mjc.school.repository.interfaces.ModelInterface;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,20 +14,20 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
-public class FileDataSource implements DataSourceInterface {
-    private volatile static FileDataSource instance;
-    DataManager dataManager = new ListDataFileManager();
+public class DataSource implements DataSourceInterface {
+    private volatile static DataSource instance;
+    DataManagerInterface dataManagerInterface = new ListDataManager();
 
     String authorFilePath;
     String newsFilePath;
 
 
 
-    private FileDataSource(){
+    private DataSource(){
         try {
             PropertyLoader propertyLoader = PropertyLoader.getInstance();
-            newsTable = dataManager.load(News.class);
-            authorTable = dataManager.load(Author.class);
+            newsTable = dataManagerInterface.load(News.class);
+            authorTable = dataManagerInterface.load(Author.class);
 
         } catch (Exception e){
             System.out.println(e.getMessage());
@@ -36,10 +35,10 @@ public class FileDataSource implements DataSourceInterface {
     }
 
 
-    public static FileDataSource getInstance() throws Exception{
-        synchronized (FileDataSource.class){
+    public static DataSource getInstance() throws Exception{
+        synchronized (DataSource.class){
             if (Objects.isNull(instance)){
-                instance = new FileDataSource();
+                instance = new DataSource();
             }
             return instance;
         }
@@ -47,11 +46,6 @@ public class FileDataSource implements DataSourceInterface {
 
     private List<ModelInterface> newsTable;
     private List<ModelInterface> authorTable;
-
-
-    private String getModelFilePath(Class<? extends ModelInterface> tableType) throws IOException {
-        return ((Author.class.isAssignableFrom(tableType))? authorFilePath : newsFilePath);
-    }
 
 
     private List<ModelInterface> setFromTable(Class<? extends ModelInterface> tableType){
@@ -89,7 +83,7 @@ public class FileDataSource implements DataSourceInterface {
         setModelTableValue(clazz, resultTable);
     }
 
-    public void executeInsertQuery(Class<? extends ModelInterface> clazz, ModelInterface model) throws Exception{
+    public ModelInterface executeInsertQuery(Class<? extends ModelInterface> clazz, ModelInterface model) throws Exception{
         List<ModelInterface> modelTable = setFromTable(clazz);
         model.generateId();
         if(model instanceof News){
@@ -100,9 +94,10 @@ public class FileDataSource implements DataSourceInterface {
             }
         }
         modelTable.add((ModelInterface) model);
+        return model;
     }
 
-    public void executeUpdateQuery(Class<? extends ModelInterface> clazz, ModelInterface model, Predicate<ModelInterface> predicate) throws Exception{
+    public ModelInterface executeUpdateQuery(Class<? extends ModelInterface> clazz, ModelInterface model, Predicate<ModelInterface> predicate) throws Exception{
         List<ModelInterface> modelTable = setFromTable(clazz);
 
         if (modelTable.stream().filter(predicate).toList().size() == 0) {
@@ -131,6 +126,7 @@ public class FileDataSource implements DataSourceInterface {
             return original;
         }).toList();
         setModelTableValue(clazz, modelTable);
+        return model;
     }
 
 

@@ -18,13 +18,13 @@ class ModelValidatorUtilsTest {
 
     @BeforeEach
     void setUp() {
-        news = new News(
-            ".",
-            ".",
-            LocalDateTime.now(),
-            LocalDateTime.now().plusMinutes(5),
-            1L
-        );
+        news = News.builder()
+                .title(".")
+                .content(".")
+                .createDate(LocalDateTime.now())
+                .lastUpdateDate(LocalDateTime.now().plusMinutes(5))
+                .authorId(1L)
+                .build();
     }
 
     @AfterEach

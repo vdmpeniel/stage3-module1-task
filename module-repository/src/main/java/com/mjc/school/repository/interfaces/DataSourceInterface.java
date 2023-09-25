@@ -8,8 +8,8 @@ public interface DataSourceInterface {
 
     public void executeDeleteQuery(Class<? extends ModelInterface> clazz, Predicate<ModelInterface> predicate) throws Exception;
 
-    public void executeInsertQuery(Class<? extends ModelInterface> clazz, ModelInterface model) throws Exception;
+    public ModelInterface executeInsertQuery(Class<? extends ModelInterface> clazz, ModelInterface model) throws Exception;
 
-    public void executeUpdateQuery(Class<? extends ModelInterface> clazz, ModelInterface model, Predicate<ModelInterface> predicate) throws Exception;
+    public ModelInterface executeUpdateQuery(Class<? extends ModelInterface> clazz, ModelInterface model, Predicate<ModelInterface> predicate) throws Exception;
 
 }

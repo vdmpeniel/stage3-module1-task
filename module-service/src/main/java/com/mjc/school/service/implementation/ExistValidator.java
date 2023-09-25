@@ -30,7 +30,7 @@ public class ExistValidator implements ConstraintValidator<Exist, String> {
         try {
             ModelDaoInterface modelDao = modelDao = message.contains("author")? (new AuthorDao()): (new NewsDao());
             long longId = Long.parseLong(id);
-            return longId >= 0 && Objects.nonNull(modelDao.findById(longId));
+            return longId >= 0 && Objects.nonNull(modelDao.readById(longId));
 
         } catch(Exception e){
             return false;

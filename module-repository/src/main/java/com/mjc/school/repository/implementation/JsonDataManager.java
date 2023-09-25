@@ -3,7 +3,7 @@ package com.mjc.school.repository.implementation;
 import com.mjc.school.common.implementation.utils.FileUtils;
 import com.mjc.school.common.implementation.utils.JsonUtils;
 import com.mjc.school.common.implementation.utils.PropertyLoader;
-import com.mjc.school.repository.interfaces.DataManager;
+import com.mjc.school.repository.interfaces.DataManagerInterface;
 import com.mjc.school.repository.interfaces.ModelInterface;
 
 import java.io.IOException;
@@ -11,12 +11,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class JsonDataFileManager implements DataManager {
+public class JsonDataManager implements DataManagerInterface {
     PropertyLoader propertyLoader;
     private String authorFilePath;
     private String newsFilePath;
 
-    public JsonDataFileManager(){
+    public JsonDataManager(){
         try {
             propertyLoader = PropertyLoader.getInstance();
             String testVariant = isTest() ? ".test" : "";

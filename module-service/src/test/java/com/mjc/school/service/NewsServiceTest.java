@@ -1,7 +1,7 @@
 package com.mjc.school.service;
 
 import com.mjc.school.common.implementation.exceptions.IllegalFieldValueException;
-import com.mjc.school.repository.implementation.FileDataSource;
+import com.mjc.school.repository.implementation.DataSource;
 import com.mjc.school.service.implementation.NewsDto;
 import com.mjc.school.service.implementation.NewsService;
 import com.mjc.school.service.implementation.RequestDto;
@@ -20,7 +20,7 @@ class NewsServiceTest {
     @BeforeEach
     void setUp() {
         try {
-            FileDataSource.getInstance();
+            DataSource.getInstance();
              service = new NewsService();
 
         } catch(Exception e){
