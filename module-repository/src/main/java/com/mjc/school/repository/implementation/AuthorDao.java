@@ -15,8 +15,8 @@ public class AuthorDao implements ModelDaoInterface {
     public AuthorDao(){}
 
     @Override
-    public ModelInterface create(ModelInterface author)throws Exception{
-        return dataSource.executeInsertQuery(AuthorModel.class, author);
+    public ModelInterface create(ModelInterface authorModel)throws Exception{
+        return dataSource.executeInsertQuery(AuthorModel.class, authorModel);
     }
 
     @Override
@@ -34,9 +34,9 @@ public class AuthorDao implements ModelDaoInterface {
     }
 
     @Override
-    public ModelInterface update(ModelInterface author) throws Exception{
-        Predicate<ModelInterface> authorById = model -> author.getId().equals(model.getId());
-        return dataSource.executeUpdateQuery(AuthorModel.class, author, authorById);
+    public ModelInterface update(ModelInterface authorModel) throws Exception{
+        Predicate<ModelInterface> authorById = model -> authorModel.getId().equals(model.getId());
+        return dataSource.executeUpdateQuery(AuthorModel.class, authorModel, authorById);
     }
 
     @Override

@@ -14,8 +14,8 @@ public class NewsDao implements ModelDaoInterface {
     public NewsDao(){}
 
     @Override
-    public ModelInterface create(ModelInterface news)throws Exception{
-        return dataSource.executeInsertQuery(NewsModel.class, news);
+    public ModelInterface create(ModelInterface newsModel)throws Exception{
+        return dataSource.executeInsertQuery(NewsModel.class, newsModel);
     }
 
     public List<ModelInterface> readAll() throws Exception{
@@ -31,9 +31,9 @@ public class NewsDao implements ModelDaoInterface {
     }
 
     @Override
-    public ModelInterface update(ModelInterface news) throws Exception {
-        Predicate<ModelInterface> newsById = model -> news.getId().equals(model.getId());
-        return dataSource.executeUpdateQuery(NewsModel.class, news, newsById);
+    public ModelInterface update(ModelInterface newsModel) throws Exception {
+        Predicate<ModelInterface> newsById = model -> newsModel.getId().equals(model.getId());
+        return dataSource.executeUpdateQuery(NewsModel.class, newsModel, newsById);
     }
 
     public Boolean delete(Long id) throws Exception{
