@@ -1,6 +1,6 @@
 package com.mjc.school.service.interfaces;
 
-import com.mjc.school.repository.implementation.Author;
+import com.mjc.school.repository.implementation.AuthorModel;
 import com.mjc.school.service.implementation.AuthorDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,8 +12,8 @@ public interface AuthorMapperInterface {
 
     @Mapping( source = "fullName", target = "name" )
     @Mapping(target = "id", constant = "-1L")
-    Author authorDtoToAuthor(AuthorDto authorDto);
+    AuthorModel authorDtoToAuthor(AuthorDto authorDto);
 
     @Mapping( source = "name", target = "fullName" )
-    AuthorDto authorToAuthorDto(Author author);
+    AuthorDto authorToAuthorDto(AuthorModel authorModel);
 }

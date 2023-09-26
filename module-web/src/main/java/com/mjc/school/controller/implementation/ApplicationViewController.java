@@ -43,10 +43,6 @@ public class ApplicationViewController implements ViewControllerInterface {
         }};
         operations.get(index).run();
     }
-    public void getAllNews(){
-        view.renderOperationTittle();
-        view.renderResponse(newsService.getAll());
-    }
 
     private int validateIndexInput(String input){
         try {
@@ -63,7 +59,10 @@ public class ApplicationViewController implements ViewControllerInterface {
         doNextLoop = false;
     }
 
-
+    public void getAllNews(){
+        view.renderOperationTittle();
+        view.renderResponse(newsService.getAll());
+    }
 
     public void getNewsById(){
         view.renderOperationTittle();

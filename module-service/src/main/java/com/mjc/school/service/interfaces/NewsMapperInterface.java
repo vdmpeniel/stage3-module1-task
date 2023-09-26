@@ -1,6 +1,6 @@
 package com.mjc.school.service.interfaces;
 
-import com.mjc.school.repository.implementation.News;
+import com.mjc.school.repository.implementation.NewsModel;
 import com.mjc.school.service.implementation.NewsDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,11 +15,11 @@ public interface NewsMapperInterface {
     @Mapping(target = "id", constant = "-1L")
     @Mapping(target = "lastUpdateDate", expression = "java(newsDto.getLastUpdateDate())")
     @Mapping(target = "createDate", expression = "java(newsDto.getCreateDate())")
-    News newsDtoToNews(NewsDto newsDto );
+    NewsModel newsDtoToNews(NewsDto newsDto );
 
     @Mapping( source = "content", target = "newsContent" )
-    @Mapping(target = "lastUpdateDate", expression = "java(news.getLastUpdateDate())")
-    @Mapping(target = "createDate", expression = "java(news.getCreateDate())")
-    NewsDto newsToNewsDto(News news );
+    @Mapping(target = "lastUpdateDate", expression = "java(newsModel.getLastUpdateDate())")
+    @Mapping(target = "createDate", expression = "java(newsModel.getCreateDate())")
+    NewsDto newsToNewsDto(NewsModel newsModel);
 }
 

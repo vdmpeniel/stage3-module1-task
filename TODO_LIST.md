@@ -6,20 +6,20 @@ Use a branch for each item in the list
     * ERROR_CODE: 000010 ERROR_MESSAGE: News id can not be null or less than 1. News id is: -1
     * ERROR_CODE: 000001 ERROR_MESSAGE: News with id 123 does not exist.
     * ERROR_CODE: 000013 ERROR_MESSAGE: Author Id should be number
-    Creating news:
+    Creating newsModel:
     * ERROR_CODE: 000013 ERROR_MESSAGE: Author Id should be number
     * ERROR_CODE: 000010 ERROR_MESSAGE: Author id can not be null or less than 1. Author id is: -1
     * ERROR_CODE: 000002 ERROR_MESSAGE: Author Id does not exist. Author Id is: 123
     * ERROR_CODE: 000012 ERROR_MESSAGE: News title can not be less than 5 and more than 30 symbols. News title is a
     * ERROR_CODE: 000012 ERROR_MESSAGE: News content can not be less than 5 and more than 255 symbols. News content is a
-    Updating news:
+    Updating newsModel:
     * ERROR_CODE: 000013 ERROR_MESSAGE: News Id should be number    
     * ERROR_CODE: 000010 ERROR_MESSAGE: News id can not be null or less than 1. News id is: -1
     * ERROR_CODE: 000013 ERROR_MESSAGE: Author Id should be number
     * ERROR_CODE: 000010 ERROR_MESSAGE: Author id can not be null or less than 1. Author id is: -1
     * ERROR_CODE: 000012 ERROR_MESSAGE: News title can not be less than 5 and more than 30 symbols. News title is a
     * ERROR_CODE: 000012 ERROR_MESSAGE: News content can not be less than 5 and more than 255 symbols. News content is a
-    Removing news:
+    Removing newsModel:
     * ERROR_CODE: 000013 ERROR_MESSAGE: News Id should be number
     * ERROR_CODE: 000010 ERROR_MESSAGE: News id can not be null or less than 1. News id is: -1
 

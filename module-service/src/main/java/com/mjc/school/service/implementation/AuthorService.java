@@ -3,7 +3,7 @@ package com.mjc.school.service.implementation;
 import com.mjc.school.common.implementation.exceptions.IllegalFieldValueException;
 import com.mjc.school.common.implementation.utils.PropertyLoader;
 import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValidatorUtils;
-import com.mjc.school.repository.implementation.Author;
+import com.mjc.school.repository.implementation.AuthorModel;
 import com.mjc.school.repository.implementation.AuthorDao;
 import com.mjc.school.repository.interfaces.ModelDaoInterface;
 import com.mjc.school.service.interfaces.AuthorMapperInterface;
@@ -32,8 +32,8 @@ public class AuthorService implements ServiceInterface {
         try {
             ModelValidatorUtils.runValidation(requestDto.getInputData());
 
-            Author author = AuthorMapperInterface.INSTANCE.authorDtoToAuthor((AuthorDto) requestDto.getInputData());
-            authorDao.create(author);
+            AuthorModel authorModel = AuthorMapperInterface.INSTANCE.authorDtoToAuthor((AuthorDto) requestDto.getInputData());
+            authorDao.create(authorModel);
 
             return ResponseDto
                     .builder()
@@ -41,7 +41,7 @@ public class AuthorService implements ServiceInterface {
                     .resultSet(
                             getById(
                                     RequestDto.builder().lookupId(
-                                            author.getId().toString()
+                                            authorModel.getId().toString()
                                     ).build()
                             ).getResultSet()
                     )
@@ -61,7 +61,7 @@ public class AuthorService implements ServiceInterface {
                     .resultSet(
                             authorDao.readAll()
                                     .stream()
-                                    .map(model -> AuthorMapperInterface.INSTANCE.authorToAuthorDto((Author) model))
+                                    .map(model -> AuthorMapperInterface.INSTANCE.authorToAuthorDto((AuthorModel) model))
                                     .map(model -> (ModelDtoInterface) model)
                                     .toList())
                     .build();
@@ -80,7 +80,7 @@ public class AuthorService implements ServiceInterface {
                     .status("OK")
                     .resultSet(
                             List.of(AuthorMapperInterface.INSTANCE.authorToAuthorDto(
-                                    (Author) authorDao.readById(Long.parseLong(requestDto.getLookupId()))
+                                    (AuthorModel) authorDao.readById(Long.parseLong(requestDto.getLookupId()))
                             ))
                     )
                     .build();
@@ -97,15 +97,15 @@ public class AuthorService implements ServiceInterface {
             ModelValidatorUtils.runValidation(requestDto);
             ModelValidatorUtils.runValidation(requestDto.getInputData());
 
-            Author author = AuthorMapperInterface.INSTANCE.authorDtoToAuthor((AuthorDto) requestDto.getInputData());
-            author.setId(Long.parseLong(requestDto.getLookupId()));
-            authorDao.update(author);
+            AuthorModel authorModel = AuthorMapperInterface.INSTANCE.authorDtoToAuthor((AuthorDto) requestDto.getInputData());
+            authorModel.setId(Long.parseLong(requestDto.getLookupId()));
+            authorDao.update(authorModel);
 
             return ResponseDto
                     .builder()
                     .status("OK")
                     .resultSet(
-                            List.of(AuthorMapperInterface.INSTANCE.authorToAuthorDto((Author) authorDao.readById(Long.parseLong(requestDto.getLookupId()))))
+                            List.of(AuthorMapperInterface.INSTANCE.authorToAuthorDto((AuthorModel) authorDao.readById(Long.parseLong(requestDto.getLookupId()))))
                     )
                     .build();
 

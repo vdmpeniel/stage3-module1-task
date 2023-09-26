@@ -16,33 +16,33 @@ public class AuthorDao implements ModelDaoInterface {
 
     @Override
     public ModelInterface create(ModelInterface author)throws Exception{
-        return dataSource.executeInsertQuery(Author.class, author);
+        return dataSource.executeInsertQuery(AuthorModel.class, author);
     }
 
     @Override
     public List<ModelInterface> readAll() throws Exception{
-        return Objects.requireNonNull(dataSource.executeSelectQuery(Author.class, null)).stream()
-            .map(model -> (Author) model)
+        return Objects.requireNonNull(dataSource.executeSelectQuery(AuthorModel.class, null)).stream()
+            .map(model -> (AuthorModel) model)
             .collect(Collectors.toList());
     }
 
     @Override
     public ModelInterface readById(Long id) throws Exception{
         Predicate<ModelInterface> AuthorById = model -> id.equals(model.getId());
-        List<ModelInterface> resultSet = dataSource.executeSelectQuery(Author.class, AuthorById);
-        return (Objects.nonNull(resultSet) && !resultSet.isEmpty())? (Author) resultSet.get(0) : null;
+        List<ModelInterface> resultSet = dataSource.executeSelectQuery(AuthorModel.class, AuthorById);
+        return (Objects.nonNull(resultSet) && !resultSet.isEmpty())? (AuthorModel) resultSet.get(0) : null;
     }
 
     @Override
     public ModelInterface update(ModelInterface author) throws Exception{
         Predicate<ModelInterface> authorById = model -> author.getId().equals(model.getId());
-        return dataSource.executeUpdateQuery(Author.class, author, authorById);
+        return dataSource.executeUpdateQuery(AuthorModel.class, author, authorById);
     }
 
     @Override
     public Boolean delete(Long id) throws Exception{
         Predicate<ModelInterface> authorById = model -> id.equals(model.getId());
-        dataSource.executeDeleteQuery(Author.class, authorById);
+        dataSource.executeDeleteQuery(AuthorModel.class, authorById);
         return true;
     }
 }

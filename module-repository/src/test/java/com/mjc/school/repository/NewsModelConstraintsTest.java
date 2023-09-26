@@ -2,7 +2,7 @@ package com.mjc.school.repository;
 
 import com.mjc.school.common.implementation.exceptions.IllegalFieldValueException;
 import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValidatorUtils;
-import com.mjc.school.repository.implementation.News;
+import com.mjc.school.repository.implementation.NewsModel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class NewsConstraintsTest {
+public class NewsModelConstraintsTest {
 
     @BeforeEach
     void setUp() {
@@ -24,29 +24,29 @@ public class NewsConstraintsTest {
     @Test
     void setTittleConstraint() {
         assertThrows(IllegalFieldValueException.class, () -> {
-            News news = new News();
-            news.setTitle(".");
-            ModelValidatorUtils.runValidation(news);
+            NewsModel newsModel = new NewsModel();
+            newsModel.setTitle(".");
+            ModelValidatorUtils.runValidation(newsModel);
         });
     }
 
     @Test
     void setContentConstraint() {
         assertThrows(IllegalFieldValueException.class, () -> {
-            News news = new News();
-            news.setContent(".");
-            ModelValidatorUtils.runValidation(news);
+            NewsModel newsModel = new NewsModel();
+            newsModel.setContent(".");
+            ModelValidatorUtils.runValidation(newsModel);
         });
     }
 
     @Test
     void setLastUpdateDateConstraint(){
         assertThrows(IllegalFieldValueException.class, () -> {
-            News news = new News();
-                news.setContent(".");
-                news.setLastUpdateDate(LocalDateTime.now());
+            NewsModel newsModel = new NewsModel();
+                newsModel.setContent(".");
+                newsModel.setLastUpdateDate(LocalDateTime.now());
 
-            ModelValidatorUtils.runValidation(news);
+            ModelValidatorUtils.runValidation(newsModel);
         });
     }
 }

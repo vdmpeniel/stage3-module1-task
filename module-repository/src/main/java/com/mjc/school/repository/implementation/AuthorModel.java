@@ -19,7 +19,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Author implements ModelInterface, Serializable {
+public class AuthorModel implements ModelInterface, Serializable {
     @JsonIgnore
     @Serial
     private static final long serialVersionUID = 123456789L;
@@ -38,7 +38,7 @@ public class Author implements ModelInterface, Serializable {
     @Override
     public String toString(){
         try {
-            return  "\n" + "Author Object: " + "\n" +
+            return  "\n" + "AuthorModel Object: " + "\n" +
                     "id: " + id + "\n" +
                     "name: " + name;
         } catch (Exception e){

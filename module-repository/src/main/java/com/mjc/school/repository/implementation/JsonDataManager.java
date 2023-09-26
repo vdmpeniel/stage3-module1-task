@@ -37,7 +37,7 @@ public class JsonDataManager implements DataManagerInterface {
     }
 
     private String getModelFilePath(Class<? extends ModelInterface> tableType){
-        return ((Author.class.isAssignableFrom(tableType))? authorFilePath : newsFilePath);
+        return ((AuthorModel.class.isAssignableFrom(tableType))? authorFilePath : newsFilePath);
     }
 
     @Override

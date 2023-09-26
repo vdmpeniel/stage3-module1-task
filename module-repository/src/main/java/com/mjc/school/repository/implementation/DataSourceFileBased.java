@@ -23,8 +23,8 @@ public class DataSourceFileBased implements DataSourceInterface {
     public DataSourceFileBased(){
         try {
             if(Objects.isNull(newsTable)) {
-                newsTable = dataManagerInterface.load(News.class);
-                authorTable = dataManagerInterface.load(Author.class);
+                newsTable = dataManagerInterface.load(NewsModel.class);
+                authorTable = dataManagerInterface.load(AuthorModel.class);
             }
 
         } catch (Exception e){
@@ -33,11 +33,11 @@ public class DataSourceFileBased implements DataSourceInterface {
     }
 
     private List<ModelInterface> setFromTable(Class<? extends ModelInterface> tableType){
-        return (Author.class.isAssignableFrom(tableType))? authorTable : newsTable;
+        return (AuthorModel.class.isAssignableFrom(tableType))? authorTable : newsTable;
     }
 
     private void setModelTableValue(Class<? extends ModelInterface> clazz, List<ModelInterface> modelTable){
-        if(Author.class.isAssignableFrom(clazz)){ authorTable = modelTable; }
+        if(AuthorModel.class.isAssignableFrom(clazz)){ authorTable = modelTable; }
         else { newsTable = modelTable; }
     }
 
@@ -70,10 +70,10 @@ public class DataSourceFileBased implements DataSourceInterface {
     public ModelInterface executeInsertQuery(Class<? extends ModelInterface> clazz, ModelInterface model){
         List<ModelInterface> modelTable = setFromTable(clazz);
         model.generateId();
-        if(model instanceof News news){
-            if(Objects.isNull(news.getCreateDate())){
-                news.setCreateDate(LocalDateTime.now());
-                news.setLastUpdateDate(news.getCreateDate());
+        if(model instanceof NewsModel newsModel){
+            if(Objects.isNull(newsModel.getCreateDate())){
+                newsModel.setCreateDate(LocalDateTime.now());
+                newsModel.setLastUpdateDate(newsModel.getCreateDate());
             }
         }
         modelTable.add(model);
@@ -91,16 +91,16 @@ public class DataSourceFileBased implements DataSourceInterface {
         modelTable = modelTable.stream().map(original -> {
             try {
                 Long id = original.getId();
-                LocalDateTime createdDate = (clazz.isAssignableFrom(News.class))?
-                    ((News) original).getCreateDate()
+                LocalDateTime createdDate = (clazz.isAssignableFrom(NewsModel.class))?
+                    ((NewsModel) original).getCreateDate()
                     : null;
 
                 if (predicate.test(original)) {
                      original = clazz.cast(JsonUtils.deserialize(JsonUtils.serialize(model), clazz));
                      original.setId(id);
-                     if (clazz.isAssignableFrom(News.class)){
-                         ((News) original).setCreateDate(createdDate);
-                         ((News) original).setLastUpdateDate(LocalDateTime.now());
+                     if (clazz.isAssignableFrom(NewsModel.class)){
+                         ((NewsModel) original).setCreateDate(createdDate);
+                         ((NewsModel) original).setLastUpdateDate(LocalDateTime.now());
                      }
                 }
 

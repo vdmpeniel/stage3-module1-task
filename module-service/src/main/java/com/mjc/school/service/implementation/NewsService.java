@@ -5,7 +5,7 @@ import com.mjc.school.common.implementation.utils.PropertyLoader;
 import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValidatorUtils;
 import com.mjc.school.repository.interfaces.ModelDaoInterface;
 import com.mjc.school.repository.implementation.NewsDao;
-import com.mjc.school.repository.implementation.News;
+import com.mjc.school.repository.implementation.NewsModel;
 import com.mjc.school.service.interfaces.ModelDtoInterface;
 import com.mjc.school.service.interfaces.NewsMapperInterface;
 import com.mjc.school.service.interfaces.ServiceInterface;
@@ -33,10 +33,10 @@ public class NewsService implements ServiceInterface {
         try {
             ModelValidatorUtils.runValidation(requestDto.getInputData());
 
-            News news = NewsMapperInterface.INSTANCE.newsDtoToNews((NewsDto) requestDto.getInputData());
-            news.setCreateDate(LocalDateTime.now());
-            news.setLastUpdateDate(news.getCreateDate());
-            newsDao.create(news);
+            NewsModel newsModel = NewsMapperInterface.INSTANCE.newsDtoToNews((NewsDto) requestDto.getInputData());
+            newsModel.setCreateDate(LocalDateTime.now());
+            newsModel.setLastUpdateDate(newsModel.getCreateDate());
+            newsDao.create(newsModel);
 
             return ResponseDto
                 .builder()
@@ -44,7 +44,7 @@ public class NewsService implements ServiceInterface {
                 .resultSet(
                     getById(
                         RequestDto.builder().lookupId(
-                            news.getId().toString()
+                            newsModel.getId().toString()
                         ).build()
                     ).getResultSet()
                 )
@@ -64,7 +64,7 @@ public class NewsService implements ServiceInterface {
                 .resultSet(
                         newsDao.readAll()
                                 .stream()
-                                .map(model -> NewsMapperInterface.INSTANCE.newsToNewsDto((News) model))
+                                .map(model -> NewsMapperInterface.INSTANCE.newsToNewsDto((NewsModel) model))
                                 .map(model -> (ModelDtoInterface) model)
                                 .toList())
                 .build();
@@ -83,7 +83,7 @@ public class NewsService implements ServiceInterface {
                 .status("OK")
                 .resultSet(
                     List.of(NewsMapperInterface.INSTANCE.newsToNewsDto(
-                        (News) newsDao.readById(Long.parseLong(requestDto.getLookupId()))
+                        (NewsModel) newsDao.readById(Long.parseLong(requestDto.getLookupId()))
                     ))
                 )
                 .build();
@@ -100,16 +100,16 @@ public class NewsService implements ServiceInterface {
             ModelValidatorUtils.runValidation(requestDto);
             ModelValidatorUtils.runValidation(requestDto.getInputData());
 
-            News news = NewsMapperInterface.INSTANCE.newsDtoToNews((NewsDto) requestDto.getInputData());
-            news.setLastUpdateDate(LocalDateTime.now());
-            news.setId(Long.parseLong(requestDto.getLookupId()));
-            newsDao.update(news);
+            NewsModel newsModel = NewsMapperInterface.INSTANCE.newsDtoToNews((NewsDto) requestDto.getInputData());
+            newsModel.setLastUpdateDate(LocalDateTime.now());
+            newsModel.setId(Long.parseLong(requestDto.getLookupId()));
+            newsDao.update(newsModel);
 
             return ResponseDto
                 .builder()
                 .status("OK")
                 .resultSet(
-                    List.of(NewsMapperInterface.INSTANCE.newsToNewsDto((News) newsDao.readById(Long.parseLong(requestDto.getLookupId()))))
+                    List.of(NewsMapperInterface.INSTANCE.newsToNewsDto((NewsModel) newsDao.readById(Long.parseLong(requestDto.getLookupId()))))
                 )
                 .build();
 

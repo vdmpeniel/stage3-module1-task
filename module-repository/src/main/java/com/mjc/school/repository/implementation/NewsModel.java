@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class News implements ModelInterface, Serializable {
+public class NewsModel implements ModelInterface, Serializable {
     @JsonIgnore
     @Serial
     private static final long serialVersionUID = 123456789L;
@@ -54,7 +54,7 @@ public class News implements ModelInterface, Serializable {
     @Override
     public String toString(){
         try {
-            return  "News Object: " + "\n" +
+            return  "NewsModel Object: " + "\n" +
                     "id: " + id + "\n" +
                     "title: " + title + "\n" +
                     "content: " + content + "\n" +
