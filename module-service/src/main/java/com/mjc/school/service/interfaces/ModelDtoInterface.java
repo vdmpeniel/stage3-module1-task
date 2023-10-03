@@ -1,5 +1,3 @@
 package com.mjc.school.service.interfaces;
 
-public interface ModelDtoInterface {
-
-}
+public interface ModelDtoInterface {}

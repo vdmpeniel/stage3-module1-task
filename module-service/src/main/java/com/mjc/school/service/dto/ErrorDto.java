@@ -1,4 +1,4 @@
-package com.mjc.school.service.implementation;
+package com.mjc.school.service.dto;
 
 import com.mjc.school.service.interfaces.ModelDtoInterface;
 import lombok.AllArgsConstructor;

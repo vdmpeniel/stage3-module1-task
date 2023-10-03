@@ -2,10 +2,10 @@ package com.mjc.school.service;
 
 import com.mjc.school.common.implementation.exceptions.IllegalFieldValueException;
 import com.mjc.school.repository.implementation.DataSourceFileBased;
-import com.mjc.school.service.implementation.NewsDto;
+import com.mjc.school.service.dto.NewsDto;
 import com.mjc.school.service.implementation.NewsService;
-import com.mjc.school.service.implementation.RequestDto;
-import com.mjc.school.service.implementation.ResponseDto;
+import com.mjc.school.service.dto.RequestDto;
+import com.mjc.school.service.dto.ResponseDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

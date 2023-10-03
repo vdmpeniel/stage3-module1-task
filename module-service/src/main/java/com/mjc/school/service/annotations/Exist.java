@@ -1,6 +1,6 @@
 package com.mjc.school.service.annotations;
 
-import com.mjc.school.service.implementation.ExistValidator;
+import com.mjc.school.service.validator.ExistValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

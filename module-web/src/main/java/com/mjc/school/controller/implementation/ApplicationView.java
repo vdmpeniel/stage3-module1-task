@@ -1,8 +1,8 @@
 package com.mjc.school.controller.implementation;
 
-import com.mjc.school.controller.ViewInterface;
-import com.mjc.school.service.implementation.NewsDto;
-import com.mjc.school.service.implementation.ResponseDto;
+import com.mjc.school.controller.interfaces.ViewInterface;
+import com.mjc.school.service.dto.NewsDto;
+import com.mjc.school.service.dto.ResponseDto;
 
 import java.util.Objects;
 import java.util.Scanner;
@@ -10,6 +10,8 @@ import java.util.Scanner;
 class ApplicationView implements ViewInterface {
 
     private volatile static ApplicationView instance;
+
+    private ApplicationView(){}
 
     public static ApplicationView getInstance(){
         synchronized (ApplicationView.class) {

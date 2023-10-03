@@ -1,7 +1,7 @@
 package com.mjc.school.service.interfaces;
 
 import com.mjc.school.repository.model.NewsModel;
-import com.mjc.school.service.implementation.NewsDto;
+import com.mjc.school.service.dto.NewsDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

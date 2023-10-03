@@ -3,9 +3,13 @@ package com.mjc.school.service.implementation;
 import com.mjc.school.common.implementation.exceptions.IllegalFieldValueException;
 import com.mjc.school.common.implementation.utils.PropertyLoader;
 import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValidatorUtils;
-import com.mjc.school.repository.interfaces.ModelDaoInterface;
+import com.mjc.school.repository.interfaces.RepositoryInterface;
 import com.mjc.school.repository.implementation.NewsRepository;
 import com.mjc.school.repository.model.NewsModel;
+import com.mjc.school.service.dto.ErrorDto;
+import com.mjc.school.service.dto.NewsDto;
+import com.mjc.school.service.dto.RequestDto;
+import com.mjc.school.service.dto.ResponseDto;
 import com.mjc.school.service.interfaces.ModelDtoInterface;
 import com.mjc.school.service.interfaces.NewsMapperInterface;
 import com.mjc.school.service.interfaces.ServiceInterface;
@@ -13,9 +17,9 @@ import com.mjc.school.service.interfaces.ServiceInterface;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class NewsService implements ServiceInterface {
+public class NewsService implements ServiceInterface<RequestDto, ResponseDto> {
     PropertyLoader propertyLoader;
-    ModelDaoInterface newsDao;
+    RepositoryInterface newsDao;
 
     public NewsService(){
         try {

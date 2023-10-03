@@ -1,9 +1,11 @@
 package com.mjc.school.controller.implementation;
 
-import com.mjc.school.controller.ViewControllerInterface;
-import com.mjc.school.service.implementation.NewsService;
-import com.mjc.school.service.implementation.NewsDto;
-import com.mjc.school.service.implementation.RequestDto;
+import com.mjc.school.controller.interfaces.ViewControllerInterface;
+import com.mjc.school.service.dto.NewsDto;
+import com.mjc.school.service.dto.RequestDto;
+import com.mjc.school.service.dto.ResponseDto;
+import com.mjc.school.service.factory.ServiceFactory;
+import com.mjc.school.service.interfaces.ServiceInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,12 @@ import java.util.function.Function;
 
 public class ApplicationViewController implements ViewControllerInterface {
     private volatile static ApplicationViewController instance;
+
+    boolean doNextLoop = true;
+
+    private final ApplicationView view = ApplicationView.getInstance();
+    private final ServiceInterface<RequestDto, ResponseDto> newsService =
+            ServiceFactory.getInstance().getNewsService();
 
     private ApplicationViewController() throws Exception{}
 
@@ -24,10 +32,7 @@ public class ApplicationViewController implements ViewControllerInterface {
         }
     }
 
-    boolean doNextLoop = true;
 
-    private ApplicationView view = new ApplicationView();
-    private NewsService newsService = new NewsService();
 
 
     public void controlMenuView(){

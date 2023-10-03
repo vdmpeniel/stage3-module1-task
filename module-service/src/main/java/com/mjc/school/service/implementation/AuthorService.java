@@ -5,16 +5,20 @@ import com.mjc.school.common.implementation.utils.PropertyLoader;
 import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValidatorUtils;
 import com.mjc.school.repository.model.AuthorModel;
 import com.mjc.school.repository.implementation.AuthorRepository;
-import com.mjc.school.repository.interfaces.ModelDaoInterface;
+import com.mjc.school.repository.interfaces.RepositoryInterface;
+import com.mjc.school.service.dto.AuthorDto;
+import com.mjc.school.service.dto.ErrorDto;
+import com.mjc.school.service.dto.RequestDto;
+import com.mjc.school.service.dto.ResponseDto;
 import com.mjc.school.service.interfaces.AuthorMapperInterface;
 import com.mjc.school.service.interfaces.ModelDtoInterface;
 import com.mjc.school.service.interfaces.ServiceInterface;
 
 import java.util.List;
 
-public class AuthorService implements ServiceInterface {
+public class AuthorService implements ServiceInterface<RequestDto, ResponseDto> {
     PropertyLoader propertyLoader;
-    ModelDaoInterface authorDao;
+    RepositoryInterface authorDao;
 
     public AuthorService(){
         try {

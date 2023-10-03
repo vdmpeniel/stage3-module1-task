@@ -1,4 +1,4 @@
-package com.mjc.school.controller;
+package com.mjc.school.controller.interfaces;
 
 public interface ViewControllerInterface {
     public void controlMenuView();

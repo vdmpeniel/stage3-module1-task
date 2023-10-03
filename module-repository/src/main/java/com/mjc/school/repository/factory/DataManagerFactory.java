@@ -11,7 +11,10 @@ public class DataManagerFactory {
     private volatile JsonDataManager jsonDataManager;
     private volatile ListDataManager listDataManager;
 
-    private DataManagerFactory(){}
+    private DataManagerFactory(){
+        jsonDataManager = new JsonDataManager();
+        listDataManager = new ListDataManager();
+    }
 
     public static DataManagerFactory getInstance(){
         synchronized (DataManagerFactory.class){
@@ -22,19 +25,9 @@ public class DataManagerFactory {
         }
     }
     public DataManagerInterface getJsonDataManager(){
-        synchronized (DataManagerFactory.class) {
-            if (Objects.isNull(jsonDataManager)) {
-                jsonDataManager = new JsonDataManager();
-            }
-            return jsonDataManager;
-        }
+        return jsonDataManager;
     }
     public DataManagerInterface getListDataManager(){
-        synchronized (DataManagerFactory.class) {
-            if (Objects.isNull(listDataManager)) {
-                listDataManager = new ListDataManager();
-            }
-            return new ListDataManager();
-        }
+        return listDataManager;
     }
 }

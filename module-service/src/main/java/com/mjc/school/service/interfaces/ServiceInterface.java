@@ -1,18 +1,15 @@
 package com.mjc.school.service.interfaces;
 
-import com.mjc.school.service.implementation.RequestDto;
-import com.mjc.school.service.implementation.ResponseDto;
+public interface ServiceInterface<T, T1> {
+    T1 create(T requestDto);
 
-public interface ServiceInterface {
-    public ResponseDto create(RequestDto requestDto);
+    T1 getAll();
 
-    public ResponseDto getAll();
+    T1 getById(T requestDto);
 
-    public ResponseDto getById(RequestDto requestDto);
+    T1 updateById(T requestDto);
 
-    public ResponseDto updateById(RequestDto requestDto);
+    T1 removeById(T requestDto);
 
-    public ResponseDto removeById(RequestDto requestDto);
-
-    public ResponseDto buildErrorResponse(Exception e);
+    T1 buildErrorResponse(Exception e);
 }
