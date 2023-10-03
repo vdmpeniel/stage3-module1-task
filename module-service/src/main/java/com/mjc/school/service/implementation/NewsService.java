@@ -4,8 +4,8 @@ import com.mjc.school.common.implementation.exceptions.IllegalFieldValueExceptio
 import com.mjc.school.common.implementation.utils.PropertyLoader;
 import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValidatorUtils;
 import com.mjc.school.repository.interfaces.ModelDaoInterface;
-import com.mjc.school.repository.implementation.NewsDao;
-import com.mjc.school.repository.implementation.NewsModel;
+import com.mjc.school.repository.implementation.NewsRepository;
+import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.service.interfaces.ModelDtoInterface;
 import com.mjc.school.service.interfaces.NewsMapperInterface;
 import com.mjc.school.service.interfaces.ServiceInterface;
@@ -20,7 +20,7 @@ public class NewsService implements ServiceInterface {
     public NewsService(){
         try {
             propertyLoader = PropertyLoader.getInstance();
-            newsDao = new NewsDao();
+            newsDao = new NewsRepository();
 
         } catch(Exception e){
             System.out.println("Error: " + e.getMessage());

@@ -1,9 +1,12 @@
 package com.mjc.school.repository.implementation;
 
 import com.mjc.school.common.implementation.utils.JsonUtils;
+import com.mjc.school.repository.factory.DataManagerFactory;
 import com.mjc.school.repository.interfaces.DataManagerInterface;
 import com.mjc.school.repository.interfaces.DataSourceInterface;
 import com.mjc.school.repository.interfaces.ModelInterface;
+import com.mjc.school.repository.model.AuthorModel;
+import com.mjc.school.repository.model.NewsModel;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,7 +17,9 @@ import java.util.stream.Collectors;
 
 
 public class DataSourceFileBased implements DataSourceInterface {
-    DataManagerInterface dataManagerInterface = new ListDataManager();
+    DataManagerInterface dataManagerInterface = DataManagerFactory
+            .getInstance()
+            .getListDataManager();
 
     private static List<ModelInterface> newsTable;
     private static List<ModelInterface> authorTable;

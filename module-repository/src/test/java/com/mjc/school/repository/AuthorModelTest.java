@@ -1,6 +1,6 @@
 package com.mjc.school.repository;
 
-import com.mjc.school.repository.implementation.AuthorModel;
+import com.mjc.school.repository.model.AuthorModel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -3,8 +3,8 @@ package com.mjc.school.service.implementation;
 import com.mjc.school.common.implementation.exceptions.IllegalFieldValueException;
 import com.mjc.school.common.implementation.utils.PropertyLoader;
 import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValidatorUtils;
-import com.mjc.school.repository.implementation.AuthorModel;
-import com.mjc.school.repository.implementation.AuthorDao;
+import com.mjc.school.repository.model.AuthorModel;
+import com.mjc.school.repository.implementation.AuthorRepository;
 import com.mjc.school.repository.interfaces.ModelDaoInterface;
 import com.mjc.school.service.interfaces.AuthorMapperInterface;
 import com.mjc.school.service.interfaces.ModelDtoInterface;
@@ -19,7 +19,7 @@ public class AuthorService implements ServiceInterface {
     public AuthorService(){
         try {
             propertyLoader = PropertyLoader.getInstance();
-            authorDao = new AuthorDao();
+            authorDao = new AuthorRepository();
 
         } catch(Exception e){
             System.out.println("Error: " + e.getMessage());

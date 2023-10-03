@@ -1,6 +1,6 @@
 package com.mjc.school.service.interfaces;
 
-import com.mjc.school.repository.implementation.AuthorModel;
+import com.mjc.school.repository.model.AuthorModel;
 import com.mjc.school.service.implementation.AuthorDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -6,6 +6,7 @@ import com.mjc.school.common.implementation.utils.JsonUtils;
 import com.mjc.school.common.implementation.utils.PropertyLoader;
 import com.mjc.school.repository.interfaces.DataManagerInterface;
 import com.mjc.school.repository.interfaces.ModelInterface;
+import com.mjc.school.repository.model.AuthorModel;
 
 import java.io.IOException;
 import java.util.Arrays;

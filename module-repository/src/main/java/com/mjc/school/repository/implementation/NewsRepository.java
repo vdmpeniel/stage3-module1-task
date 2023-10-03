@@ -3,19 +3,20 @@ package com.mjc.school.repository.implementation;
 import com.mjc.school.repository.interfaces.ModelDaoInterface;
 import com.mjc.school.repository.interfaces.DataSourceInterface;
 import com.mjc.school.repository.interfaces.ModelInterface;
+import com.mjc.school.repository.model.NewsModel;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class NewsDao implements ModelDaoInterface {
+public class NewsRepository implements ModelDaoInterface<NewsModel> {
     private final DataSourceInterface dataSource = new DataSourceFileBased();
-    public NewsDao(){}
+    public NewsRepository(){}
 
     @Override
-    public ModelInterface create(ModelInterface newsModel)throws Exception{
-        return dataSource.executeInsertQuery(NewsModel.class, newsModel);
+    public ModelInterface create(ModelInterface model)throws Exception{
+        return dataSource.executeInsertQuery(NewsModel.class, model);
     }
 
     public List<ModelInterface> readAll() throws Exception{
@@ -31,9 +32,9 @@ public class NewsDao implements ModelDaoInterface {
     }
 
     @Override
-    public ModelInterface update(ModelInterface newsModel) throws Exception {
-        Predicate<ModelInterface> newsById = model -> newsModel.getId().equals(model.getId());
-        return dataSource.executeUpdateQuery(NewsModel.class, newsModel, newsById);
+    public ModelInterface update(ModelInterface model) throws Exception {
+        Predicate<ModelInterface> newsById = newsModel -> model.getId().equals(newsModel.getId());
+        return dataSource.executeUpdateQuery(NewsModel.class, model, newsById);
     }
 
     public Boolean delete(Long id) throws Exception{

@@ -3,16 +3,17 @@ package com.mjc.school.repository.implementation;
 import com.mjc.school.repository.interfaces.ModelDaoInterface;
 import com.mjc.school.repository.interfaces.DataSourceInterface;
 import com.mjc.school.repository.interfaces.ModelInterface;
+import com.mjc.school.repository.model.AuthorModel;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class AuthorDao implements ModelDaoInterface {
+public class AuthorRepository implements ModelDaoInterface<AuthorRepository> {
 
     private final DataSourceInterface dataSource = new DataSourceFileBased();
-    public AuthorDao(){}
+    public AuthorRepository(){}
 
     @Override
     public ModelInterface create(ModelInterface authorModel)throws Exception{

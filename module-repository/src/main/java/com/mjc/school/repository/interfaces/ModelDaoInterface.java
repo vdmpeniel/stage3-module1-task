@@ -2,7 +2,7 @@ package com.mjc.school.repository.interfaces;
 
 import java.util.List;
 
-public interface ModelDaoInterface {
+public interface ModelDaoInterface<T> {
     public ModelInterface create(ModelInterface model)throws Exception;
 
     public List<ModelInterface> readAll() throws Exception;
