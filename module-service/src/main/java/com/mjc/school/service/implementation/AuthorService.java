@@ -3,6 +3,7 @@ package com.mjc.school.service.implementation;
 import com.mjc.school.common.implementation.exceptions.IllegalFieldValueException;
 import com.mjc.school.common.implementation.utils.PropertyLoader;
 import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValidatorUtils;
+import com.mjc.school.repository.interfaces.ModelInterface;
 import com.mjc.school.repository.model.AuthorModel;
 import com.mjc.school.repository.implementation.AuthorRepository;
 import com.mjc.school.repository.interfaces.RepositoryInterface;
@@ -18,12 +19,12 @@ import java.util.List;
 
 public class AuthorService implements ServiceInterface<RequestDto, ResponseDto> {
     PropertyLoader propertyLoader;
-    RepositoryInterface authorDao;
+    RepositoryInterface<ModelInterface> authorRepository;
 
     public AuthorService(){
         try {
             propertyLoader = PropertyLoader.getInstance();
-            authorDao = new AuthorRepository();
+            authorRepository = new AuthorRepository();
 
         } catch(Exception e){
             System.out.println("Error: " + e.getMessage());
@@ -37,7 +38,7 @@ public class AuthorService implements ServiceInterface<RequestDto, ResponseDto> 
             ModelValidatorUtils.runValidation(requestDto.getInputData());
 
             AuthorModel authorModel = AuthorMapperInterface.INSTANCE.authorDtoToAuthor((AuthorDto) requestDto.getInputData());
-            authorDao.create(authorModel);
+            authorRepository.create(authorModel);
 
             return ResponseDto
                     .builder()
@@ -63,7 +64,7 @@ public class AuthorService implements ServiceInterface<RequestDto, ResponseDto> 
                     .builder()
                     .status("OK")
                     .resultSet(
-                            authorDao.readAll()
+                            authorRepository.readAll()
                                     .stream()
                                     .map(model -> AuthorMapperInterface.INSTANCE.authorToAuthorDto((AuthorModel) model))
                                     .map(model -> (ModelDtoInterface) model)
@@ -84,7 +85,7 @@ public class AuthorService implements ServiceInterface<RequestDto, ResponseDto> 
                     .status("OK")
                     .resultSet(
                             List.of(AuthorMapperInterface.INSTANCE.authorToAuthorDto(
-                                    (AuthorModel) authorDao.readById(Long.parseLong(requestDto.getLookupId()))
+                                    (AuthorModel) authorRepository.readById(Long.parseLong(requestDto.getLookupId()))
                             ))
                     )
                     .build();
@@ -103,13 +104,13 @@ public class AuthorService implements ServiceInterface<RequestDto, ResponseDto> 
 
             AuthorModel authorModel = AuthorMapperInterface.INSTANCE.authorDtoToAuthor((AuthorDto) requestDto.getInputData());
             authorModel.setId(Long.parseLong(requestDto.getLookupId()));
-            authorDao.update(authorModel);
+            authorRepository.update(authorModel);
 
             return ResponseDto
                     .builder()
                     .status("OK")
                     .resultSet(
-                            List.of(AuthorMapperInterface.INSTANCE.authorToAuthorDto((AuthorModel) authorDao.readById(Long.parseLong(requestDto.getLookupId()))))
+                            List.of(AuthorMapperInterface.INSTANCE.authorToAuthorDto((AuthorModel) authorRepository.readById(Long.parseLong(requestDto.getLookupId()))))
                     )
                     .build();
 
@@ -122,7 +123,7 @@ public class AuthorService implements ServiceInterface<RequestDto, ResponseDto> 
     public ResponseDto removeById(RequestDto requestDto ) {
         try{
             ModelValidatorUtils.runValidation(requestDto);
-            authorDao.delete(Long.parseLong(requestDto.getLookupId()));
+            authorRepository.delete(Long.parseLong(requestDto.getLookupId()));
             return ResponseDto.builder()
                     .status("OK")
                     .resultSet(null)

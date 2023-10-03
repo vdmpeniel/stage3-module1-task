@@ -21,7 +21,7 @@ public class ApplicationViewController implements ViewControllerInterface {
     private final ServiceInterface<RequestDto, ResponseDto> newsService =
             ServiceFactory.getInstance().getNewsService();
 
-    private ApplicationViewController() throws Exception{}
+    private ApplicationViewController(){}
 
     public static ApplicationViewController getInstance() throws Exception{
         synchronized (ApplicationViewController.class) {

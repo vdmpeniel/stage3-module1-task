@@ -1,6 +1,7 @@
 package com.mjc.school.service.validator;
 
 import com.mjc.school.repository.implementation.AuthorRepository;
+import com.mjc.school.repository.interfaces.ModelInterface;
 import com.mjc.school.repository.interfaces.RepositoryInterface;
 import com.mjc.school.repository.implementation.NewsRepository;
 import com.mjc.school.service.annotations.Exist;
@@ -28,9 +29,9 @@ public class ExistValidator implements ConstraintValidator<Exist, String> {
                 .addConstraintViolation();
 
         try {
-            RepositoryInterface modelDao = modelDao = message.contains("author")? (new AuthorRepository()): (new NewsRepository());
+            RepositoryInterface<ModelInterface> modelRepository = message.contains("author")? (new AuthorRepository()): (new NewsRepository());
             long longId = Long.parseLong(id);
-            return longId >= 0 && Objects.nonNull(modelDao.readById(longId));
+            return longId >= 0 && Objects.nonNull(modelRepository.readById(longId));
 
         } catch(Exception e){
             return false;

@@ -8,8 +8,8 @@ import java.util.Objects;
 
 public class DataManagerFactory {
     private static volatile DataManagerFactory instance;
-    private volatile JsonDataManager jsonDataManager;
-    private volatile ListDataManager listDataManager;
+    private final JsonDataManager jsonDataManager;
+    private final ListDataManager listDataManager;
 
     private DataManagerFactory(){
         jsonDataManager = new JsonDataManager();
