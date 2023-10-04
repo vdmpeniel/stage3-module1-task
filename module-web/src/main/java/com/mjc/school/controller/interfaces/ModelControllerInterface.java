@@ -1,6 +1,6 @@
-package com.mjc.school.service.interfaces;
+package com.mjc.school.controller.interfaces;
 
-public interface ServiceInterface<T, T1> {
+public interface ModelControllerInterface<T, T1> {
     T1 create(T requestDto);
 
     T1 readAll();

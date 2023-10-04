@@ -4,8 +4,8 @@ import com.mjc.school.controller.interfaces.ViewControllerInterface;
 import com.mjc.school.service.dto.NewsDto;
 import com.mjc.school.service.dto.RequestDto;
 import com.mjc.school.service.dto.ResponseDto;
-import com.mjc.school.service.factory.ServiceFactory;
-import com.mjc.school.service.interfaces.ServiceInterface;
+import com.mjc.school.controller.factory.ModelControllerFactory;
+import com.mjc.school.controller.interfaces.ModelControllerInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +18,8 @@ public class ApplicationViewController implements ViewControllerInterface {
     boolean doNextLoop = true;
 
     private final ApplicationView view = ApplicationView.getInstance();
-    private final ServiceInterface<RequestDto, ResponseDto> newsService =
-            ServiceFactory.getInstance().getNewsService();
+    private final ModelControllerInterface<RequestDto, ResponseDto> newsService =
+            ModelControllerFactory.getInstance().getNewsService();
 
     private ApplicationViewController(){}
 
@@ -31,8 +31,6 @@ public class ApplicationViewController implements ViewControllerInterface {
             return instance;
         }
     }
-
-
 
 
     public void controlMenuView(){

@@ -1,15 +1,15 @@
 package com.mjc.school.service;
 
-import com.mjc.school.common.implementation.exceptions.IllegalFieldValueException;
 import com.mjc.school.repository.implementation.DataSourceFileBased;
 import com.mjc.school.service.dto.NewsDto;
 import com.mjc.school.service.implementation.NewsService;
-import com.mjc.school.service.dto.RequestDto;
-import com.mjc.school.service.dto.ResponseDto;
+import com.mjc.school.service.interfaces.ModelDtoInterface;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,83 +33,52 @@ class NewsModelServiceTest {
     void tearDown() {
     }
 
-
-
     @Test
-    void create() {
-        ResponseDto responseDto = service.create(
-            RequestDto.builder()
-                .inputData(
-                    NewsDto.builder()
+    void create() throws Exception{
+        ModelDtoInterface model = service.create(
+                NewsDto.builder()
                         .title("This is a test!")
                         .newsContent("Some cheesy text here.")
                         .authorId("1")
                         .build()
-                )
+        );
+        assertInstanceOf(NewsDto.class, model);
+    }
+
+    @Test
+    void getAll() throws Exception{
+        List<NewsDto> all = service.readAll();
+        assertFalse(all.isEmpty());
+    }
+
+    @Test
+    void getById() throws Exception{
+        List<NewsDto> all = service.readAll();
+        Long id = (new Random()).nextLong(all.size() - 1);
+        NewsDto newsDto = service.readById(id);
+        assertFalse(Objects.isNull(newsDto.getId()));
+    }
+
+    @Test
+    void updateById() throws Exception{
+        List<NewsDto> all = service.readAll();
+        Long id = (new Random()).nextLong(all.size() - 1);
+        NewsDto newsDto = service.updateById(
+            id,
+            NewsDto.builder()
+                .title("Hello Test!")
+                .newsContent("This is just a test.")
+                .authorId("1")
                 .build()
         );
-        assertInstanceOf(NewsDto.class, responseDto.getResultSet().get(0));
+        assertEquals(id.toString(), newsDto.getId());
     }
 
     @Test
-    void getAll() {
-        ResponseDto responseDto = service.readAll();
-        System.out.println(responseDto);
-        assertFalse(responseDto.getResultSet().isEmpty());
+    void deleteById() throws Exception{
+        List<NewsDto> all = service.readAll();
+        String id = all.get((new Random()).nextInt(all.size())).getId();
+        Boolean response = service.deleteById(Long.parseLong(id));
+        assertEquals(true, response);
     }
-
-    @Test
-    void getById() {
-        ResponseDto all = service.readAll();
-        Long id = (new Random()).nextLong(all.getResultSet().size() - 1);
-        ResponseDto responseDto = service.readById(
-           RequestDto.builder()
-               .lookupId(id.toString())
-               .build()
-        );
-        assertFalse(responseDto.getResultSet().isEmpty());
-    }
-
-    @Test
-    void updateById() {
-        ResponseDto responseDto = service.updateById(
-            RequestDto.builder()
-                .lookupId("1")
-                .inputData(
-                    NewsDto.builder()
-                        .title("Hello Test!")
-                        .newsContent("This is just a test.")
-                        .authorId("1")
-                        .build()
-                )
-                .build()
-        );
-        assertEquals("1", ((NewsDto) responseDto.getResultSet().get(0)).getId());
-    }
-
-    @Test
-    void removeById() {
-
-
-        ResponseDto all = service.readAll();
-        String id = (
-            (NewsDto) all.getResultSet().get(
-                (new Random()).nextInt(all.getResultSet().size())
-            )
-        ).getId();
-        ResponseDto responseDto = service.deleteById(
-                RequestDto.builder().lookupId(id).build()
-        );
-        assertEquals("OK", responseDto.getStatus());
-    }
-
-    @Test
-    void buildErrorResponse() {
-        ResponseDto responseDto = service.buildErrorResponse(
-            new IllegalFieldValueException("Test exception", "010101")
-        );
-        assertEquals("010101", responseDto.getError().getCode());
-    }
-
-
 }
