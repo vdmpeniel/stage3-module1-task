@@ -34,16 +34,16 @@ public class AuthorController implements ModelControllerInterface<RequestDto, Re
             authorRepository.create(authorModel);
 
             return ResponseDto
-                    .builder()
-                    .status("OK")
-                    .resultSet(
-                            readById(
-                                    RequestDto.builder().lookupId(
-                                            authorModel.getId().toString()
-                                    ).build()
-                            ).getResultSet()
-                    )
-                    .build();
+                .builder()
+                .status("OK")
+                .resultSet(
+                    readById(
+                        RequestDto.builder().lookupId(
+                            authorModel.getId().toString()
+                        ).build()
+                    ).getResultSet()
+                )
+                .build();
 
         } catch(Exception e){
             return buildErrorResponse(e);
@@ -54,15 +54,15 @@ public class AuthorController implements ModelControllerInterface<RequestDto, Re
     public ResponseDto readAll() {
         try{
             return ResponseDto
-                    .builder()
-                    .status("OK")
-                    .resultSet(
-                            authorRepository.readAll()
-                                    .stream()
-                                    .map(model -> AuthorMapperInterface.INSTANCE.authorToAuthorDto((AuthorModel) model))
-                                    .map(model -> (ModelDtoInterface) model)
-                                    .toList())
-                    .build();
+                .builder()
+                .status("OK")
+                .resultSet(
+                    authorRepository.readAll()
+                        .stream()
+                        .map(model -> AuthorMapperInterface.INSTANCE.authorToAuthorDto((AuthorModel) model))
+                        .map(model -> (ModelDtoInterface) model)
+                        .toList())
+                .build();
 
         } catch(Exception e){
             return buildErrorResponse(e);
@@ -74,14 +74,14 @@ public class AuthorController implements ModelControllerInterface<RequestDto, Re
         try{
             ModelValidatorUtils.runValidation(requestDto);
             return ResponseDto
-                    .builder()
-                    .status("OK")
-                    .resultSet(
-                            List.of(AuthorMapperInterface.INSTANCE.authorToAuthorDto(
-                                    (AuthorModel) authorRepository.readById(Long.parseLong(requestDto.getLookupId()))
-                            ))
-                    )
-                    .build();
+                .builder()
+                .status("OK")
+                .resultSet(
+                        List.of(AuthorMapperInterface.INSTANCE.authorToAuthorDto(
+                                (AuthorModel) authorRepository.readById(Long.parseLong(requestDto.getLookupId()))
+                        ))
+                )
+                .build();
 
         } catch(Exception e){
             return buildErrorResponse(e);
@@ -99,12 +99,12 @@ public class AuthorController implements ModelControllerInterface<RequestDto, Re
             authorRepository.update(authorModel);
 
             return ResponseDto
-                    .builder()
-                    .status("OK")
-                    .resultSet(
-                            List.of(AuthorMapperInterface.INSTANCE.authorToAuthorDto((AuthorModel) authorRepository.readById(Long.parseLong(requestDto.getLookupId()))))
-                    )
-                    .build();
+                .builder()
+                .status("OK")
+                .resultSet(
+                        List.of(AuthorMapperInterface.INSTANCE.authorToAuthorDto((AuthorModel) authorRepository.readById(Long.parseLong(requestDto.getLookupId()))))
+                )
+                .build();
 
         } catch(Exception e){
             return buildErrorResponse(e);
@@ -117,24 +117,21 @@ public class AuthorController implements ModelControllerInterface<RequestDto, Re
             ModelValidatorUtils.runValidation(requestDto);
             authorRepository.delete(Long.parseLong(requestDto.getLookupId()));
             return ResponseDto.builder()
-                    .status("OK")
-                    .resultSet(null)
-                    .build();
+                .status("OK")
+                .resultSet(null)
+                .build();
 
         } catch(Exception e){
             return buildErrorResponse(e);
         }
     }
 
-
     @Override
     public ResponseDto buildErrorResponse(Exception e) {
         if (e instanceof IllegalFieldValueException ifve) {
             return ResponseDto.builder()
                 .status("Failed")
-                .error(
-                        ErrorDto.builder().code(ifve.getErrorCode()).message(ifve.getMessage()).build()
-                )
+                .error(ErrorDto.builder().code(ifve.getErrorCode()).message(ifve.getMessage()).build())
                 .build();
 
         } else {
@@ -146,5 +143,4 @@ public class AuthorController implements ModelControllerInterface<RequestDto, Re
                 .build();
         }
     }
-
 }

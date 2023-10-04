@@ -118,21 +118,16 @@ public class NewsController implements ModelControllerInterface<RequestDto, Resp
 
     @Override
     public ResponseDto buildErrorResponse(Exception e) {
-        if (e instanceof IllegalFieldValueException) {
-            IllegalFieldValueException ifve = (IllegalFieldValueException) e;
+        if (e instanceof IllegalFieldValueException ifve) {
             return ResponseDto.builder()
                 .status("Failed")
-                .error(
-                        ErrorDto.builder().code(ifve.getErrorCode()).message(ifve.getMessage()).build()
-                )
+                .error(ErrorDto.builder().code(ifve.getErrorCode()).message(ifve.getMessage()).build())
                 .build();
 
         } else {
             return ResponseDto.builder()
                 .status("Failed")
-                .error(
-                        ErrorDto.builder().code("0000123").message(e.getMessage()).build()
-                )
+                .error(ErrorDto.builder().code("0000123").message(e.getMessage()).build())
                 .build();
         }
     }
