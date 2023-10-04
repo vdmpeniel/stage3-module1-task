@@ -23,7 +23,7 @@ public class ApplicationViewController implements ViewControllerInterface {
 
     private ApplicationViewController(){}
 
-    public static ApplicationViewController getInstance() throws Exception{
+    public static ApplicationViewController getInstance(){
         synchronized (ApplicationViewController.class) {
             if (Objects.isNull(instance)) {
                 instance = new ApplicationViewController();
@@ -66,12 +66,12 @@ public class ApplicationViewController implements ViewControllerInterface {
 
     public void getAllNews(){
         view.renderOperationTittle();
-        view.renderResponse(newsService.getAll());
+        view.renderResponse(newsService.readAll());
     }
 
     public void getNewsById(){
         view.renderOperationTittle();
-        view.renderResponse(newsService.getById(
+        view.renderResponse(newsService.readById(
             RequestDto.builder().lookupId(
                     view.renderNewsIdInputForm()
             ).build())
@@ -105,7 +105,7 @@ public class ApplicationViewController implements ViewControllerInterface {
 
     public void removeNewsById(){
         view.renderOperationTittle();
-        view.renderDeleteResponse(newsService.removeById(
+        view.renderDeleteResponse(newsService.deleteById(
             RequestDto.builder().lookupId(view.renderNewsIdInputForm()).build()
         ));
     }

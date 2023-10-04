@@ -53,16 +53,16 @@ class NewsModelServiceTest {
 
     @Test
     void getAll() {
-        ResponseDto responseDto = service.getAll();
+        ResponseDto responseDto = service.readAll();
         System.out.println(responseDto);
         assertFalse(responseDto.getResultSet().isEmpty());
     }
 
     @Test
     void getById() {
-        ResponseDto all = service.getAll();
+        ResponseDto all = service.readAll();
         Long id = (new Random()).nextLong(all.getResultSet().size() - 1);
-        ResponseDto responseDto = service.getById(
+        ResponseDto responseDto = service.readById(
            RequestDto.builder()
                .lookupId(id.toString())
                .build()
@@ -91,13 +91,13 @@ class NewsModelServiceTest {
     void removeById() {
 
 
-        ResponseDto all = service.getAll();
+        ResponseDto all = service.readAll();
         String id = (
             (NewsDto) all.getResultSet().get(
                 (new Random()).nextInt(all.getResultSet().size())
             )
         ).getId();
-        ResponseDto responseDto = service.removeById(
+        ResponseDto responseDto = service.deleteById(
                 RequestDto.builder().lookupId(id).build()
         );
         assertEquals("OK", responseDto.getStatus());

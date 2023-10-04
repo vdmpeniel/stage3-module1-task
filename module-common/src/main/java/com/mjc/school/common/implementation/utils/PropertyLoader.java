@@ -14,6 +14,7 @@ public class PropertyLoader {
     }
 
     public static PropertyLoader getInstance() throws IOException{
+
         synchronized (PropertyLoader.class) {
             if (Objects.isNull(instance)) {
                 instance = new PropertyLoader();
@@ -26,7 +27,6 @@ public class PropertyLoader {
     private void loadProperties() throws IOException{
         try (InputStream inputStream = PropertyLoader.class.getResourceAsStream("/application.properties")) {
             properties.load(inputStream);
-
         }
     }
 

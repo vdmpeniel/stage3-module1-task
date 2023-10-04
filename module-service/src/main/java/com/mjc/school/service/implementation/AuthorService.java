@@ -15,20 +15,24 @@ import com.mjc.school.service.interfaces.AuthorMapperInterface;
 import com.mjc.school.service.interfaces.ModelDtoInterface;
 import com.mjc.school.service.interfaces.ServiceInterface;
 
+import java.io.IOException;
 import java.util.List;
 
 public class AuthorService implements ServiceInterface<RequestDto, ResponseDto> {
-    PropertyLoader propertyLoader;
-    RepositoryInterface<ModelInterface> authorRepository;
+    private static final PropertyLoader propertyLoader;
+    private final RepositoryInterface<ModelInterface> authorRepository;
 
-    public AuthorService(){
+    static {
         try {
             propertyLoader = PropertyLoader.getInstance();
-            authorRepository = new AuthorRepository();
 
-        } catch(Exception e){
-            System.out.println("Error: " + e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    public AuthorService(){
+        authorRepository = new AuthorRepository();
     }
 
 
@@ -44,7 +48,7 @@ public class AuthorService implements ServiceInterface<RequestDto, ResponseDto> 
                     .builder()
                     .status("OK")
                     .resultSet(
-                            getById(
+                            readById(
                                     RequestDto.builder().lookupId(
                                             authorModel.getId().toString()
                                     ).build()
@@ -58,7 +62,7 @@ public class AuthorService implements ServiceInterface<RequestDto, ResponseDto> 
     }
 
     @Override
-    public ResponseDto getAll() {
+    public ResponseDto readAll() {
         try{
             return ResponseDto
                     .builder()
@@ -77,10 +81,10 @@ public class AuthorService implements ServiceInterface<RequestDto, ResponseDto> 
     }
 
     @Override
-    public ResponseDto getById(RequestDto requestDto) {
+    public ResponseDto readById(RequestDto requestDto) {
         try{
             ModelValidatorUtils.runValidation(requestDto);
-            ResponseDto responseDto = ResponseDto
+            return ResponseDto
                     .builder()
                     .status("OK")
                     .resultSet(
@@ -89,7 +93,6 @@ public class AuthorService implements ServiceInterface<RequestDto, ResponseDto> 
                             ))
                     )
                     .build();
-            return responseDto;
 
         } catch(Exception e){
             return buildErrorResponse(e);
@@ -120,7 +123,7 @@ public class AuthorService implements ServiceInterface<RequestDto, ResponseDto> 
     }
 
     @Override
-    public ResponseDto removeById(RequestDto requestDto ) {
+    public ResponseDto deleteById(RequestDto requestDto ) {
         try{
             ModelValidatorUtils.runValidation(requestDto);
             authorRepository.delete(Long.parseLong(requestDto.getLookupId()));
@@ -140,19 +143,19 @@ public class AuthorService implements ServiceInterface<RequestDto, ResponseDto> 
         if (e instanceof IllegalFieldValueException) {
             IllegalFieldValueException ifve = (IllegalFieldValueException) e;
             return ResponseDto.builder()
-                    .status("Failed")
-                    .error(
-                            ErrorDto.builder().code(ifve.getErrorCode()).message(ifve.getMessage()).build()
-                    )
-                    .build();
+                .status("Failed")
+                .error(
+                        ErrorDto.builder().code(ifve.getErrorCode()).message(ifve.getMessage()).build()
+                )
+                .build();
 
         } else {
             return ResponseDto.builder()
-                    .status("Failed")
-                    .error(
-                            ErrorDto.builder().code("0000123").message(e.getMessage()).build()
-                    )
-                    .build();
+                .status("Failed")
+                .error(
+                        ErrorDto.builder().code("0000123").message(e.getMessage()).build()
+                )
+                .build();
         }
     }
 
