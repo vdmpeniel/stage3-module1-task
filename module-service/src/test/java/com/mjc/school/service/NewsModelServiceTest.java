@@ -64,21 +64,21 @@ class NewsModelServiceTest {
         List<NewsDto> all = service.readAll();
         Long id = (new Random()).nextLong(all.size() - 1);
         NewsDto newsDto = service.updateById(
-            id,
             NewsDto.builder()
+                .id(id)
                 .title("Hello Test!")
                 .newsContent("This is just a test.")
                 .authorId("1")
                 .build()
         );
-        assertEquals(id.toString(), newsDto.getId());
+        assertEquals(id, newsDto.getId());
     }
 
     @Test
     void deleteById() throws Exception{
         List<NewsDto> all = service.readAll();
-        String id = all.get((new Random()).nextInt(all.size())).getId();
-        Boolean response = service.deleteById(Long.parseLong(id));
+        Long id = all.get((new Random()).nextInt(all.size())).getId();
+        Boolean response = service.deleteById(id);
         assertEquals(true, response);
     }
 }

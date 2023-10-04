@@ -24,6 +24,7 @@ public class AuthorModel implements ModelInterface, Serializable {
     @Serial
     private static final long serialVersionUID = 123456789L;
 
+    @JsonIgnore
     private Long id;
 
     @Size(min=5, max=15, message = "Name must be between 5 and 15 characters long")

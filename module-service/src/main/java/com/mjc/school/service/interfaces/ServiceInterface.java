@@ -9,7 +9,7 @@ public interface ServiceInterface<T> {
 
     T readById(Long id) throws Exception;
 
-    T updateById(Long id,  T modelDto) throws Exception;
+    T updateById(T modelDto) throws Exception;
 
     Boolean deleteById(Long id) throws Exception;
 }

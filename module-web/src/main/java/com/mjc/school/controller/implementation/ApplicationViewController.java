@@ -79,7 +79,7 @@ public class ApplicationViewController implements ViewControllerInterface {
 
     private final Function<String, NewsDto> newsDtoWithIdSupplier = (id) -> {
         NewsDto newsDto = view.renderNewsInputForm();
-        newsDto.setId(id);
+        newsDto.setId(Long.parseLong(id));
         return newsDto;
     };
     public void createNews(){

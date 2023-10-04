@@ -41,10 +41,10 @@ public class AuthorService implements ServiceInterface<AuthorDto> {
     }
 
 
-    public AuthorDto updateById(Long id,  AuthorDto model) throws Exception{
-        ModelValidatorUtils.runValidation(model);
-        AuthorModel authorModel = AuthorMapperInterface.INSTANCE.authorDtoToAuthor(model);
-        authorModel.setId(Long.parseLong(id.toString()));
+    public AuthorDto updateById(AuthorDto authorDto) throws Exception{
+        ModelValidatorUtils.runValidation(authorDto);
+        AuthorModel authorModel = AuthorMapperInterface.INSTANCE.authorDtoToAuthor(authorDto);
+        authorModel.setId(authorDto.getId());
         return (AuthorDto) authorRepository.update(authorModel);
     }
 

@@ -5,7 +5,7 @@ import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValid
 import com.mjc.school.controller.dto.RequestDto;
 import com.mjc.school.controller.dto.ResponseDto;
 import com.mjc.school.controller.interfaces.ModelControllerInterface;
-import com.mjc.school.service.dto.ErrorDto;
+import com.mjc.school.controller.dto.ErrorDto;
 import com.mjc.school.service.dto.NewsDto;
 import com.mjc.school.service.factory.ServiceFactory;
 import com.mjc.school.service.interfaces.ModelDtoInterface;
@@ -33,7 +33,7 @@ public class NewsController implements ModelControllerInterface<RequestDto, Resp
                 .resultSet(
                     readById(
                         RequestDto.builder().lookupId(
-                            newsDto.getId()
+                            newsDto.getId().toString()
                         ).build()
                     ).getResultSet()
                 )
@@ -82,10 +82,10 @@ public class NewsController implements ModelControllerInterface<RequestDto, Resp
     @Override
     public ResponseDto updateById(RequestDto requestDto) {
         try{
-            newsService.updateById(
-                Long.parseLong(requestDto.getLookupId()),
-                (NewsDto) requestDto.getInputData()
-            );
+            NewsDto newsDto = (NewsDto) requestDto.getInputData();
+            newsDto.setId(Long.parseLong(requestDto.getLookupId()));
+
+            newsService.updateById(newsDto);
             return ResponseDto
                 .builder()
                 .status("OK")

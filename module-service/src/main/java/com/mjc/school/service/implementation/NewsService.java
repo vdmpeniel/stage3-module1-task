@@ -35,24 +35,21 @@ public class NewsService implements ServiceInterface<NewsDto> {
             .toList();
     }
 
-
     public NewsDto readById(Long id) throws Exception{
         return NewsMapperInterface.INSTANCE.newsToNewsDto(
-                (NewsModel) newsRepository.readById(Long.parseLong(id.toString()))
+            (NewsModel) newsRepository.readById(Long.parseLong(id.toString()))
         );
     }
 
-
-    public NewsDto updateById(Long id,  NewsDto model) throws Exception{
-        ModelValidatorUtils.runValidation(model);
-        NewsModel newsModel = NewsMapperInterface.INSTANCE.newsDtoToNews(model);
+    public NewsDto updateById(NewsDto newsDto) throws Exception{
+        ModelValidatorUtils.runValidation(newsDto);
+        NewsModel newsModel = NewsMapperInterface.INSTANCE.newsDtoToNews(newsDto);
         newsModel.setLastUpdateDate(LocalDateTime.now());
-        newsModel.setId(Long.parseLong(id.toString()));
+        newsModel.setId(newsDto.getId());
         return NewsMapperInterface.INSTANCE.newsToNewsDto( (NewsModel) newsRepository.update(newsModel) );
     }
 
-
-    public Boolean deleteById(Long id ) throws Exception{
+    public Boolean deleteById(Long id) throws Exception{
         return newsRepository.delete(Long.parseLong(id.toString()));
     }
 

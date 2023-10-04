@@ -2,11 +2,11 @@ package com.mjc.school.controller.modelcontroller;
 
 import com.mjc.school.common.implementation.exceptions.IllegalFieldValueException;
 import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValidatorUtils;
+import com.mjc.school.controller.dto.ErrorDto;
 import com.mjc.school.controller.dto.RequestDto;
 import com.mjc.school.controller.dto.ResponseDto;
 import com.mjc.school.controller.interfaces.ModelControllerInterface;
 import com.mjc.school.service.dto.AuthorDto;
-import com.mjc.school.service.dto.ErrorDto;
 import com.mjc.school.service.factory.ServiceFactory;
 import com.mjc.school.service.interfaces.ModelDtoInterface;
 import com.mjc.school.service.interfaces.ServiceInterface;
@@ -81,15 +81,15 @@ public class AuthorController implements ModelControllerInterface<RequestDto, Re
     @Override
     public ResponseDto updateById(RequestDto requestDto) {
         try{
-             authorService.updateById(
-                    Long.parseLong(requestDto.getLookupId()),
-                    ( AuthorDto) requestDto.getInputData()
-            );
+             AuthorDto authorDto = (AuthorDto) requestDto.getInputData();
+             authorDto.setId(Long.parseLong(requestDto.getLookupId()));
+
+             authorService.updateById(authorDto);
             return ResponseDto
                     .builder()
                     .status("OK")
                     .resultSet(
-                            List.of( authorService.readById(Long.parseLong(requestDto.getLookupId())))
+                            List.of(authorService.readById(Long.parseLong(requestDto.getLookupId())))
                     )
                     .build();
 
@@ -129,5 +129,4 @@ public class AuthorController implements ModelControllerInterface<RequestDto, Re
                     .build();
         }
     }
-
 }
