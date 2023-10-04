@@ -1,23 +1,24 @@
-package com.mjc.school.controller.implementation;
+package com.mjc.school.controller.modelcontroller;
 
 import com.mjc.school.common.implementation.exceptions.IllegalFieldValueException;
 import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValidatorUtils;
+import com.mjc.school.controller.dto.RequestDto;
+import com.mjc.school.controller.dto.ResponseDto;
 import com.mjc.school.controller.interfaces.ModelControllerInterface;
 import com.mjc.school.service.dto.ErrorDto;
 import com.mjc.school.service.dto.NewsDto;
-import com.mjc.school.service.dto.RequestDto;
-import com.mjc.school.service.dto.ResponseDto;
-import com.mjc.school.service.implementation.NewsService;
+import com.mjc.school.service.factory.ServiceFactory;
 import com.mjc.school.service.interfaces.ModelDtoInterface;
+import com.mjc.school.service.interfaces.ServiceInterface;
 
 import java.util.List;
 
 public class NewsController implements ModelControllerInterface<RequestDto, ResponseDto> {
 
-    private final NewsService newsService;
+    private final ServiceInterface<NewsDto> newsService;
 
     public NewsController(){
-        newsService = new NewsService();
+        newsService = ServiceFactory.getInstance().getNewsService();
     }
 
 
@@ -81,12 +82,10 @@ public class NewsController implements ModelControllerInterface<RequestDto, Resp
     @Override
     public ResponseDto updateById(RequestDto requestDto) {
         try{
-
             newsService.updateById(
                 Long.parseLong(requestDto.getLookupId()),
                 (NewsDto) requestDto.getInputData()
             );
-
             return ResponseDto
                 .builder()
                 .status("OK")

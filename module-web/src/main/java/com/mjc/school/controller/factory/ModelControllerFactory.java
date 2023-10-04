@@ -1,10 +1,10 @@
 package com.mjc.school.controller.factory;
 
-import com.mjc.school.controller.implementation.AuthorController;
-import com.mjc.school.controller.implementation.NewsController;
+import com.mjc.school.controller.modelcontroller.AuthorController;
+import com.mjc.school.controller.modelcontroller.NewsController;
 import com.mjc.school.controller.interfaces.ModelControllerInterface;
-import com.mjc.school.service.dto.RequestDto;
-import com.mjc.school.service.dto.ResponseDto;
+import com.mjc.school.controller.dto.RequestDto;
+import com.mjc.school.controller.dto.ResponseDto;
 
 import java.util.Objects;
 

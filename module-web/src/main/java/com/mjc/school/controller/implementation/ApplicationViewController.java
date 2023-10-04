@@ -2,8 +2,8 @@ package com.mjc.school.controller.implementation;
 
 import com.mjc.school.controller.interfaces.ViewControllerInterface;
 import com.mjc.school.service.dto.NewsDto;
-import com.mjc.school.service.dto.RequestDto;
-import com.mjc.school.service.dto.ResponseDto;
+import com.mjc.school.controller.dto.RequestDto;
+import com.mjc.school.controller.dto.ResponseDto;
 import com.mjc.school.controller.factory.ModelControllerFactory;
 import com.mjc.school.controller.interfaces.ModelControllerInterface;
 

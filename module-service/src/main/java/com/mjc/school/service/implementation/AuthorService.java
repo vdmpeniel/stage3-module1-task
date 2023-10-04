@@ -7,10 +7,11 @@ import com.mjc.school.repository.interfaces.RepositoryInterface;
 import com.mjc.school.repository.model.AuthorModel;
 import com.mjc.school.service.dto.AuthorDto;
 import com.mjc.school.service.interfaces.AuthorMapperInterface;
+import com.mjc.school.service.interfaces.ServiceInterface;
 
 import java.util.List;
 
-public class AuthorService {
+public class AuthorService implements ServiceInterface<AuthorDto> {
     private final RepositoryInterface<ModelInterface> authorRepository;
 
     public AuthorService(){

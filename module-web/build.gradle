@@ -10,6 +10,10 @@ repositories {
 }
 
 dependencies {
+    //implementation 'jakarta.validation:jakarta.validation-api:3.0.0'
+    implementation 'org.glassfish:jakarta.el:4.0.2'
+    implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
+
     implementation project(path: ':module-service')
     implementation project(path: ':module-common')
     implementation project(path: ':module-repository')

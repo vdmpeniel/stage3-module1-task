@@ -2,7 +2,7 @@ package com.mjc.school.controller.implementation;
 
 import com.mjc.school.controller.interfaces.ViewInterface;
 import com.mjc.school.service.dto.NewsDto;
-import com.mjc.school.service.dto.ResponseDto;
+import com.mjc.school.controller.dto.ResponseDto;
 
 import java.util.Objects;
 import java.util.Scanner;

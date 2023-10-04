@@ -7,11 +7,12 @@ import com.mjc.school.repository.interfaces.RepositoryInterface;
 import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.service.dto.NewsDto;
 import com.mjc.school.service.interfaces.NewsMapperInterface;
+import com.mjc.school.service.interfaces.ServiceInterface;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class NewsService {
+public class NewsService implements ServiceInterface<NewsDto> {
     private final RepositoryInterface<ModelInterface> newsRepository;
 
     public NewsService(){
