@@ -1,4 +1,6 @@
-package com.mjc.school.common.implementation.utils;
+package com.mjc.school.common.utils;
+
+import com.mjc.school.common.implementation.PropertyLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +37,6 @@ public class FileUtils {
     }
 
     public static Path getAbsolutePath(String filePath){
-        Path path = Path.of(filePath);
         File file = new File(filePath);
         return Path.of(file.getAbsolutePath());
     }

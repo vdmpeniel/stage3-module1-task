@@ -1,8 +1,8 @@
 package com.mjc.school.repository.implementation;
 
-import com.mjc.school.common.implementation.utils.FileUtils;
-import com.mjc.school.common.implementation.utils.IdGeneratorUtils;
-import com.mjc.school.common.implementation.utils.PropertyLoader;
+import com.mjc.school.common.utils.FileUtils;
+import com.mjc.school.common.utils.IdGeneratorUtils;
+import com.mjc.school.common.implementation.PropertyLoader;
 import com.mjc.school.repository.interfaces.DataManagerInterface;
 import com.mjc.school.repository.interfaces.ModelInterface;
 import com.mjc.school.repository.model.AuthorModel;

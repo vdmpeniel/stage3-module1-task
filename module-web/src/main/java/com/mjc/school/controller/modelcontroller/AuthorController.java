@@ -1,7 +1,7 @@
 package com.mjc.school.controller.modelcontroller;
 
-import com.mjc.school.common.implementation.exceptions.IllegalFieldValueException;
-import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValidatorUtils;
+import com.mjc.school.common.exceptions.IllegalFieldValueException;
+import com.mjc.school.common.implementation.ModelValidator;
 import com.mjc.school.controller.dto.ErrorDto;
 import com.mjc.school.controller.dto.RequestDto;
 import com.mjc.school.controller.dto.ResponseDto;
@@ -14,10 +14,14 @@ import com.mjc.school.service.interfaces.ServiceInterface;
 import java.util.List;
 
 public class AuthorController implements ModelControllerInterface<RequestDto, ResponseDto> {
-    private final ServiceInterface<AuthorDto>  authorService;
+    private ServiceInterface<AuthorDto>  authorService;
+    private ModelValidator validator;
 
     public  AuthorController(){
-         authorService = ServiceFactory.getInstance().getAuthorService();
+        try {
+            authorService = ServiceFactory.getInstance().getAuthorService();
+            validator = ModelValidator.getInstance();
+        } catch(Exception e){ buildErrorResponse(e); }
     }
 
 
@@ -64,7 +68,7 @@ public class AuthorController implements ModelControllerInterface<RequestDto, Re
     @Override
     public ResponseDto readById(RequestDto requestDto) {
         try{
-            ModelValidatorUtils.runValidation(requestDto);
+            validator.runValidation(requestDto);
             return ResponseDto
                     .builder()
                     .status("OK")
@@ -101,7 +105,7 @@ public class AuthorController implements ModelControllerInterface<RequestDto, Re
     @Override
     public ResponseDto deleteById(RequestDto requestDto ) {
         try{
-            ModelValidatorUtils.runValidation(requestDto);
+            validator.runValidation(requestDto);
              authorService.deleteById(Long.parseLong(requestDto.getLookupId()));
             return ResponseDto.builder()
                     .status("OK")

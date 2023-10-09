@@ -1,6 +1,6 @@
 package com.mjc.school.common.utils;
 
-import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValidatorUtils;
+import com.mjc.school.common.implementation.ModelValidator;
 import com.mjc.school.repository.model.NewsModel;
 import jakarta.validation.ConstraintViolation;
 import org.junit.jupiter.api.AfterEach;
@@ -13,11 +13,12 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ModelValidatorUtilsTest {
+class ModelValidatorTest {
     private NewsModel newsModel;
+    private ModelValidator validator;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception{
         newsModel = NewsModel.builder()
                 .title(".")
                 .content(".")
@@ -25,6 +26,8 @@ class ModelValidatorUtilsTest {
                 .lastUpdateDate(LocalDateTime.now().plusMinutes(5))
                 .authorId(1L)
                 .build();
+
+        validator = ModelValidator.getInstance();
     }
 
     @AfterEach
@@ -33,24 +36,24 @@ class ModelValidatorUtilsTest {
 
     @Test
     void validate() {
-        Set<ConstraintViolation<NewsModel>> violations = ModelValidatorUtils.validate(newsModel);
+        Set<ConstraintViolation<NewsModel>> violations = validator.validate(newsModel);
         assertNotEquals(0, violations.size());
     }
 
     @Test
     void createViolationMap() {
-        Set<ConstraintViolation<NewsModel>> violations = ModelValidatorUtils.validate(newsModel);
-        boolean hasFailingField = ModelValidatorUtils.createViolationMap(violations)
+        Set<ConstraintViolation<NewsModel>> violations = validator.validate(newsModel);
+        boolean hasFailingField = validator.createViolationMap(violations)
             .containsKey("content");
         assertTrue(hasFailingField);
     }
 
     @Test
     void createValidationErrorList() {
-        Set<ConstraintViolation<NewsModel>> violations = ModelValidatorUtils.validate(newsModel);
+        Set<ConstraintViolation<NewsModel>> violations = validator.validate(newsModel);
         assertNotEquals(
                 0,
-                ModelValidatorUtils.createValidationErrorList(ModelValidatorUtils.createViolationMap(violations)).size()
+                validator.createValidationErrorList(validator.createViolationMap(violations)).size()
         );
     }
 }

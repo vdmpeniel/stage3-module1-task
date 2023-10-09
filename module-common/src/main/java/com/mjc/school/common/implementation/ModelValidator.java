@@ -1,9 +1,8 @@
-package com.mjc.school.common.implementation.utils.modelvalidatorutils;
+package com.mjc.school.common.implementation;
 
 
-import com.mjc.school.common.implementation.exceptions.IllegalFieldValueException;
-import com.mjc.school.common.implementation.utils.PropertyLoader;
-import com.mjc.school.common.implementation.utils.JsonUtils;
+import com.mjc.school.common.exceptions.IllegalFieldValueException;
+import com.mjc.school.common.utils.JsonUtils;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -13,8 +12,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ModelValidatorUtils {
-    private static PropertyLoader propertyLoader;
+public class ModelValidator {
+    private static ModelValidator instance;
+    private final static PropertyLoader propertyLoader;
 
     static {
         try {
@@ -24,19 +24,26 @@ public class ModelValidatorUtils {
         }
     }
 
-    private ModelValidatorUtils(){}
+    private ModelValidator(){}
 
-    public static <T> Set<ConstraintViolation<T>> validate(T obj) {
+    public static ModelValidator getInstance() throws IOException{
+        synchronized (ModelValidator.class) {
+            if (Objects.isNull(instance)) {
+                instance = new ModelValidator();
+            }
+            return instance;
+        }
+    }
+
+    public <T> Set<ConstraintViolation<T>> validate(T obj) {
         Validator validator;
-        //CustomValidatorFactory.createValidatorFactory()
-
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
             validator = factory.getValidator();
         }
         return validator.validate(obj);
     }
 
-    public static <T> Map<String, String> createViolationMap(Set<ConstraintViolation<T>> violations){
+    public <T> Map<String, String> createViolationMap(Set<ConstraintViolation<T>> violations){
         return violations.stream()
             .collect(Collectors.toMap(
                 violation -> violation.getPropertyPath().toString(),
@@ -45,13 +52,13 @@ public class ModelValidatorUtils {
     }
 
 
-    public static List<String> createValidationErrorList(Map<String, String> violationMap){
+    public List<String> createValidationErrorList(Map<String, String> violationMap){
         return violationMap.entrySet().stream().
             map(entry -> "Error at field " + entry.getKey() + ": " + entry.getValue())
             .collect(Collectors.toList());
     }
 
-    public static <T> List<Object> runValidation(T obj) throws Exception{
+    public <T> List<Object> runValidation(T obj) throws Exception{
         Set<ConstraintViolation<T>> violations = validate(obj);
         if (!violations.isEmpty()) {
             List<Object> exceptionList = violations.stream()

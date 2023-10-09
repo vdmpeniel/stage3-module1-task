@@ -1,4 +1,4 @@
-package com.mjc.school.common.implementation.exceptions;
+package com.mjc.school.common.exceptions;
 
 public class IllegalFieldValueException extends Exception{
     private String errorCode;

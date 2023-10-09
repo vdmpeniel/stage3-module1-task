@@ -1,6 +1,6 @@
 package com.mjc.school.service.implementation;
 
-import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValidatorUtils;
+import com.mjc.school.common.implementation.ModelValidator;
 import com.mjc.school.repository.factory.RepositoryFactory;
 import com.mjc.school.repository.interfaces.ModelInterface;
 import com.mjc.school.repository.interfaces.RepositoryInterface;
@@ -13,13 +13,15 @@ import java.util.List;
 
 public class AuthorService implements ServiceInterface<AuthorDto> {
     private final RepositoryInterface<ModelInterface> authorRepository;
+    private final ModelValidator validator;
 
-    public AuthorService(){
+    public AuthorService() throws Exception{
         authorRepository = RepositoryFactory.getInstance().getAuthorRepository();
+        validator = ModelValidator.getInstance();
     }
 
     public AuthorDto create(AuthorDto model) throws Exception{
-        ModelValidatorUtils.runValidation(model);
+        validator.runValidation(model);
         return (AuthorDto) authorRepository.create(
                 AuthorMapperInterface.INSTANCE.authorDtoToAuthor(model)
         );
@@ -42,7 +44,7 @@ public class AuthorService implements ServiceInterface<AuthorDto> {
 
 
     public AuthorDto updateById(AuthorDto authorDto) throws Exception{
-        ModelValidatorUtils.runValidation(authorDto);
+        validator.runValidation(authorDto);
         AuthorModel authorModel = AuthorMapperInterface.INSTANCE.authorDtoToAuthor(authorDto);
         authorModel.setId(authorDto.getId());
         return (AuthorDto) authorRepository.update(authorModel);

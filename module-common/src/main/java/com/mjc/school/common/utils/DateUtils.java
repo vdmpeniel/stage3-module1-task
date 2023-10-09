@@ -1,4 +1,6 @@
-package com.mjc.school.common.implementation.utils;
+package com.mjc.school.common.utils;
+
+import com.mjc.school.common.implementation.PropertyLoader;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -6,7 +8,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class DateUtils {
-    private static PropertyLoader propertyLoader;
+    private final static PropertyLoader propertyLoader;
 
     static {
         try {

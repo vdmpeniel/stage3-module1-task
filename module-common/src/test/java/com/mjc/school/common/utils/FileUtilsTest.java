@@ -1,6 +1,5 @@
 package com.mjc.school.common.utils;
 
-import com.mjc.school.common.implementation.utils.FileUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

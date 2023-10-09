@@ -1,6 +1,6 @@
 package com.mjc.school.repository.implementation;
 
-import com.mjc.school.common.implementation.utils.JsonUtils;
+import com.mjc.school.common.utils.JsonUtils;
 import com.mjc.school.repository.factory.DataManagerFactory;
 import com.mjc.school.repository.interfaces.DataManagerInterface;
 import com.mjc.school.repository.interfaces.DataSourceInterface;

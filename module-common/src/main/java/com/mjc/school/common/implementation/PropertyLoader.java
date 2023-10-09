@@ -1,4 +1,4 @@
-package com.mjc.school.common.implementation.utils;
+package com.mjc.school.common.implementation;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,14 +14,12 @@ public class PropertyLoader {
     }
 
     public static PropertyLoader getInstance() throws IOException{
-
         synchronized (PropertyLoader.class) {
             if (Objects.isNull(instance)) {
                 instance = new PropertyLoader();
             }
             return instance;
         }
-
     }
 
     private void loadProperties() throws IOException{

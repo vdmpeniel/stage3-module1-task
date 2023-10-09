@@ -1,6 +1,6 @@
-package com.mjc.school.common.implementation.utils.modelvalidatorutils;
+package com.mjc.school.common.implementation;
 
-import com.mjc.school.common.implementation.utils.FileUtils;
+import com.mjc.school.common.utils.FileUtils;
 import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator;
 import org.hibernate.validator.resourceloading.PlatformResourceBundleLocator;
 

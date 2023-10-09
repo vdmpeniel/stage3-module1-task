@@ -1,4 +1,4 @@
-package com.mjc.school.common.implementation.utils;
+package com.mjc.school.common.utils;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JacksonException;
@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.mjc.school.common.implementation.PropertyLoader;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JsonUtils {
-    private static PropertyLoader propertyLoader;
+    private final static PropertyLoader propertyLoader;
 
     static {
         try {

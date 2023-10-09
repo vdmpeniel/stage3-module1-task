@@ -1,7 +1,7 @@
 package com.mjc.school.controller.modelcontroller;
 
-import com.mjc.school.common.implementation.exceptions.IllegalFieldValueException;
-import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValidatorUtils;
+import com.mjc.school.common.exceptions.IllegalFieldValueException;
+import com.mjc.school.common.implementation.ModelValidator;
 import com.mjc.school.controller.dto.RequestDto;
 import com.mjc.school.controller.dto.ResponseDto;
 import com.mjc.school.controller.interfaces.ModelControllerInterface;
@@ -15,10 +15,14 @@ import java.util.List;
 
 public class NewsController implements ModelControllerInterface<RequestDto, ResponseDto> {
 
-    private final ServiceInterface<NewsDto> newsService;
+    private ServiceInterface<NewsDto> newsService;
+    private ModelValidator validator;
 
     public NewsController(){
-        newsService = ServiceFactory.getInstance().getNewsService();
+        try{
+            newsService = ServiceFactory.getInstance().getNewsService();
+            validator = ModelValidator.getInstance();
+        } catch(Exception e){ buildErrorResponse(e); }
     }
 
 
@@ -65,7 +69,7 @@ public class NewsController implements ModelControllerInterface<RequestDto, Resp
     @Override
     public ResponseDto readById(RequestDto requestDto) {
         try{
-            ModelValidatorUtils.runValidation(requestDto);
+            validator.runValidation(requestDto);
             return ResponseDto
                 .builder()
                 .status("OK")
@@ -102,7 +106,7 @@ public class NewsController implements ModelControllerInterface<RequestDto, Resp
     @Override
     public ResponseDto deleteById(RequestDto requestDto ) {
         try{
-            ModelValidatorUtils.runValidation(requestDto);
+            validator.runValidation(requestDto);
             newsService.deleteById(Long.parseLong(requestDto.getLookupId()));
             return ResponseDto.builder()
                     .status("OK")

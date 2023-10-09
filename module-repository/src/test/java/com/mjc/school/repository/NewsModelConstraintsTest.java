@@ -1,7 +1,7 @@
 package com.mjc.school.repository;
 
-import com.mjc.school.common.implementation.exceptions.IllegalFieldValueException;
-import com.mjc.school.common.implementation.utils.modelvalidatorutils.ModelValidatorUtils;
+import com.mjc.school.common.exceptions.IllegalFieldValueException;
+import com.mjc.school.common.implementation.ModelValidator;
 import com.mjc.school.repository.model.NewsModel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,9 +12,11 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class NewsModelConstraintsTest {
+    private ModelValidator validator;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception{
+        validator = ModelValidator.getInstance();
     }
 
     @AfterEach
@@ -26,7 +28,7 @@ public class NewsModelConstraintsTest {
         assertThrows(IllegalFieldValueException.class, () -> {
             NewsModel newsModel = new NewsModel();
             newsModel.setTitle(".");
-            ModelValidatorUtils.runValidation(newsModel);
+            validator.runValidation(newsModel);
         });
     }
 
@@ -35,7 +37,7 @@ public class NewsModelConstraintsTest {
         assertThrows(IllegalFieldValueException.class, () -> {
             NewsModel newsModel = new NewsModel();
             newsModel.setContent(".");
-            ModelValidatorUtils.runValidation(newsModel);
+            validator.runValidation(newsModel);
         });
     }
 
@@ -46,7 +48,7 @@ public class NewsModelConstraintsTest {
                 newsModel.setContent(".");
                 newsModel.setLastUpdateDate(LocalDateTime.now());
 
-            ModelValidatorUtils.runValidation(newsModel);
+            validator.runValidation(newsModel);
         });
     }
 }

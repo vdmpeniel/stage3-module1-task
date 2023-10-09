@@ -1,4 +1,4 @@
-package com.mjc.school.common.implementation.utils;
+package com.mjc.school.common.utils;
 
 import java.util.HashMap;
 import java.util.Map;
