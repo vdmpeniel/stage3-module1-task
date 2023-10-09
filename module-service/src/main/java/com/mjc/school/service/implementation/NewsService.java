@@ -1,6 +1,5 @@
 package com.mjc.school.service.implementation;
 
-import com.mjc.school.common.implementation.ModelValidator;
 import com.mjc.school.repository.factory.RepositoryFactory;
 import com.mjc.school.repository.interfaces.ModelInterface;
 import com.mjc.school.repository.interfaces.RepositoryInterface;

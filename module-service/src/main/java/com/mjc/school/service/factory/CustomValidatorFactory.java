@@ -1,6 +1,6 @@
-package com.mjc.school.common.factory;
+package com.mjc.school.service.factory;
 
-import com.mjc.school.common.implementation.CustomMessageInterpolator;
+import com.mjc.school.service.implementation.CustomMessageInterpolator;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
 import org.hibernate.validator.HibernateValidator;
