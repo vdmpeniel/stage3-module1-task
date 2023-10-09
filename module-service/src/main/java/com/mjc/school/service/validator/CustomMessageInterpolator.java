@@ -1,4 +1,4 @@
-package com.mjc.school.service.implementation;
+package com.mjc.school.service.validator;
 
 import com.mjc.school.common.utils.FileUtils;
 import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator;

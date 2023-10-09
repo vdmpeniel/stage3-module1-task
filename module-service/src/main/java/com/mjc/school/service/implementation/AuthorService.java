@@ -7,6 +7,7 @@ import com.mjc.school.repository.model.AuthorModel;
 import com.mjc.school.service.dto.AuthorDto;
 import com.mjc.school.service.interfaces.AuthorMapperInterface;
 import com.mjc.school.service.interfaces.ServiceInterface;
+import com.mjc.school.service.validator.ModelValidator;
 
 import java.util.List;
 
@@ -19,10 +20,10 @@ public class AuthorService implements ServiceInterface<AuthorDto> {
         validator = ModelValidator.getInstance();
     }
 
-    public AuthorDto create(AuthorDto model) throws Exception{
-        validator.runValidation(model);
+    public AuthorDto create(AuthorDto modelDto) throws Exception{
+        validator.runValidation(modelDto);
         return (AuthorDto) authorRepository.create(
-                AuthorMapperInterface.INSTANCE.authorDtoToAuthor(model)
+                AuthorMapperInterface.INSTANCE.authorDtoToAuthor(modelDto)
         );
     }
 
@@ -42,10 +43,10 @@ public class AuthorService implements ServiceInterface<AuthorDto> {
     }
 
 
-    public AuthorDto updateById(AuthorDto authorDto) throws Exception{
-        validator.runValidation(authorDto);
-        AuthorModel authorModel = AuthorMapperInterface.INSTANCE.authorDtoToAuthor(authorDto);
-        authorModel.setId(authorDto.getId());
+    public AuthorDto updateById(AuthorDto modelDto) throws Exception{
+        validator.runValidation(modelDto);
+        AuthorModel authorModel = AuthorMapperInterface.INSTANCE.authorDtoToAuthor(modelDto);
+        authorModel.setId(modelDto.getId());
         return (AuthorDto) authorRepository.update(authorModel);
     }
 

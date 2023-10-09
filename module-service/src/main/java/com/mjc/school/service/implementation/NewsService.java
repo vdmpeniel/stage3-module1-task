@@ -7,6 +7,7 @@ import com.mjc.school.repository.model.NewsModel;
 import com.mjc.school.service.dto.NewsDto;
 import com.mjc.school.service.interfaces.NewsMapperInterface;
 import com.mjc.school.service.interfaces.ServiceInterface;
+import com.mjc.school.service.validator.ModelValidator;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,9 +21,9 @@ public class NewsService implements ServiceInterface<NewsDto> {
         validator = ModelValidator.getInstance();
     }
 
-    public NewsDto create(NewsDto newsDto) throws Exception{
-        validator.runValidation(newsDto);
-        NewsModel newsModel = NewsMapperInterface.INSTANCE.newsDtoToNews(newsDto);
+    public NewsDto create(NewsDto modelDto) throws Exception{
+        validator.runValidation(modelDto);
+        NewsModel newsModel = NewsMapperInterface.INSTANCE.newsDtoToNews(modelDto);
         newsModel.setCreateDate(LocalDateTime.now());
         newsModel.setLastUpdateDate(newsModel.getCreateDate());
         return NewsMapperInterface.INSTANCE.newsToNewsDto((NewsModel) this.newsRepository.create(newsModel));
@@ -41,11 +42,11 @@ public class NewsService implements ServiceInterface<NewsDto> {
         );
     }
 
-    public NewsDto updateById(NewsDto newsDto) throws Exception{
-        validator.runValidation(newsDto);
-        NewsModel newsModel = NewsMapperInterface.INSTANCE.newsDtoToNews(newsDto);
+    public NewsDto updateById(NewsDto modelDto) throws Exception{
+        validator.runValidation(modelDto);
+        NewsModel newsModel = NewsMapperInterface.INSTANCE.newsDtoToNews(modelDto);
         newsModel.setLastUpdateDate(LocalDateTime.now());
-        newsModel.setId(newsDto.getId());
+        newsModel.setId(modelDto.getId());
         return NewsMapperInterface.INSTANCE.newsToNewsDto( (NewsModel) newsRepository.update(newsModel) );
     }
 

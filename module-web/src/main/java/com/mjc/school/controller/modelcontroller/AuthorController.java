@@ -1,7 +1,7 @@
 package com.mjc.school.controller.modelcontroller;
 
 import com.mjc.school.common.exceptions.IllegalFieldValueException;
-import com.mjc.school.service.implementation.ModelValidator;
+import com.mjc.school.service.validator.ModelValidator;
 import com.mjc.school.controller.dto.ErrorDto;
 import com.mjc.school.controller.dto.RequestDto;
 import com.mjc.school.controller.dto.ResponseDto;
