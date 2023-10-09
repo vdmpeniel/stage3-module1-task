@@ -27,7 +27,7 @@ public class ModelValidator {
 
     private ModelValidator(){}
 
-    public static ModelValidator getInstance() throws IOException{
+    public static ModelValidator getValidator(){
         synchronized (ModelValidator.class) {
             if (Objects.isNull(instance)) {
                 instance = new ModelValidator();

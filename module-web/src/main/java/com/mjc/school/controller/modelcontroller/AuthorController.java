@@ -20,7 +20,7 @@ public class AuthorController implements ModelControllerInterface<RequestDto, Re
     public  AuthorController(){
         try {
             authorService = ServiceFactory.getInstance().getAuthorService();
-            validator = ModelValidator.getInstance();
+            validator = ModelValidator.getValidator();
         } catch(Exception e){ buildErrorResponse(e); }
     }
 

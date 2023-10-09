@@ -1,8 +1,8 @@
-package com.mjc.school.repository;
+package com.mjc.school.service;
 
 import com.mjc.school.common.exceptions.IllegalFieldValueException;
-import com.mjc.school.common.implementation.ModelValidator;
 import com.mjc.school.repository.model.NewsModel;
+import com.mjc.school.service.validator.ModelValidator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ public class NewsModelConstraintsTest {
 
     @BeforeEach
     void setUp() throws Exception{
-        validator = ModelValidator.getInstance();
+        validator = ModelValidator.getValidator();
     }
 
     @AfterEach

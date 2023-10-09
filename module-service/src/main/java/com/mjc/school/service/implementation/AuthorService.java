@@ -17,7 +17,7 @@ public class AuthorService implements ServiceInterface<AuthorDto> {
 
     public AuthorService() throws Exception{
         authorRepository = RepositoryFactory.getInstance().getAuthorRepository();
-        validator = ModelValidator.getInstance();
+        validator = ModelValidator.getValidator();
     }
 
     public AuthorDto create(AuthorDto modelDto) throws Exception{

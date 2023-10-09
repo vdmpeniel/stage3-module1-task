@@ -18,7 +18,7 @@ public class NewsService implements ServiceInterface<NewsDto> {
 
     public NewsService() throws Exception{
         newsRepository = RepositoryFactory.getInstance().getNewsRepository();
-        validator = ModelValidator.getInstance();
+        validator = ModelValidator.getValidator();
     }
 
     public NewsDto create(NewsDto modelDto) throws Exception{

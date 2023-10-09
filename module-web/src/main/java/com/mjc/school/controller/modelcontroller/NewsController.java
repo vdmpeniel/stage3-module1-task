@@ -21,7 +21,7 @@ public class NewsController implements ModelControllerInterface<RequestDto, Resp
     public NewsController(){
         try{
             newsService = ServiceFactory.getInstance().getNewsService();
-            validator = ModelValidator.getInstance();
+            validator = ModelValidator.getValidator();
         } catch(Exception e){ buildErrorResponse(e); }
     }
 

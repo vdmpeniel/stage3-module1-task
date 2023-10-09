@@ -1,7 +1,7 @@
-package com.mjc.school.common.utils;
+package com.mjc.school.service;
 
-import com.mjc.school.common.implementation.ModelValidator;
 import com.mjc.school.repository.model.NewsModel;
+import com.mjc.school.service.validator.ModelValidator;
 import jakarta.validation.ConstraintViolation;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +27,7 @@ class ModelValidatorTest {
                 .authorId(1L)
                 .build();
 
-        validator = ModelValidator.getInstance();
+        validator = ModelValidator.getValidator();
     }
 
     @AfterEach
