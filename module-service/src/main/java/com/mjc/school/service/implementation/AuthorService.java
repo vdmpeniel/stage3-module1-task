@@ -13,15 +13,15 @@ import java.util.List;
 
 public class AuthorService implements ServiceInterface<AuthorDto> {
     private final RepositoryInterface<ModelInterface> authorRepository;
-    private final ModelValidator validator;
+    private final ModelValidator modelValidator;
 
-    public AuthorService() throws Exception{
+    public AuthorService(){
         authorRepository = RepositoryFactory.getInstance().getAuthorRepository();
-        validator = ModelValidator.getValidator();
+        modelValidator = ModelValidator.getValidator();
     }
 
     public AuthorDto create(AuthorDto modelDto) throws Exception{
-        validator.runValidation(modelDto);
+        modelValidator.runValidation(modelDto);
         return (AuthorDto) authorRepository.create(
                 AuthorMapperInterface.INSTANCE.authorDtoToAuthor(modelDto)
         );
@@ -44,7 +44,7 @@ public class AuthorService implements ServiceInterface<AuthorDto> {
 
 
     public AuthorDto updateById(AuthorDto modelDto) throws Exception{
-        validator.runValidation(modelDto);
+        modelValidator.runValidation(modelDto);
         AuthorModel authorModel = AuthorMapperInterface.INSTANCE.authorDtoToAuthor(modelDto);
         authorModel.setId(modelDto.getId());
         return (AuthorDto) authorRepository.update(authorModel);

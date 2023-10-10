@@ -15,12 +15,12 @@ import java.util.List;
 
 public class AuthorController implements ModelControllerInterface<RequestDto, ResponseDto> {
     private ServiceInterface<AuthorDto>  authorService;
-    private ModelValidator validator;
+    private ModelValidator modelValidator;
 
     public  AuthorController(){
         try {
             authorService = ServiceFactory.getInstance().getAuthorService();
-            validator = ModelValidator.getValidator();
+            modelValidator = ModelValidator.getValidator();
         } catch(Exception e){ buildErrorResponse(e); }
     }
 
@@ -68,7 +68,7 @@ public class AuthorController implements ModelControllerInterface<RequestDto, Re
     @Override
     public ResponseDto readById(RequestDto requestDto) {
         try{
-            validator.runValidation(requestDto);
+            modelValidator.runValidation(requestDto);
             return ResponseDto
                     .builder()
                     .status("OK")
@@ -105,7 +105,7 @@ public class AuthorController implements ModelControllerInterface<RequestDto, Re
     @Override
     public ResponseDto deleteById(RequestDto requestDto ) {
         try{
-            validator.runValidation(requestDto);
+            modelValidator.runValidation(requestDto);
              authorService.deleteById(Long.parseLong(requestDto.getLookupId()));
             return ResponseDto.builder()
                     .status("OK")

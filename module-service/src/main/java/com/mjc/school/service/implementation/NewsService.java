@@ -14,15 +14,15 @@ import java.util.List;
 
 public class NewsService implements ServiceInterface<NewsDto> {
     private final RepositoryInterface<ModelInterface> newsRepository;
-    private final ModelValidator validator;
+    private final ModelValidator modelValidator;
 
-    public NewsService() throws Exception{
+    public NewsService(){
         newsRepository = RepositoryFactory.getInstance().getNewsRepository();
-        validator = ModelValidator.getValidator();
+        modelValidator = ModelValidator.getValidator();
     }
 
     public NewsDto create(NewsDto modelDto) throws Exception{
-        validator.runValidation(modelDto);
+        modelValidator.runValidation(modelDto);
         NewsModel newsModel = NewsMapperInterface.INSTANCE.newsDtoToNews(modelDto);
         newsModel.setCreateDate(LocalDateTime.now());
         newsModel.setLastUpdateDate(newsModel.getCreateDate());
@@ -43,7 +43,7 @@ public class NewsService implements ServiceInterface<NewsDto> {
     }
 
     public NewsDto updateById(NewsDto modelDto) throws Exception{
-        validator.runValidation(modelDto);
+        modelValidator.runValidation(modelDto);
         NewsModel newsModel = NewsMapperInterface.INSTANCE.newsDtoToNews(modelDto);
         newsModel.setLastUpdateDate(LocalDateTime.now());
         newsModel.setId(modelDto.getId());
