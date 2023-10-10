@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
-public class ApplicationViewController implements ViewControllerInterface {
-    private volatile static ApplicationViewController instance;
+public class ApplicationViewManager implements ViewControllerInterface {
+    private volatile static ApplicationViewManager instance;
 
     boolean doNextLoop = true;
 
@@ -21,12 +21,12 @@ public class ApplicationViewController implements ViewControllerInterface {
     private final ModelControllerInterface<RequestDto, ResponseDto> newsService =
             ModelControllerFactory.getInstance().getNewsService();
 
-    private ApplicationViewController(){}
+    private ApplicationViewManager(){}
 
-    public static ApplicationViewController getInstance(){
-        synchronized (ApplicationViewController.class) {
+    public static ApplicationViewManager getInstance(){
+        synchronized (ApplicationViewManager.class) {
             if (Objects.isNull(instance)) {
-                instance = new ApplicationViewController();
+                instance = new ApplicationViewManager();
             }
             return instance;
         }

@@ -1,4 +1,4 @@
-package com.mjc.school.controller.modelcontroller;
+package com.mjc.school.controller.implementation;
 
 import com.mjc.school.common.exceptions.IllegalFieldValueException;
 import com.mjc.school.service.validator.ModelValidator;

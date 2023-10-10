@@ -1,7 +1,7 @@
 package com.mjc.school.controller.implementation;
 
 public class ConsoleApplication {
-    ApplicationViewController viewController = ApplicationViewController.getInstance();
+    ApplicationViewManager viewController = ApplicationViewManager.getInstance();
 
     public ConsoleApplication() throws Exception{}
 
