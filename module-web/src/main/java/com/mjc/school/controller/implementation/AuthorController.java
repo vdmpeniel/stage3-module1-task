@@ -1,136 +1,55 @@
 package com.mjc.school.controller.implementation;
 
-import com.mjc.school.common.exceptions.IllegalFieldValueException;
-import com.mjc.school.service.validator.ModelValidator;
-import com.mjc.school.controller.dto.ErrorDto;
 import com.mjc.school.controller.dto.RequestDto;
-import com.mjc.school.controller.dto.ResponseDto;
 import com.mjc.school.controller.interfaces.ModelControllerInterface;
 import com.mjc.school.service.dto.AuthorDto;
 import com.mjc.school.service.factory.ServiceFactory;
-import com.mjc.school.service.interfaces.ModelDtoInterface;
 import com.mjc.school.service.interfaces.ServiceInterface;
+import com.mjc.school.service.validator.ModelValidator;
 
 import java.util.List;
 
-public class AuthorController implements ModelControllerInterface<RequestDto, ResponseDto> {
-    private ServiceInterface<AuthorDto>  authorService;
-    private ModelValidator modelValidator;
+public class AuthorController implements ModelControllerInterface<RequestDto, AuthorDto> {
+
+    private final ServiceInterface< AuthorDto>  authorService;
+    private final ModelValidator modelValidator;
 
     public  AuthorController(){
-        try {
-            authorService = ServiceFactory.getInstance().getAuthorService();
-            modelValidator = ModelValidator.getValidator();
-        } catch(Exception e){ buildErrorResponse(e); }
+        authorService = ServiceFactory.getInstance().getAuthorService();
+        modelValidator = ModelValidator.getValidator();
     }
 
 
-    @Override
-    public ResponseDto create(RequestDto requestDto){
-        try {
-             AuthorDto  authorDto = ( AuthorDto) requestDto.getInputData();
-             authorDto =  authorService.create( authorDto);
-            return ResponseDto
-                    .builder()
-                    .status("OK")
-                    .resultSet(
-                            readById(
-                                    RequestDto.builder().lookupId(
-                                             authorDto.getId().toString()
-                                    ).build()
-                            ).getResultSet()
-                    )
-                    .build();
 
-        } catch(Exception e){
-            return buildErrorResponse(e);
-        }
-    }
-
-    @Override
-    public ResponseDto readAll() {
-        try{
-            return ResponseDto
-                    .builder()
-                    .status("OK")
-                    .resultSet(
-                             authorService.readAll()
-                                    .stream()
-                                    .map(model -> (ModelDtoInterface) model)
-                                    .toList())
-                    .build();
-
-        } catch(Exception e){
-            return buildErrorResponse(e);
-        }
-    }
-
-    @Override
-    public ResponseDto readById(RequestDto requestDto) {
-        try{
-            modelValidator.runValidation(requestDto);
-            return ResponseDto
-                    .builder()
-                    .status("OK")
-                    .resultSet(
-                            List.of(  authorService.readById(Long.parseLong(requestDto.getLookupId())) )
-                    )
-                    .build();
-
-        } catch(Exception e){
-            return buildErrorResponse(e);
-        }
-    }
-
-    @Override
-    public ResponseDto updateById(RequestDto requestDto) {
-        try{
-             AuthorDto authorDto = (AuthorDto) requestDto.getInputData();
-             authorDto.setId(Long.parseLong(requestDto.getLookupId()));
-
-             authorService.updateById(authorDto);
-            return ResponseDto
-                    .builder()
-                    .status("OK")
-                    .resultSet(
-                            List.of(authorService.readById(Long.parseLong(requestDto.getLookupId())))
-                    )
-                    .build();
-
-        } catch(Exception e){
-            return buildErrorResponse(e);
-        }
-    }
-
-    @Override
-    public ResponseDto deleteById(RequestDto requestDto ) {
-        try{
-            modelValidator.runValidation(requestDto);
-             authorService.deleteById(Long.parseLong(requestDto.getLookupId()));
-            return ResponseDto.builder()
-                    .status("OK")
-                    .resultSet(null)
-                    .build();
-
-        } catch(Exception e){
-            return buildErrorResponse(e);
-        }
+    public  AuthorDto create(RequestDto requestDto) throws Exception{
+        return  authorService.create(( AuthorDto) requestDto.getInputData());
     }
 
 
-    @Override
-    public ResponseDto buildErrorResponse(Exception e) {
-        if (e instanceof IllegalFieldValueException ifve) {
-            return ResponseDto.builder()
-                    .status("Failed")
-                    .error(ErrorDto.builder().code(ifve.getErrorCode()).message(ifve.getMessage()).build())
-                    .build();
+    public List<AuthorDto> readAll() throws Exception{
+        return  authorService.readAll();
+    }
 
-        } else {
-            return ResponseDto.builder()
-                    .status("Failed")
-                    .error(ErrorDto.builder().code("0000123").message(e.getMessage()).build())
-                    .build();
-        }
+
+    public  AuthorDto readById(Long id) throws Exception{
+        RequestDto requestDto = RequestDto.builder().lookupId(id.toString()).build();
+        modelValidator.runValidation(requestDto);
+        return  authorService.readById(Long.parseLong(requestDto.getLookupId()));
+    }
+
+
+    public  AuthorDto updateById(RequestDto requestDto) throws Exception{
+        modelValidator.runValidation(requestDto);
+         AuthorDto  authorDto = ( AuthorDto) requestDto.getInputData();
+         authorDto.setId(Long.parseLong(requestDto.getLookupId()));
+
+        return  authorService.updateById( authorDto);
+    }
+
+
+    public Boolean deleteById(Long id) throws Exception{
+        RequestDto requestDto = RequestDto.builder().lookupId(id.toString()).build();
+        modelValidator.runValidation(requestDto);
+        return  authorService.deleteById(Long.parseLong(requestDto.getLookupId()));
     }
 }

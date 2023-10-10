@@ -1,21 +1,22 @@
 package com.mjc.school.controller.factory;
 
+import com.mjc.school.controller.dto.RequestDto;
 import com.mjc.school.controller.implementation.AuthorController;
 import com.mjc.school.controller.implementation.NewsController;
 import com.mjc.school.controller.interfaces.ModelControllerInterface;
-import com.mjc.school.controller.dto.RequestDto;
-import com.mjc.school.controller.dto.ResponseDto;
+import com.mjc.school.service.dto.AuthorDto;
+import com.mjc.school.service.dto.NewsDto;
 
 import java.util.Objects;
 
 public class ModelControllerFactory {
     private static volatile ModelControllerFactory instance;
-    private final ModelControllerInterface<RequestDto, ResponseDto> newsService;
-    private final ModelControllerInterface<RequestDto, ResponseDto> authorService;
+    private final ModelControllerInterface<RequestDto, NewsDto> newsController;
+    private final ModelControllerInterface<RequestDto, AuthorDto> authorController;
 
     private ModelControllerFactory(){
-        newsService = new NewsController();
-        authorService = new AuthorController();
+        newsController = new NewsController();
+        authorController = new AuthorController();
     }
 
     public static ModelControllerFactory getInstance(){
@@ -26,10 +27,10 @@ public class ModelControllerFactory {
             return instance;
         }
     }
-    public ModelControllerInterface<RequestDto, ResponseDto> getNewsService(){
-        return newsService;
+    public ModelControllerInterface<RequestDto, NewsDto> getNewsController(){
+        return newsController;
     }
-    public ModelControllerInterface<RequestDto, ResponseDto> getAuthorService(){
-        return authorService;
+    public ModelControllerInterface<RequestDto, AuthorDto> getAuthorService(){
+        return authorController;
     }
 }

@@ -13,13 +13,13 @@ public class ServiceFactory {
     private final ServiceInterface<AuthorDto> authorService;
     private final ServiceInterface<NewsDto> newsService;
 
-    private ServiceFactory() throws Exception{
+    private ServiceFactory(){
         authorService = new AuthorService();
         newsService = new NewsService();
     }
 
-    public static ServiceFactory getInstance() throws Exception{
-        synchronized(ServiceFactory.class) {
+    public static ServiceFactory getInstance(){
+        synchronized (ServiceFactory.class) {
             if (Objects.isNull(instance)) {
                 instance = new ServiceFactory();
             }

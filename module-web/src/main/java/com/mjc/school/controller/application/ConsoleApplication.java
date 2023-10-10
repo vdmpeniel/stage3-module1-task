@@ -1,4 +1,4 @@
-package com.mjc.school.controller.implementation;
+package com.mjc.school.controller.application;
 
 public class ConsoleApplication {
     ApplicationViewManager viewController = ApplicationViewManager.getInstance();

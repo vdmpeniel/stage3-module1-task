@@ -1,6 +1,6 @@
 package com.mjc.school;
 
-import com.mjc.school.controller.implementation.ConsoleApplication;
+import com.mjc.school.controller.application.ConsoleApplication;
 
 class Main {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package com.mjc.school.controller.implementation;
+package com.mjc.school.controller.application;
 
 import com.mjc.school.controller.interfaces.ViewInterface;
 import com.mjc.school.service.dto.NewsDto;

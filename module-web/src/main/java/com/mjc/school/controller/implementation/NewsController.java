@@ -1,137 +1,60 @@
 package com.mjc.school.controller.implementation;
 
-import com.mjc.school.common.exceptions.IllegalFieldValueException;
-import com.mjc.school.service.validator.ModelValidator;
 import com.mjc.school.controller.dto.RequestDto;
-import com.mjc.school.controller.dto.ResponseDto;
 import com.mjc.school.controller.interfaces.ModelControllerInterface;
-import com.mjc.school.controller.dto.ErrorDto;
 import com.mjc.school.service.dto.NewsDto;
 import com.mjc.school.service.factory.ServiceFactory;
-import com.mjc.school.service.interfaces.ModelDtoInterface;
 import com.mjc.school.service.interfaces.ServiceInterface;
+import com.mjc.school.service.validator.ModelValidator;
 
 import java.util.List;
 
-public class NewsController implements ModelControllerInterface<RequestDto, ResponseDto> {
+public class NewsController implements ModelControllerInterface<RequestDto, NewsDto> {
 
-    private ServiceInterface<NewsDto> newsService;
-    private ModelValidator modelValidator;
+
+    private final ServiceInterface<NewsDto> newsService;
+    private final ModelValidator modelValidator;
 
     public NewsController(){
-        try{
-            newsService = ServiceFactory.getInstance().getNewsService();
-            modelValidator = ModelValidator.getValidator();
-        } catch(Exception e){ buildErrorResponse(e); }
+        newsService = ServiceFactory.getInstance().getNewsService();
+        modelValidator = ModelValidator.getValidator();
     }
 
 
-    @Override
-    public ResponseDto create(RequestDto requestDto){
-        try {
-            NewsDto newsDto = (NewsDto) requestDto.getInputData();
-            newsDto = newsService.create(newsDto);
-            return ResponseDto
-                .builder()
-                .status("OK")
-                .resultSet(
-                    readById(
-                        RequestDto.builder().lookupId(
-                            newsDto.getId().toString()
-                        ).build()
-                    ).getResultSet()
-                )
-                .build();
 
-        } catch(Exception e){
-            return buildErrorResponse(e);
-        }
-    }
-
-    @Override
-    public ResponseDto readAll() {
-        try{
-            return ResponseDto
-                .builder()
-                .status("OK")
-                .resultSet(
-                        newsService.readAll()
-                                .stream()
-                                .map(model -> (ModelDtoInterface) model)
-                                .toList())
-                .build();
-
-        } catch(Exception e){
-            return buildErrorResponse(e);
-        }
-    }
-
-    @Override
-    public ResponseDto readById(RequestDto requestDto) {
-        try{
-            modelValidator.runValidation(requestDto);
-            return ResponseDto
-                .builder()
-                .status("OK")
-                .resultSet(
-                    List.of( newsService.readById(Long.parseLong(requestDto.getLookupId())) )
-                )
-                .build();
-
-        } catch(Exception e){
-            return buildErrorResponse(e);
-        }
-    }
-
-    @Override
-    public ResponseDto updateById(RequestDto requestDto) {
-        try{
-            NewsDto newsDto = (NewsDto) requestDto.getInputData();
-            newsDto.setId(Long.parseLong(requestDto.getLookupId()));
-
-            newsService.updateById(newsDto);
-            return ResponseDto
-                .builder()
-                .status("OK")
-                .resultSet(
-                    List.of(newsService.readById(Long.parseLong(requestDto.getLookupId())))
-                )
-                .build();
-
-        } catch(Exception e){
-            return buildErrorResponse(e);
-        }
-    }
-
-    @Override
-    public ResponseDto deleteById(RequestDto requestDto ) {
-        try{
-            modelValidator.runValidation(requestDto);
-            newsService.deleteById(Long.parseLong(requestDto.getLookupId()));
-            return ResponseDto.builder()
-                    .status("OK")
-                    .resultSet(null)
-                    .build();
-
-        } catch(Exception e){
-            return buildErrorResponse(e);
-        }
+    public NewsDto create(RequestDto requestDto) throws Exception {
+        return newsService.create((NewsDto) requestDto.getInputData());
     }
 
 
-    @Override
-    public ResponseDto buildErrorResponse(Exception e) {
-        if (e instanceof IllegalFieldValueException ifve) {
-            return ResponseDto.builder()
-                .status("Failed")
-                .error(ErrorDto.builder().code(ifve.getErrorCode()).message(ifve.getMessage()).build())
-                .build();
-
-        } else {
-            return ResponseDto.builder()
-                .status("Failed")
-                .error(ErrorDto.builder().code("0000123").message(e.getMessage()).build())
-                .build();
-        }
+    public List<NewsDto> readAll() throws Exception{
+        return newsService.readAll();
     }
+
+
+    public NewsDto readById(Long id) throws Exception{
+        RequestDto requestDto = RequestDto.builder().lookupId(id.toString()).build();
+        modelValidator.runValidation(requestDto);
+        return newsService.readById(Long.parseLong(requestDto.getLookupId()));
+    }
+
+
+    public NewsDto updateById(RequestDto requestDto) throws Exception{
+        modelValidator.runValidation(requestDto);
+        NewsDto newsDto = (NewsDto) requestDto.getInputData();
+        newsDto.setId(Long.parseLong(requestDto.getLookupId()));
+
+        return newsService.updateById(newsDto);
+    }
+
+
+    public Boolean deleteById(Long id) throws Exception{
+        RequestDto requestDto = RequestDto.builder().lookupId(id.toString()).build();
+        modelValidator.runValidation(requestDto);
+        return newsService.deleteById(Long.parseLong(requestDto.getLookupId()));
+    }
+
+
+
+
 }
