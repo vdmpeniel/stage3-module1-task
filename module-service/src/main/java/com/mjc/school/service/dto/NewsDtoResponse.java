@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class NewsDto implements ModelDtoInterface {
+public class NewsDtoResponse implements ModelDtoInterface {
     private Long id;
 
     @Size(min=5, max=30, message = "validation.error.news.title.size")

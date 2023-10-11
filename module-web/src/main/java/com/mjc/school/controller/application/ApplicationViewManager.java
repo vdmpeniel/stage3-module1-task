@@ -2,12 +2,12 @@ package com.mjc.school.controller.application;
 
 import com.mjc.school.common.exceptions.IllegalFieldValueException;
 import com.mjc.school.controller.dto.ErrorDto;
-import com.mjc.school.controller.dto.RequestDto;
+import com.mjc.school.controller.dto.RequestDtoRequest;
 import com.mjc.school.controller.dto.ResponseDto;
 import com.mjc.school.controller.factory.ModelControllerFactory;
 import com.mjc.school.controller.interfaces.ModelControllerInterface;
 import com.mjc.school.controller.interfaces.ViewManagerInterface;
-import com.mjc.school.service.dto.NewsDto;
+import com.mjc.school.service.dto.NewsDtoResponse;
 import com.mjc.school.service.interfaces.ModelDtoInterface;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class ApplicationViewManager implements ViewManagerInterface {
     boolean doNextLoop = true;
 
     private final ApplicationView view = ApplicationView.getInstance();
-    private final ModelControllerInterface<RequestDto, NewsDto> newsController;
+    private final ModelControllerInterface<RequestDtoRequest, NewsDtoResponse> newsController;
 
     private ApplicationViewManager(){
         newsController = ModelControllerFactory.getInstance().getNewsController();
@@ -91,17 +91,17 @@ public class ApplicationViewManager implements ViewManagerInterface {
     }
 
 
-    private final Function<String, NewsDto> newsDtoWithIdSupplier = (id) -> {
-        NewsDto newsDto = view.renderNewsInputForm();
-        newsDto.setId(Long.parseLong(id));
-        return newsDto;
+    private final Function<String, NewsDtoResponse> newsDtoWithIdSupplier = (id) -> {
+        NewsDtoResponse newsDtoResponse = view.renderNewsInputForm();
+        newsDtoResponse.setId(Long.parseLong(id));
+        return newsDtoResponse;
     };
     public void createNews(){
         view.renderOperationTittle();
         try{
             view.renderResponse(buildResponse(
                     newsController.create(
-                        RequestDto.builder().inputData(view.renderNewsInputForm()).build()
+                        RequestDtoRequest.builder().inputData(view.renderNewsInputForm()).build()
                     )
                 )
             );
@@ -115,7 +115,7 @@ public class ApplicationViewManager implements ViewManagerInterface {
         try{
             view.renderResponse(buildResponse(
                     newsController.updateById(
-                        RequestDto.builder()
+                        RequestDtoRequest.builder()
                             .lookupId(view.renderNewsIdInputForm())
                             .inputData(newsDtoWithIdSupplier.apply("-1"))
                             .build()

@@ -1,7 +1,7 @@
 package com.mjc.school.controller.application;
 
 import com.mjc.school.controller.interfaces.ViewInterface;
-import com.mjc.school.service.dto.NewsDto;
+import com.mjc.school.service.dto.NewsDtoResponse;
 import com.mjc.school.controller.dto.ResponseDto;
 
 import java.util.Objects;
@@ -38,23 +38,23 @@ class ApplicationView implements ViewInterface {
 
     public void renderResponse(ResponseDto responseDto){
         if("OK".equals(responseDto.getStatus()) && Objects.nonNull(responseDto.getResultSet())) {
-            responseDto.getResultSet().stream().map(model -> (NewsDto) model).forEach(this::renderSingleNews);
+            responseDto.getResultSet().stream().map(model -> (NewsDtoResponse) model).forEach(this::renderSingleNews);
 
         } else {
             renderErrors(responseDto);
         }
     }
 
-    private void renderSingleNews(NewsDto newsDto){
-        System.out.println(newsDto);
+    private void renderSingleNews(NewsDtoResponse newsDtoResponse){
+        System.out.println(newsDtoResponse);
     }
 
     public String renderNewsIdInputForm(){
         return getInput("Enter news id:");
     }
 
-    public NewsDto renderNewsInputForm(){
-        return NewsDto.builder()
+    public NewsDtoResponse renderNewsInputForm(){
+        return NewsDtoResponse.builder()
             .title(getInput("Enter news title:"))
             .newsContent(getInput("Enter news content:"))
             .authorId(getInput("Enter author id:"))

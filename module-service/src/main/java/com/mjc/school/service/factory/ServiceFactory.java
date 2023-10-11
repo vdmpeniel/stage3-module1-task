@@ -1,7 +1,7 @@
 package com.mjc.school.service.factory;
 
 import com.mjc.school.service.dto.AuthorDto;
-import com.mjc.school.service.dto.NewsDto;
+import com.mjc.school.service.dto.NewsDtoResponse;
 import com.mjc.school.service.implementation.AuthorService;
 import com.mjc.school.service.implementation.NewsService;
 import com.mjc.school.service.interfaces.ServiceInterface;
@@ -11,7 +11,7 @@ import java.util.Objects;
 public class ServiceFactory {
     private static volatile ServiceFactory instance;
     private final ServiceInterface<AuthorDto> authorService;
-    private final ServiceInterface<NewsDto> newsService;
+    private final ServiceInterface<NewsDtoResponse> newsService;
 
     private ServiceFactory(){
         authorService = new AuthorService();
@@ -31,7 +31,7 @@ public class ServiceFactory {
         return authorService;
     }
 
-    public ServiceInterface<NewsDto> getNewsService(){
+    public ServiceInterface<NewsDtoResponse> getNewsService(){
         return newsService;
     }
 }
