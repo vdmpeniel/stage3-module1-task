@@ -1,7 +1,6 @@
 package com.mjc.school.controller.implementation;
 
 import com.mjc.school.controller.dto.RequestDtoRequest;
-import com.mjc.school.controller.interfaces.ModelControllerInterface;
 import com.mjc.school.service.dto.NewsDtoResponse;
 import com.mjc.school.service.factory.ServiceFactory;
 import com.mjc.school.service.interfaces.ServiceInterface;
@@ -9,7 +8,7 @@ import com.mjc.school.service.validator.ModelValidator;
 
 import java.util.List;
 
-public class NewsController implements ModelControllerInterface<RequestDtoRequest, NewsDtoResponse> {
+public class NewsController {
 
 
     private final ServiceInterface<NewsDtoResponse> newsService;
@@ -35,7 +34,8 @@ public class NewsController implements ModelControllerInterface<RequestDtoReques
     public NewsDtoResponse readById(Long id) throws Exception{
         RequestDtoRequest requestDtoRequest = RequestDtoRequest.builder().lookupId(id.toString()).build();
         modelValidator.runValidation(requestDtoRequest);
-        return newsService.readById(Long.parseLong(requestDtoRequest.getLookupId()));
+
+        return newsService.readById(id);
     }
 
 
@@ -43,6 +43,7 @@ public class NewsController implements ModelControllerInterface<RequestDtoReques
         modelValidator.runValidation(requestDtoRequest);
         NewsDtoResponse newsDtoResponse = (NewsDtoResponse) requestDtoRequest.getInputData();
         newsDtoResponse.setId(Long.parseLong(requestDtoRequest.getLookupId()));
+
         return newsService.updateById(newsDtoResponse);
     }
 
@@ -50,6 +51,7 @@ public class NewsController implements ModelControllerInterface<RequestDtoReques
     public Boolean deleteById(Long id) throws Exception{
         RequestDtoRequest requestDtoRequest = RequestDtoRequest.builder().lookupId(id.toString()).build();
         modelValidator.runValidation(requestDtoRequest);
-        return newsService.deleteById(Long.parseLong(requestDtoRequest.getLookupId()));
+
+        return newsService.deleteById(id);
     }
 }

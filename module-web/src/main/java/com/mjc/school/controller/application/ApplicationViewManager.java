@@ -5,7 +5,7 @@ import com.mjc.school.controller.dto.ErrorDto;
 import com.mjc.school.controller.dto.RequestDtoRequest;
 import com.mjc.school.controller.dto.ResponseDto;
 import com.mjc.school.controller.factory.ModelControllerFactory;
-import com.mjc.school.controller.interfaces.ModelControllerInterface;
+import com.mjc.school.controller.implementation.NewsController;
 import com.mjc.school.controller.interfaces.ViewManagerInterface;
 import com.mjc.school.service.dto.NewsDtoResponse;
 import com.mjc.school.service.interfaces.ModelDtoInterface;
@@ -21,7 +21,7 @@ public class ApplicationViewManager implements ViewManagerInterface {
     boolean doNextLoop = true;
 
     private final ApplicationView view = ApplicationView.getInstance();
-    private final ModelControllerInterface<RequestDtoRequest, NewsDtoResponse> newsController;
+    private final NewsController newsController;
 
     private ApplicationViewManager(){
         newsController = ModelControllerFactory.getInstance().getNewsController();
