@@ -1,57 +1,86 @@
 package com.mjc.school.service.implementation;
 
-import com.mjc.school.repository.factory.RepositoryFactory;
-import com.mjc.school.repository.interfaces.ModelInterface;
-import com.mjc.school.repository.interfaces.RepositoryInterface;
-import com.mjc.school.repository.model.NewsModel;
-import com.mjc.school.service.dto.NewsDtoResponse;
-import com.mjc.school.service.interfaces.NewsMapperInterface;
-import com.mjc.school.service.interfaces.ServiceInterface;
-import com.mjc.school.service.validator.ModelValidator;
+import static com.mjc.school.service.exceptions.ServiceErrorCode.NEWS_ID_DOES_NOT_EXIST;
+import static com.mjc.school.service.validator.NewsValidator.getNewsValidator;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-public class NewsService implements ServiceInterface<NewsDtoResponse> {
-    private final RepositoryInterface<ModelInterface> newsRepository;
-    private final ModelValidator modelValidator;
+import org.mapstruct.factory.Mappers;
 
-    public NewsService(){
-        newsRepository = RepositoryFactory.getInstance().getNewsRepository();
-        modelValidator = ModelValidator.getValidator();
+import com.mjc.school.repository.factory.RepositoryFactory;
+import com.mjc.school.repository.interfaces.Repository;
+import com.mjc.school.repository.model.NewsModel;
+import com.mjc.school.service.dto.NewsDtoRequest;
+import com.mjc.school.service.dto.NewsDtoResponse;
+import com.mjc.school.service.exceptions.NotFoundException;
+import com.mjc.school.service.interfaces.ModelMapper;
+import com.mjc.school.service.interfaces.Service;
+import com.mjc.school.service.validator.NewsValidator;
+
+public class NewsService implements Service<NewsDtoRequest, NewsDtoResponse> {
+
+  private final Repository<NewsModel> newsRepository;
+  private final NewsValidator newsValidator;
+  private ModelMapper mapper = Mappers.getMapper(ModelMapper.class);
+
+  public NewsService() {
+    this.newsRepository = RepositoryFactory.getInstance().getNewsRepository();
+    newsValidator = getNewsValidator();
+  }
+
+  @Override
+  public List<NewsDtoResponse> readAll() {
+    return mapper.modelListToDtoList(newsRepository.readAll());
+  }
+
+  @Override
+  public NewsDtoResponse readById(Long newsId) {
+    newsValidator.validateNewsId(newsId);
+    if (newsRepository.isExistById(newsId)) {
+      NewsModel newsModel = newsRepository.readById(newsId);
+      return mapper.modelToDto(newsModel);
+    } else {
+      throw new NotFoundException(
+          String.format(String.valueOf(NEWS_ID_DOES_NOT_EXIST.getMessage()), newsId));
     }
+  }
 
-    public NewsDtoResponse create(NewsDtoResponse modelDto) throws Exception{
-        modelValidator.runValidation(modelDto);
-        NewsModel newsModel = NewsMapperInterface.INSTANCE.newsDtoToNews(modelDto);
-        newsModel.setCreateDate(LocalDateTime.now());
-        newsModel.setLastUpdateDate(newsModel.getCreateDate());
-        return NewsMapperInterface.INSTANCE.newsToNewsDto((NewsModel) this.newsRepository.create(newsModel));
+  @Override
+  public NewsDtoResponse create(NewsDtoRequest dtoRequest) {
+    newsValidator.validateNewsDto(dtoRequest);
+    NewsModel model = mapper.dtoToModel(dtoRequest);
+    LocalDateTime date = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    model.setCreateDate(date);
+    model.setLastUpdatedDate(date);
+    NewsModel newsModel = newsRepository.create(model);
+    return mapper.modelToDto(newsModel);
+  }
+
+  @Override
+  public NewsDtoResponse update(NewsDtoRequest dtoRequest) {
+    newsValidator.validateNewsId(dtoRequest.id());
+    newsValidator.validateNewsDto(dtoRequest);
+    if (newsRepository.isExistById(dtoRequest.id())) {
+      NewsModel model = mapper.dtoToModel(dtoRequest);
+      LocalDateTime date = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+      model.setLastUpdatedDate(date);
+      NewsModel newsModel = newsRepository.update(model);
+      return mapper.modelToDto(newsModel);
+    } else {
+      throw new NotFoundException(
+          String.format(NEWS_ID_DOES_NOT_EXIST.getMessage(), dtoRequest.id()));
     }
+  }
 
-    public List<NewsDtoResponse> readAll() throws Exception{
-        return newsRepository.readAll()
-            .stream()
-            .map(model -> NewsMapperInterface.INSTANCE.newsToNewsDto((NewsModel) model))
-            .toList();
+  @Override
+  public Boolean deleteById(Long newsId) {
+    newsValidator.validateNewsId(newsId);
+    if (newsRepository.isExistById(newsId)) {
+      return newsRepository.deleteById(newsId);
+    } else {
+      throw new NotFoundException(String.format(NEWS_ID_DOES_NOT_EXIST.getMessage(), newsId));
     }
-
-    public NewsDtoResponse readById(Long id) throws Exception{
-        return NewsMapperInterface.INSTANCE.newsToNewsDto(
-            (NewsModel) newsRepository.readById(Long.parseLong(id.toString()))
-        );
-    }
-
-    public NewsDtoResponse updateById(NewsDtoResponse modelDto) throws Exception{
-        modelValidator.runValidation(modelDto);
-        NewsModel newsModel = NewsMapperInterface.INSTANCE.newsDtoToNews(modelDto);
-        newsModel.setLastUpdateDate(LocalDateTime.now());
-        newsModel.setId(modelDto.getId());
-        return NewsMapperInterface.INSTANCE.newsToNewsDto( (NewsModel) newsRepository.update(newsModel) );
-    }
-
-    public Boolean deleteById(Long id) throws Exception{
-        return newsRepository.delete(Long.parseLong(id.toString()));
-    }
-
+  }
 }

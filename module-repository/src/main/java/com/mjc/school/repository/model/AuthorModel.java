@@ -1,49 +1,41 @@
 package com.mjc.school.repository.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mjc.school.common.utils.IdGeneratorUtils;
-import com.mjc.school.repository.interfaces.ModelInterface;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.Objects;
 
-import java.io.Serial;
-import java.io.Serializable;
+public class AuthorModel {
+  private Long id;
+  private String name;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class AuthorModel implements ModelInterface, Serializable {
-    @JsonIgnore
-    @Serial
-    private static final long serialVersionUID = 123456789L;
+  public AuthorModel(Long id, String name) {
+    this.id = id;
+    this.name = name;
+  }
 
-    @JsonIgnore
-    private Long id;
+  public Long getId() {
+    return id;
+  }
 
-    @Size(min=5, max=15, message = "Name must be between 5 and 15 characters long")
-    String name;
+  public void setId(Long id) {
+    this.id = id;
+  }
 
+  public String getName() {
+    return name;
+  }
 
-    @JsonProperty("id")
-    public synchronized void generateId() {
-        id = IdGeneratorUtils.generateId(this.getClass());
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    @Override
-    public String toString(){
-        try {
-            return  "\n" + "AuthorModel Object: " + "\n" +
-                    "id: " + id + "\n" +
-                    "name: " + name;
-        } catch (Exception e){
-            throw new RuntimeException(e.getMessage());
-        }
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof AuthorModel that)) return false;
+    return Objects.equals(id, that.id) && Objects.equals(name, that.name);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name);
+  }
 }

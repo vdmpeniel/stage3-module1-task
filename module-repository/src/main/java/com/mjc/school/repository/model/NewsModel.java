@@ -1,69 +1,89 @@
 package com.mjc.school.repository.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mjc.school.common.utils.DateUtils;
-import com.mjc.school.common.utils.IdGeneratorUtils;
-import com.mjc.school.repository.interfaces.ModelInterface;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class NewsModel implements ModelInterface, Serializable {
-    @JsonIgnore
-    @Serial
-    private static final long serialVersionUID = 123456789L;
+public class NewsModel {
+  private Long id;
+  private String title;
+  private String content;
+  private LocalDateTime createDate;
+  private LocalDateTime lastUpdatedDate;
+  private Long authorId;
 
-    @JsonIgnore
-    private Long id;
+  public NewsModel(
+      Long id,
+      String title,
+      String content,
+      LocalDateTime createDate,
+      LocalDateTime lastUpdatedDate,
+      Long authorId
+  ) {
+    this.id = id;
+    this.title = title;
+    this.content = content;
+    this.createDate = createDate;
+    this.lastUpdatedDate = lastUpdatedDate;
+    this.authorId = authorId;
+  }
 
-    @Size(min=5, max=30, message = "Tittle must be between 5 and 30 characters long.")
-    private String title;
+  public Long getId() {
+    return id;
+  }
 
-    @Size(min=5, max=255, message = "Content must be between 5 and 255 characters long.")
-    private String content;
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    @NotNull(message = "Creation Date must be populated")
-    private LocalDateTime createDate;
+  public String getTitle() {
+    return title;
+  }
 
-    @NotNull(message = "Creation Date must be populated")
-    private LocalDateTime lastUpdateDate;
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    @NotNull(message = "Creation Date must be populated")
-    private Long authorId;
+  public String getContent() {
+    return content;
+  }
 
-    @Override
-    @JsonProperty("id")
-    public synchronized void generateId() {
-        id = IdGeneratorUtils.generateId(this.getClass());
-    }
+  public void setContent(String content) {
+    this.content = content;
+  }
 
-    @Override
-    public String toString(){
-        try {
-            return  "NewsModel Object: " + "\n" +
-                    "id: " + id + "\n" +
-                    "title: " + title + "\n" +
-                    "content: " + content + "\n" +
-                    "createdDate: " + DateUtils.LocalDateTimeToISO8601(createDate) + "\n" +
-                    "lastUpdatedDate: " + DateUtils.LocalDateTimeToISO8601(lastUpdateDate) + "\n" +
-                    "authorId: " + authorId + "\n";
+  public LocalDateTime getCreateDate() {
+    return createDate;
+  }
 
-        } catch (Exception e){
-            throw new RuntimeException(e.getMessage());
-        }
-    }
+  public void setCreateDate(LocalDateTime createDate) {
+    this.createDate = createDate;
+  }
+
+  public LocalDateTime getLastUpdatedDate() {
+    return lastUpdatedDate;
+  }
+
+  public void setLastUpdatedDate(LocalDateTime lastUpdatedDate) {
+    this.lastUpdatedDate = lastUpdatedDate;
+  }
+
+  public Long getAuthorId() {
+    return authorId;
+  }
+
+  public void setAuthorId(Long authorId) {
+    this.authorId = authorId;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof NewsModel newsModel)) return false;
+    return Objects.equals(id, newsModel.id) && Objects.equals(title, newsModel.title) && Objects.equals(content, newsModel.content) && Objects.equals(createDate, newsModel.createDate) && Objects.equals(lastUpdatedDate, newsModel.lastUpdatedDate) && Objects.equals(authorId, newsModel.authorId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, title, content, createDate, lastUpdatedDate, authorId);
+  }
 }

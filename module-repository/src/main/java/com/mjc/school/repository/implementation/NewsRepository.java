@@ -1,45 +1,66 @@
 package com.mjc.school.repository.implementation;
 
-import com.mjc.school.repository.interfaces.RepositoryInterface;
-import com.mjc.school.repository.interfaces.DataSourceInterface;
-import com.mjc.school.repository.interfaces.ModelInterface;
-import com.mjc.school.repository.model.NewsModel;
-
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
-public class NewsRepository implements RepositoryInterface<ModelInterface> {
-    private final DataSourceInterface dataSource = new DataSourceFileBased();
-    public NewsRepository(){}
+import com.mjc.school.repository.interfaces.Repository;
+import com.mjc.school.repository.model.NewsModel;
+import com.mjc.school.repository.utils.DataSource;
 
-    @Override
-    public ModelInterface create(ModelInterface model)throws Exception{
-        return dataSource.executeInsertQuery(NewsModel.class, model);
+public class NewsRepository implements Repository<NewsModel> {
+
+  private final DataSource dataSource;
+
+  public NewsRepository() {
+    this.dataSource = DataSource.getInstance();
+  }
+
+  @Override
+  public List<NewsModel> readAll() {
+    return dataSource.getNews();
+  }
+
+  @Override
+  public NewsModel readById(Long newsId) {
+    return dataSource.getNews().stream()
+        .filter(news -> newsId.equals(news.getId()))
+        .findFirst()
+        .get();
+  }
+
+  @Override
+  public NewsModel create(NewsModel model) {
+    List<NewsModel> newsModel = dataSource.getNews();
+    newsModel.sort(Comparator.comparing(NewsModel::getId));
+    if (!newsModel.isEmpty()) {
+      model.setId(newsModel.get(newsModel.size() - 1).getId() + 1);
+    } else {
+      model.setId(1L);
     }
+    newsModel.add(model);
+    return model;
+  }
 
-    public List<ModelInterface> readAll() throws Exception{
-        return Objects.requireNonNull(dataSource.executeSelectQuery(NewsModel.class, null)).stream()
-            .map(model -> (NewsModel) model)
-            .collect(Collectors.toList());
-    }
+  @Override
+  public NewsModel update(NewsModel model) {
+    NewsModel newsModel = readById(model.getId());
+    newsModel.setTitle(model.getTitle());
+    newsModel.setContent(model.getContent());
+    newsModel.setLastUpdatedDate(model.getLastUpdatedDate());
+    newsModel.setAuthorId(model.getAuthorId());
+    return newsModel;
+  }
 
-    public ModelInterface readById(Long id) throws Exception{
-        Predicate<ModelInterface> newsById = model -> id.equals(model.getId());
-        List<ModelInterface> resultSet = dataSource.executeSelectQuery(NewsModel.class, newsById);
-        return (Objects.nonNull(resultSet) && !resultSet.isEmpty())? (NewsModel) resultSet.get(0) : null;
-    }
+  @Override
+  public Boolean deleteById(Long newsId) {
+    List<NewsModel> deleteList = new ArrayList<>();
+    deleteList.add(this.readById(newsId));
+    return dataSource.getNews().removeAll(deleteList);
+  }
 
-    @Override
-    public ModelInterface update(ModelInterface model) throws Exception {
-        Predicate<ModelInterface> newsById = newsModel -> model.getId().equals(newsModel.getId());
-        return dataSource.executeUpdateQuery(NewsModel.class, model, newsById);
-    }
-
-    public Boolean delete(Long id) throws Exception{
-        Predicate<ModelInterface> newsById = model -> id.equals(model.getId());
-        dataSource.executeDeleteQuery(NewsModel.class, newsById);
-        return true;
-    }
+  @Override
+  public Boolean isExistById(Long newsId) {
+    return dataSource.getNews().stream().anyMatch(news -> newsId.equals(news.getId()));
+  }
 }
